@@ -1,22 +1,15 @@
-import { useState } from "react";
-import LoginForm from "./LoginForm";
-import RegisterForm from "./RegisterForm";
+import { Link } from "react-router-dom";
 
 function MainPage() {
-  const [page, setPage] = useState("home"); // home, login, register
-
   return (
     <div>
-      {page === "home" && (
-        <div>
-          <h1>Welcome to ScholaMentor</h1>
-          <button onClick={() => setPage("login")}>Login</button>
-          <button onClick={() => setPage("register")}>Register</button>
-        </div>
-      )}
-
-      {page === "login" && <LoginForm />}
-      {page === "register" && <RegisterForm />}
+      <h1>Welcome to ScholaMentor</h1>
+      <Link to="/login">
+        <button>Login</button>
+      </Link>
+      <Link to="/register">
+        <button>Register</button>
+      </Link>
     </div>
   );
 }
