@@ -1,29 +1,38 @@
 import { useState } from "react";
 import axios from "axios";
 
-function LoginForm() {
+function RegisterForm() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+      const res = await axios.post("http://localhost:5000/api/auth/register", {
+        name,
         email,
         password,
       });
       setMessage(res.data);
     } catch (err) {
       console.error(err);
-      setMessage("Login failed!");
+      setMessage("Registration failed!");
     }
   };
 
   return (
     <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
+      <h2>Register</h2>
+      <form onSubmit={handleRegister}>
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
         <input
           type="email"
           placeholder="Email"
@@ -38,11 +47,11 @@ function LoginForm() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Login</button>
+        <button type="submit">Register</button>
       </form>
       <p>{message}</p>
     </div>
   );
 }
 
-export default LoginForm;
+export default RegisterForm;
