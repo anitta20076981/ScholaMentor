@@ -12,27 +12,17 @@ function LoginForm() {
     e.preventDefault();
 
     try {
-      // const res = await axios.post("http://localhost:5000/api/auth/login", {
-      //   email,
-      //   password,
-      // });
-      
+            
       const res = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/auth/login`,
             { email, password }
       );
 
-
       setMessage(res.data.message); 
-     
-      // if (res.data.message === "Admin login successful!") {
-      //   navigate("/admin/dashboard");  
-      // }
-
-       if (res.data.role === "admin") {
+      if (res.data.role === "admin") {
         navigate("/admin/dashboard"); // redirect admin
       } else if (res.data.role === "student") {
-        
+        navigate("/student/dashboard");
       } else {
         
       }

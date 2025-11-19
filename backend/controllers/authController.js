@@ -1,35 +1,28 @@
 const db = require("../config/db");
+const { User } = require('../models');
 const bcrypt = require("bcrypt");
 
-// LOGIN 
 exports.login = async (req, res) => {
     const { email, password } = req.body;
-    // Allow only admin login
-    if (email !== "admin@gmail.com") {
-        return res.status(403).json({ message: "Admin login only" });
-    }
-        
-
     try {
-        // Find admin in DB
         const [rows] = await db.promise().query(
             "SELECT * FROM users WHERE email = ?",
             [email]
         );
 
         if (rows.length === 0) {
-            return res.status(404).json({ message: "Admin not found" });
+            return res.status(404).json({ message: "User not found" });
         }
 
-        const admin = rows[0];
+        const user = rows[0];
 
-        // Check password
-        const isMatch = await bcrypt.compare(password, admin.password);
+        const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ message: "Incorrect password" });
-        }
+        }console.log(user);
+        console.log(54678);
 
-        return res.json({ message: "Admin login successful!",role: admin.type });
+        return res.json({ message: "Login successful!",role: user.type });
 
     } catch (err) {
         console.log("Login error:", err);
@@ -38,6 +31,36 @@ exports.login = async (req, res) => {
 };
 
 // REGISTER 
-exports.register = (req, res) => {
-    res.send("Register route working!");
+
+exports.register = async (req, res) => {
+    try {
+        const { name, email, password, type } = req.body;
+
+        const existingUser = await User.findOne({ where: { email } });
+        if (existingUser) {
+            return res.status(400).json({ message: "Email already registered" });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newUser = await User.create({
+            name,
+            email,
+            password: hashedPassword,
+            type
+        });
+
+        return res.status(201).json({
+            message: "User registered successfully",
+            user: {
+                id: newUser.id,
+                name: newUser.name,
+                email: newUser.email,
+                type: newUser.type
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server error" });
+    }
 };
