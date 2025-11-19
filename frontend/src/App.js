@@ -4,6 +4,7 @@ import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 import AdminDashboard from "./pages/AdminDashboard"; 
 import StudentDashboard from "./pages/StudentDashboard"; 
+import AdminStudentList from "./pages/AdminStudentList"; 
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} /> 
         <Route path="/student/dashboard" element={<StudentDashboard />} /> 
+        <Route path="/admin/students_list" element={<AdminStudentList />} /> 
       </Routes>
     </Router>
   );

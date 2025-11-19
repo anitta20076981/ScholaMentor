@@ -8,7 +8,7 @@ function AdminSidebar({ children }) {
         <h2>Admin Panel</h2>
         <ul>
           <li><Link to="/admin/dashboard">Home</Link></li>
-          <li><Link to="/admin/students">Student List</Link></li>
+          <li><Link to="/admin/students_list">Student List</Link></li>
           <li><Link to="/admin/scholarships">Scholarships</Link></li>
           <li><Link to="/admin/add-scholarship">Add Scholarship</Link></li>
         </ul>
