@@ -1,0 +1,67 @@
+
+.register-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #7f9bea;
+}
+
+.register-card {
+  background-color: white;
+  padding: 30px 40px;
+  border-radius: 10px;
+  box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
+  width: 380px;
+  text-align: center;
+}
+
+
+.register-title {
+  margin-bottom: 25px;
+  font-size: 24px;
+  color: #333;
+}
+
+
+.register-input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* Button */
+.register-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #366cff;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.register-button:hover {
+  background-color:  hwb(196 1% 74% / 0.605);
+}
+
+
+.register-message {
+  margin-top: 15px;
+  color: #e53935;
+  font-weight: bold;
+}
+
+
+.register-details {
+  margin-top: 15px;
+  background: #f5f5f5;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: left;
+}

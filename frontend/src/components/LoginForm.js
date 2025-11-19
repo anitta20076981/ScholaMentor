@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"; 
 import axios from "axios";
+import "./LoginForm.css"; 
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -38,30 +39,31 @@ function LoginForm() {
     }
   };
 
-  return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-
-        <button type="submit">Login</button>
-      </form>
-
-      <p>{message}</p>
+ return (
+    <div className="login-page">
+      <div className="login-card">
+        <h2 className="login-title">Login</h2>
+        <form onSubmit={handleLogin} className="login-form">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="login-input"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="login-input"
+            required
+          />
+          <button type="submit" className="login-button">Login</button>
+        </form>
+        {message && <p className="login-message">{message}</p>}
+      </div>
     </div>
   );
 }
