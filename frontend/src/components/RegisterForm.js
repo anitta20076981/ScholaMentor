@@ -27,7 +27,9 @@ function RegisterForm() {
       setMessage(res.data.message); 
       setUser(res.data.user);
       if (res.data.user.type === "student") {
-      navigate("/student/dashboard");
+        console.log(res.data.user);
+        const studentId = res.data.user.id;
+        navigate(`/student/dashboard/${studentId}`);
       }
       // else if (res.data.user.type === "mentor") {
       //   navigate("/mentor-dashboard");

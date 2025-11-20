@@ -7,7 +7,6 @@ import { useParams } from "react-router-dom"; // use parameter from URL
 function StudentProfile() {
   const { studentId } = useParams(); // get studentId from URL
 
-  // State for personal info form
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -28,14 +27,25 @@ function StudentProfile() {
   useEffect(() => {
     async function fetchProfile() {
       try {
-        console.log(111111);
-
         const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/student/getDetails/${studentId}`);
-
         console.log(res.data);
 
-        // If backend returns an array (e.g., [student]), use res.data[0]
-        setFormData(res.data); 
+        setFormData({
+            fullName: res.data.name || "",
+            email: res.data.email || "",
+            phone: "",             
+            dob: "",                
+            gender: "",            
+            address: "",
+            pincode: "",
+            school: "",
+            course: "",
+            department: "",
+            year: "",
+            cgpa: "",
+            familyIncome: "",
+            profilePic: null,
+        });
       } catch (err) {
         console.error("Error fetching student profile:", err);
       }

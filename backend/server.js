@@ -27,12 +27,12 @@ app.get('/test-db', (req, res) => {
 // Import route files
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-// const studentRoutes = require('./routes/studentRoutes');
+const studentRoutes = require('./routes/studentRoutes');
 
 // // Add routes to the app
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
-// app.use('/api/student', studentRoutes);
+app.use('/api/student', studentRoutes);
 
 
 
