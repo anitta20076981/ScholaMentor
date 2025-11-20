@@ -1,4 +1,8 @@
 import { useState } from "react";
+import TopBar from "../../components/student/TopBar";  
+import Footer from "../../components/student/Footer";
+import { useParams } from "react-router-dom"; // use parameter from url
+
 
 // Example data
 const scholarships = [
@@ -13,41 +17,19 @@ const mentors = [
 ];
 
 function StudentDashboard() {
+  const { studentId } = useParams(); // define studentid
   const [query, setQuery] = useState("");
 
   const handleSearch = (e) => {
     e.preventDefault();
     console.log("Search:", query);
   };
+  
 
   return (
     <div style={{ fontFamily: "Arial, sans-serif" }}>
       {/* -------------------- TOP NAV -------------------- */}
-      <header
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "15px 40px",
-          background: "#2d6cdf",
-          color: "white",
-          position: "sticky",
-          top: 0,
-          zIndex: 100,
-          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-        }}
-      >
-        <div style={{ fontWeight: "bold", fontSize: "22px", cursor: "pointer" }}>ScholaMentor</div>
-        <nav style={{ display: "flex", gap: "25px" }}>
-          <a href="#howItWorks" style={navLinkStyle}>How It Works</a>
-          <a href="studet/profile" style={navLinkStyle}>Profile</a>
-          <a href="#" style={navLinkStyle}>Scholarships</a>
-          <a href="#" style={navLinkStyle}>Sponsorships</a>
-          <a href="#" style={navLinkStyle}>Mentors</a>
-          <a href="#" style={navLinkStyle}>Donor Support</a>
-          <a href="#" style={navLinkStyle}>Logout</a>
-        </nav>
-      </header>
+      <TopBar studentId={studentId} />  {/* pass student id */}
 
       {/* -------------------- MAIN HERO SECTION -------------------- */}
       <section style={{
@@ -246,9 +228,7 @@ function StudentDashboard() {
       </section>
 
       {/* -------------------- FOOTER -------------------- */}
-      <footer style={{ padding: "25px 40px", textAlign: "center", background: "#2d6cdf", color: "white" }}>
-        © 2025 ScholaMentor. All rights reserved.
-      </footer>
+      <Footer />
     </div>
   );
 }

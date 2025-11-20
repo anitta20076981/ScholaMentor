@@ -18,7 +18,7 @@ function App() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} /> 
         <Route path="/student/dashboard/:studentId" element={<StudentDashboard />} /> 
         <Route path="/admin/students_list" element={<AdminStudentList />} /> 
-        <Route path="/student/profile" element={<StudentProfile />} /> 
+        <Route path="/student/profile/:studentId" element={<StudentProfile />} /> 
 
       </Routes>
     </Router>
