@@ -3,8 +3,10 @@ import MainPage from "./components/MainPage";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 import AdminDashboard from "./pages/AdminDashboard"; 
-import StudentDashboard from "./pages/StudentDashboard"; 
+import StudentDashboard from "./pages/student/StudentDashboard"; 
 import AdminStudentList from "./pages/AdminStudentList"; 
+import StudentProfile from "./pages/student/StudentProfile"; 
+
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} /> 
         <Route path="/student/dashboard" element={<StudentDashboard />} /> 
         <Route path="/admin/students_list" element={<AdminStudentList />} /> 
+        <Route path="/student/profile" element={<StudentProfile />} /> 
+
       </Routes>
     </Router>
   );
