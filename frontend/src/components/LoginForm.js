@@ -23,7 +23,8 @@ function LoginForm() {
       if (res.data.role === "admin") {
         navigate("/admin/dashboard"); // redirect admin
       } else if (res.data.role === "student") {
-        navigate("/student/dashboard");
+        navigate(`/student/dashboard/${res.data.id}`);
+
       } else {
         
       }
