@@ -30,8 +30,8 @@ function StudentProfile() {
     income_proof: null,
     
   });
-  const [successMessage, setSuccessMessage] = useState(""); // <-- new state
-  const [errorMessage, setErrorMessage] = useState(""); // optional for errors
+  const [successMessage, setSuccessMessage] = useState(""); 
+  const [errorMessage, setErrorMessage] = useState(""); 
   useEffect(() => {
     async function fetchProfile() {
       try {
@@ -97,7 +97,7 @@ function StudentProfile() {
       );
 
       if (res.data.success) {
-        setSuccessMessage("Profile updated successfully!"); // <-- show success
+        setSuccessMessage("Profile updated successfully!"); 
         setTimeout(() => {
           setSuccessMessage("");
         }, 3000);
@@ -120,7 +120,8 @@ function StudentProfile() {
   return (
     
     <div className="profile-page">
-      <TopBar studentId={studentId}/>
+      <TopBar studentId={studentId} successMessage={successMessage} errorMessage={errorMessage} />
+
 
       <div className="profile-main">
         {/* Sidebar */}
@@ -193,38 +194,6 @@ function StudentProfile() {
              
             </div>
 
-              {successMessage && (
-                <div
-                  style={{
-                    background: "#d4edda",
-                    color: "#155724",
-                    padding: "10px",
-                    borderRadius: "5px",
-                    marginBottom: "15px",
-                    textAlign: "center",
-                    border: "1px solid #c3e6cb",
-                  }}
-                >
-                  {successMessage}
-                </div>
-              )}
-
-              {/* ---------------- ERROR MESSAGE ---------------- */}
-              {errorMessage && (
-                <div
-                  style={{
-                    background: "#f8d7da",
-                    color: "#721c24",
-                    padding: "10px",
-                    borderRadius: "5px",
-                    marginBottom: "15px",
-                    textAlign: "center",
-                    border: "1px solid #f5c6cb",
-                  }}
-                >
-                  {errorMessage}
-                </div>
-              )}
             <form onSubmit={handleSubmit}>
              
               {/* Personal Info Tab */}
