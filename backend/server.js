@@ -6,6 +6,7 @@ const db = require('./config/db');  // DB connection
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+const path = require("path");
 
 // Test API route
 app.get('/', (req, res) => {
@@ -33,7 +34,7 @@ const studentRoutes = require('./routes/studentRoutes');
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/student', studentRoutes);
-
+app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // for getting files that user uploads
 
 
 // Start server

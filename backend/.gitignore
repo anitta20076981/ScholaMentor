@@ -24,3 +24,10 @@ Thumbs.db
 
 # VS Code settings
 .vscode/
+
+
+# Ignore all files in uploads folder
+uploads/*
+
+# But do not ignore the .gitkeep file
+!uploads/.gitkeep
