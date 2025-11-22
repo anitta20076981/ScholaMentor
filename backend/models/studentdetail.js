@@ -8,10 +8,15 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   StudentDetail.init({
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true
+    },
     student_id: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
+      allowNull: false,
+      unique: true
     },
     phone: DataTypes.STRING(20),
     dob: DataTypes.DATE,
