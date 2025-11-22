@@ -29,4 +29,21 @@ router.put(
   studentController.updateStudentDetails
 );
 
+
+// Apply scholarship route with type and studentId
+router.put(
+  "/apply_scholarship/:type/:studentId",
+  upload.fields([
+    { name: "marksheet_file", maxCount: 1 }, // for Merit
+    { name: "income_certificate", maxCount: 1 }, // for Need-based
+    { name: "sports_certificate", maxCount: 1 }, // for Sports
+    { name: "category_certificate", maxCount: 1 }, // for Special Scheme
+    { name: "disability_certificate", maxCount: 1 }, // for Special Scheme
+  ]),
+  studentController.applyScholarshipByType
+);
+
+router.get("/getScholarship/:type/:studentId", studentController.getScholarship);
+
+
 module.exports = router;
