@@ -54,6 +54,15 @@ exports.register = async (req, res) => {
             [name, email, hashedPassword, type]
         );
 
+        const userId = result.insertId;
+        // If type is student, create entry in student_details table
+        if (type === "student") {
+            await db.query(
+                `INSERT INTO studentdetails (student_id) VALUES (?)`,
+                [userId]
+            );
+        }
+
         return res.status(201).json({
             message: "User registered successfully",
             user: {
