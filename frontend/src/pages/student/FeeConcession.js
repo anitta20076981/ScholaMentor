@@ -273,21 +273,54 @@ function FeeConcession() {
                 {new Date(latestApplication.created_at).toLocaleDateString()}
               </p>
 
-              {latestApplication.status === "Pending" && (
-                <div
-                  style={{
-                    marginTop: "20px",
-                    padding: "15px",
-                    background: "#f0ad4e",
-                    color: "white",
-                    borderRadius: "8px",
-                    textAlign: "center",
-                    fontWeight: "bold",
-                  }}
-                >
-                  🕒 Your application is under review. Please wait for admin verification.
-                </div>
-              )}
+            {latestApplication.status === "Pending" && (
+              <div
+                style={{
+                  marginTop: "20px",
+                  padding: "15px",
+                  background: "#f0ad4e",
+                  color: "white",
+                  borderRadius: "8px",
+                  textAlign: "center",
+                  fontWeight: "bold",
+                }}
+              >
+                🕒 Your application is under review. Please wait for admin verification.
+              </div>
+            )}
+
+            {latestApplication.status === "Approved" && (
+              <div
+                style={{
+                  marginTop: "20px",
+                  padding: "15px",
+                  background: "#5cb85c",
+                  color: "white",
+                  borderRadius: "8px",
+                  textAlign: "center",
+                  fontWeight: "bold",
+                }}
+              >
+                ✅ Your fee concession application has been approved.
+              </div>
+            )}
+
+            {latestApplication.status === "Rejected" && (
+              <div
+                style={{
+                  marginTop: "20px",
+                  padding: "15px",
+                  background: "#d9534f",
+                  color: "white",
+                  borderRadius: "8px",
+                  textAlign: "center",
+                  fontWeight: "bold",
+                }}
+              >
+                ❌ Your fee concession application has been rejected. Please contact admin for details.
+              </div>
+            )}
+
             </div>
           )}
         </div>
