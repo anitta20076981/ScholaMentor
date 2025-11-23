@@ -31,6 +31,66 @@ function StudentDashboard() {
       {/* -------------------- TOP NAV -------------------- */}
       <TopBar studentId={studentId} />  {/* pass student id */}
 
+      <section
+        style={{
+          textAlign: "center",
+          padding: "80px 20px",
+          color: "white",
+          backgroundImage: `url(/track_status.jpg)`, // replace with your image URL
+          backgroundSize: "cover", // makes the image cover entire section
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          position: "relative",
+        }}
+      >
+        {/* Optional overlay for better readability */}
+        <div style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0, 0, 0, 0.6)", // semi-transparent overlay
+          zIndex: 1,
+        }}>
+        </div>
+
+        <div style={{ position: "relative", zIndex: 2 }}>
+          <h1 style={{ fontSize: "42px", marginBottom: "15px" }}>Track Your Scholarship Application Status
+        </h1>
+          <p style={{ fontSize: "18px", marginBottom: "40px" }}>
+            Stay updated on your scholarship progress with real-time updates and notifications.
+          </p>
+
+          <form onSubmit={handleSearch} style={{ display: "flex", justifyContent: "center", gap: "10px", flexWrap: "wrap" }}>
+            <input
+              type="text"
+              placeholder="Search scholarships, mentors..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              style={{
+                width: "400px",
+                padding: "12px 15px",
+                borderRadius: "8px",
+                border: "none",
+              }}
+            />
+            <button type="submit" style={{
+              padding: "12px 25px",
+              background: "#fff",
+              color: "#2d6cdf",
+              border: "none",
+              borderRadius: "8px",
+              fontWeight: "bold",
+              cursor: "pointer",
+            }}>
+              Search
+            </button>
+          </form>
+        </div>
+      </section>
+
+
       {/* -------------------- MAIN HERO SECTION -------------------- */}
       <section style={{
         textAlign: "center",
