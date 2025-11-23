@@ -6,9 +6,11 @@ import axios from "axios";
 function AdminDashboard() {
   const [stats, setStats] = useState({
     pendingScholarship: 0,
+    approvedScholarship: 0,
+    rejectedScholarship: 0,
     pendingFeeConcession: 0,
-    approved: 0,
-    rejected: 0,
+    approvedFeeConcession: 0,
+    rejectedFeeConcession: 0,
   });
 
   useEffect(() => {
@@ -17,7 +19,7 @@ function AdminDashboard() {
 
   const fetchStats = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/admin/dashboard-stats");
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/dashboard-stats`);
       setStats(res.data);
     } catch (error) {
       console.log("Error fetching stats:", error);
@@ -40,7 +42,7 @@ function AdminDashboard() {
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
             gap: "15px",
-            maxWidth: "900px",
+            maxWidth: "1000px",
             margin: "0 auto",
           }}
         >
@@ -70,6 +72,54 @@ function AdminDashboard() {
             </p>
           </div>
 
+          {/* Approved Scholarship */}
+          <div
+            style={{
+              padding: "15px",
+              background: "#5cb85c",
+              color: "white",
+              borderRadius: "10px",
+              minHeight: "100px",
+              boxShadow: "0 3px 8px rgba(0,0,0,0.15)",
+            }}
+          >
+            <h4 style={{ margin: 0, marginBottom: "10px" }}>Approved Scholarship</h4>
+            <p
+              style={{
+                fontSize: "28px",
+                fontWeight: "bold",
+                margin: 0,
+                textAlign: "center",
+              }}
+            >
+              {stats.approvedScholarship}
+            </p>
+          </div>
+
+          {/* Rejected Scholarship */}
+          <div
+            style={{
+              padding: "15px",
+              background: "#d9534f",
+              color: "white",
+              borderRadius: "10px",
+              minHeight: "100px",
+              boxShadow: "0 3px 8px rgba(0,0,0,0.15)",
+            }}
+          >
+            <h4 style={{ margin: 0, marginBottom: "10px" }}>Rejected Scholarship</h4>
+            <p
+              style={{
+                fontSize: "28px",
+                fontWeight: "bold",
+                margin: 0,
+                textAlign: "center",
+              }}
+            >
+              {stats.rejectedScholarship}
+            </p>
+          </div>
+
           {/* Pending Fee Concession */}
           <div
             style={{
@@ -96,7 +146,7 @@ function AdminDashboard() {
             </p>
           </div>
 
-          {/* Total Approved */}
+          {/* Approved Fee Concession */}
           <div
             style={{
               padding: "15px",
@@ -107,7 +157,7 @@ function AdminDashboard() {
               boxShadow: "0 3px 8px rgba(0,0,0,0.15)",
             }}
           >
-            <h4 style={{ margin: 0, marginBottom: "10px" }}>Total Approved</h4>
+            <h4 style={{ margin: 0, marginBottom: "10px" }}>Approved Fee Concession</h4>
             <p
               style={{
                 fontSize: "28px",
@@ -116,11 +166,11 @@ function AdminDashboard() {
                 textAlign: "center",
               }}
             >
-              {stats.approved}
+              {stats.approvedFeeConcession}
             </p>
           </div>
 
-          {/* Total Rejected */}
+          {/* Rejected Fee Concession */}
           <div
             style={{
               padding: "15px",
@@ -131,7 +181,7 @@ function AdminDashboard() {
               boxShadow: "0 3px 8px rgba(0,0,0,0.15)",
             }}
           >
-            <h4 style={{ margin: 0, marginBottom: "10px" }}>Total Rejected</h4>
+            <h4 style={{ margin: 0, marginBottom: "10px" }}>Rejected Fee Concession</h4>
             <p
               style={{
                 fontSize: "28px",
@@ -140,7 +190,7 @@ function AdminDashboard() {
                 textAlign: "center",
               }}
             >
-              {stats.rejected}
+              {stats.rejectedFeeConcession}
             </p>
           </div>
         </div>
