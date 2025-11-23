@@ -22,7 +22,7 @@ function LoginForm() {
       setMessage(res.data.message); 
       if (res.data.role === "admin") {
         navigate("/admin/dashboard"); // redirect admin
-      } else if (res.data.role === "student") {
+      } else if (res.data.role === "student") {// redirect student
         navigate(`/student/dashboard/${res.data.id}`);
 
       } else {

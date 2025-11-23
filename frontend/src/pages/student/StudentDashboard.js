@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState , useEffect} from "react";
+import axios from "axios";
 import TopBar from "../../components/student/TopBar";  
 import Footer from "../../components/student/Footer";
 import { useParams, useNavigate } from "react-router-dom"; // use parameter from url
@@ -20,11 +21,30 @@ function StudentDashboard() {
   const navigate = useNavigate();//for redirect user for view scholarship status
   const { studentId } = useParams(); // define studentid
   const [query, setQuery] = useState("");
+  const [userScholarshipApplicationCount, setUserScholarshipApplicationCount] = useState(0);
+
 
   const handleSearch = (e) => {
     e.preventDefault();
     console.log("Search:", query);
   };
+
+  useEffect(() => {
+    // Fetch scholarship count for the user
+    const fetchScholarshipCount = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/student/${studentId}/scholarship-count`
+        );
+        console.log(response.data.count);
+        setUserScholarshipApplicationCount(response.data.count);
+      } catch (error) {
+        console.error("Error fetching scholarship count:", error);
+      }
+    };
+
+    fetchScholarshipCount();
+  }, [studentId]);
   
 
   return (
@@ -33,6 +53,7 @@ function StudentDashboard() {
       <TopBar studentId={studentId} />  {/* pass student id */}
 
     {/* -------------------- view scholarship application status -------------------- */}
+    {userScholarshipApplicationCount > 0 && (
     <section
       style={{
         textAlign: "center",
@@ -83,6 +104,8 @@ function StudentDashboard() {
         </button>
       </div>
     </section>
+    )}
+
     {/* -------------------------- */}
 
 

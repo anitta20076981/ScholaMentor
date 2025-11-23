@@ -131,6 +131,23 @@ exports.getScholarship = async (req, res) => {
   }
 };
 
+exports.getScholarshipCount = async (req, res) => { 
+  const { studentId } = req.params;
+   try {
+    const [result] = await db.query(
+      `SELECT COUNT(*) AS totalApplications
+      FROM scholarship_applications
+      WHERE student_id = ? AND deleted_at IS NULL`,
+      [studentId]
+    );
+    const count = result[0].totalApplications;
+    res.json({ count });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch count" });
+  }
+};
+
 
 // exports.applyScholarshipByType = async (req, res) => {
 //   const { studentId, type } = req.params;   

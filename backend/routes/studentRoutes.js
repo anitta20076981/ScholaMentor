@@ -44,6 +44,9 @@ router.put(
 );
 
 router.get("/getScholarship/:type/:studentId", studentController.getScholarship);
+router.get("/:studentId/scholarship-count", studentController.getScholarshipCount);
+router.get("/:studentId/track-status", studentController.trackScholarship);
+
 
 
 module.exports = router;

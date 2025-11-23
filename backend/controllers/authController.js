@@ -22,10 +22,19 @@ exports.login = async (req, res) => {
             return res.status(401).json({ message: "Incorrect password" });
         }
 
+       const [result] = await db.query(
+        "SELECT COUNT(*) AS total FROM scholarship_applications WHERE student_id = ?",
+        [user.id]
+        );
+        const userScholarshipApplicationCount = result[0].total;
+
+         
+
         return res.json({
             message: "Login successful!",
             role: user.type,
-            id: user.id
+            id: user.id,
+            userScholarshipApplicationCount :userScholarshipApplicationCount
         });
 
     } catch (err) {
