@@ -119,6 +119,10 @@ function TopBar({ studentId, successMessage, errorMessage }) {
           )}
         </div>
 
+         <Link to={`/student/fee-concession/${studentId}`} style={navLinkStyle}>
+          Apply Fee Concession
+        </Link>
+
         <a href="#" style={navLinkStyle}>
           Sponsorships
         </a>

@@ -8,6 +8,8 @@ import AdminStudentList from "./pages/AdminStudentList";
 import StudentProfile from "./pages/student/StudentProfile"; 
 import ApplyScholarship from "./pages/student/ApplyScholarship"; 
 import TrackAppliactionStatus from "./pages/student/TrackApplicationStatus"; 
+import FeeConcession from "./pages/student/FeeConcession"; 
+
 
 
 
@@ -24,6 +26,7 @@ function App() {
         <Route path="/student/profile/:studentId" element={<StudentProfile />} /> 
         <Route path="/student/apply_scholarship/:type/:studentId" element={<ApplyScholarship />} /> 
         <Route path="/student/track-status/:studentId" element={<TrackAppliactionStatus />} /> 
+        <Route path="/student/fee-concession/:studentId" element={<FeeConcession />} /> 
         
 
       </Routes>
