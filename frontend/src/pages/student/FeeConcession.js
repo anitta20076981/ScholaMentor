@@ -19,7 +19,7 @@ function FeeConcession() {
 
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [latestApplication, setLatestApplication] = useState(null); // Added for status
+  const [latestApplication, setLatestApplication] = useState(null); // Latest application for status
 
   useEffect(() => {
     async function fetchFeeConcessionApplication() {
@@ -37,7 +37,6 @@ function FeeConcession() {
           supporting_doc: res.data.supporting_doc || null,
         });
 
-        // Save latest application for status display
         if (res.data) setLatestApplication(res.data);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -73,7 +72,7 @@ function FeeConcession() {
       );
 
       setSuccessMessage("Application submitted successfully!");
-      setLatestApplication(res.data); // Update status box with latest submission
+      setLatestApplication(res.data); // Update status box
       setTimeout(() => setSuccessMessage(""), 3000);
     } catch (err) {
       console.error(err);
@@ -91,6 +90,9 @@ function FeeConcession() {
       default: return "#777";
     }
   };
+
+  //if application status is pending ,then only user can make changes of the requested application, otherwise it kept as readonly
+  const isReadOnly = latestApplication && latestApplication.status !== "Pending";
 
   return (
     <div style={{ fontFamily: "Arial, sans-serif", background: "#f0f4ff" }}>
@@ -117,7 +119,7 @@ function FeeConcession() {
         </p>
       </section>
 
-      {/* Form + Tips + Status Section */}
+      {/* Form + Status Section */}
       <section
         style={{
           display: "flex",
@@ -155,6 +157,7 @@ function FeeConcession() {
               onChange={handleChange}
               style={inputStyle}
               required
+              disabled={isReadOnly}
             >
               <option value="">Select Reason</option>
               <option value="Family Issues">Family Issues</option>
@@ -170,7 +173,8 @@ function FeeConcession() {
               name="family_income"
               value={formData.family_income}
               onChange={handleChange}
-              style={inputStyle}              
+              style={inputStyle}
+              readOnly
             />
           </label>
 
@@ -182,20 +186,22 @@ function FeeConcession() {
               onChange={handleChange}
               style={inputStyle}
               required
+              disabled={isReadOnly}
             >
               <option value="25">25%</option>
               <option value="50">50%</option>
               <option value="75">75%</option>
             </select>
-          </label>        
+          </label>
 
-          <div className="form-field" style={{ position: "relative" }}>
+          <div style={{ position: "relative" }}>
             <label>Upload Supporting Document (Optional)</label>
             <input
-                type="file"
-                name="supporting_doc"
-                onChange={handleChange}
-                style={{ paddingRight: formData.supporting_doc ? "30px" : "0" }}
+              type="file"
+              name="supporting_doc"
+              onChange={handleChange}
+              style={{ width: "100%", marginTop: "5px" }}
+              disabled={isReadOnly}
             />
             {formData.supporting_doc && (
               <a
@@ -205,7 +211,7 @@ function FeeConcession() {
                 style={{
                   position: "absolute",
                   right: "10px",
-                  top: "70%",
+                  top: "50%",
                   transform: "translateY(-50%)",
                   color: "#007bff",
                   cursor: "pointer",
@@ -216,17 +222,14 @@ function FeeConcession() {
             )}
           </div>
 
-          <button
-            type="submit"
-            style={submitBtnStyle}
-            onMouseOver={(e) => (e.currentTarget.style.transform = "translateY(-2px)")}
-            onMouseOut={(e) => (e.currentTarget.style.transform = "translateY(0)")}
-          >
-            Submit Application
-          </button>
+          {!isReadOnly && (
+            <button type="submit" style={submitBtnStyle}>
+              Submit Application
+            </button>
+          )}
         </form>
 
-        {/* Tips + Status Card */}
+        {/* Status + Tips */}
         <div
           style={{
             display: "flex",
@@ -236,7 +239,6 @@ function FeeConcession() {
             maxWidth: "400px",
           }}
         >
-             {/* Application Status */}
           {latestApplication && (
             <div
               style={{
@@ -270,49 +272,24 @@ function FeeConcession() {
                 <strong>Applied On:</strong>{" "}
                 {new Date(latestApplication.created_at).toLocaleDateString()}
               </p>
-            {/* Pending Verification Message */}
-            {latestApplication.status === "Pending" && (
-              <div
-                style={{
-                  marginTop: "20px",
-                  padding: "15px",
-                  background: "#f0ad4e",
-                  color: "white",
-                  borderRadius: "8px",
-                  textAlign: "center",
-                  fontWeight: "bold",
-                }}
-              >
-            🕒 Your application is under review. Please wait for admin verification.
-              </div>
-            )}
+
+              {latestApplication.status === "Pending" && (
+                <div
+                  style={{
+                    marginTop: "20px",
+                    padding: "15px",
+                    background: "#f0ad4e",
+                    color: "white",
+                    borderRadius: "8px",
+                    textAlign: "center",
+                    fontWeight: "bold",
+                  }}
+                >
+                  🕒 Your application is under review. Please wait for admin verification.
+                </div>
+              )}
             </div>
           )}
-          {/* Tips */}
-          <div
-            style={{
-              background: "#2d6cdf",
-              color: "white",
-              padding: "20px",
-              borderRadius: "12px",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-            }}
-          >
-            <h3 style={{ marginBottom: "15px" }}>Tips to Apply Successfully</h3>
-            <ul style={{ listStyle: "disc", paddingLeft: "20px", lineHeight: "1.6" }}>
-              <li>Fill in the form carefully and double-check all information before submitting.</li>
-              <li>Ensure your course and semester details are correct.</li>
-              <li>Select the correct reason for applying.</li>
-              <li>Verify your annual family income is accurate.</li>
-              <li>Choose the appropriate percentage of fee concession.</li>
-              <li>Upload supporting documents clearly in PDF or image format.</li>
-              <li>Provide optional explanations concisely but clearly.</li>
-              <li>Keep a copy of the submitted application for your records.</li>
-              <li>Check all fields again before submitting.</li>
-            </ul>
-          </div>
-
-         
         </div>
       </section>
 
