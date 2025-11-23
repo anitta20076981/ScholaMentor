@@ -46,6 +46,16 @@ router.put(
 router.get("/getScholarship/:type/:studentId", studentController.getScholarship);
 router.get("/:studentId/scholarship-count", studentController.getScholarshipCount);
 router.get("/:studentId/track-status", studentController.trackScholarship);
+router.get("/getFeeConcession/:studentId", studentController.getFeeConcession);
+
+router.put(
+  "/apply_fee_concessiom/:studentId",
+  upload.fields([
+    { name: "supporting_doc", maxCount: 1 }, // for supporting_doc
+  ]),
+  studentController.applyFeeConcession
+);
+
 
 
 module.exports = router;

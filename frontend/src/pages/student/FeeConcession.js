@@ -6,7 +6,7 @@ import axios from "axios";
 import { FaEye } from "react-icons/fa";
 
 function FeeConcession() {
-  const { studentId, type } = useParams();
+  const { studentId } = useParams();
 
   const [formData, setFormData] = useState({
     course: "",
@@ -19,59 +19,32 @@ function FeeConcession() {
 
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
-  const tipsContent = {
-    merit: [
-      "Ensure your academic percentage / CGPA is accurate.",
-      "Upload a valid marksheet in PDF or image format.",
-      "Explain your merit reason clearly and concisely.",
-      "Double-check all information before submitting.",
-      "Keep a copy of the submitted application for your records.",
-    ],
-    need: [
-      "Provide accurate family income details.",
-      "Upload a valid income certificate.",
-      "Explain your need clearly and concisely.",
-      "Check all family details before submitting.",
-      "Keep a copy of the submitted application for your records.",
-    ],
-    sports: [
-      "Mention your sport and level correctly.",
-      "Upload valid sports certificates.",
-      "Provide coach details if applicable.",
-      "Explain your achievements clearly.",
-      "Keep a copy of the submitted application for your records.",
-    ],
-    special: [
-      "Provide correct category type.",
-      "Upload category and disability certificates if applicable.",
-      "Explain the reason for applying clearly.",
-      "Double-check all information before submitting.",
-      "Keep a copy of the submitted application for your records.",
-    ],
-  };
+  const [latestApplication, setLatestApplication] = useState(null); // Added for status
 
   useEffect(() => {
-    async function fetchStudentScholarship() {
+    async function fetchFeeConcessionApplication() {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/student/getScholarship/${type}/${studentId}`
+          `${process.env.REACT_APP_API_URL}/api/student/getFeeConcession/${studentId}`
         );
-        setFormData((prev) => ({
-          ...prev,
+
+        setFormData({
           course: res.data.course || "",
           semester: res.data.semester || "",
           reason: res.data.reason || "",
           family_income: res.data.family_income || "",
           concession_requested: res.data.concession_requested || "25",
           supporting_doc: res.data.supporting_doc || null,
-        }));
+        });
+
+        // Save latest application for status display
+        if (res.data) setLatestApplication(res.data);
       } catch (err) {
         console.error("Error fetching data:", err);
       }
     }
-    fetchStudentScholarship();
-  }, [studentId, type]);
+    fetchFeeConcessionApplication();
+  }, [studentId]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -93,18 +66,29 @@ function FeeConcession() {
         if (formData[key] !== null && formData[key] !== "") data.append(key, formData[key]);
       });
 
-      await axios.put(
-        `${process.env.REACT_APP_API_URL}/api/student/apply_scholarship/${type}/${studentId}`,
+      const res = await axios.put(
+        `${process.env.REACT_APP_API_URL}/api/student/apply_fee_concession/${studentId}`,
         data,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
       setSuccessMessage("Application submitted successfully!");
+      setLatestApplication(res.data); // Update status box with latest submission
       setTimeout(() => setSuccessMessage(""), 3000);
     } catch (err) {
       console.error(err);
       setErrorMessage("Failed to submit application.");
       setTimeout(() => setErrorMessage(""), 3000);
+    }
+  };
+
+  // Status color
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Pending": return "#f0ad4e";
+      case "Approved": return "#5cb85c";
+      case "Rejected": return "#d9534f";
+      default: return "#777";
     }
   };
 
@@ -127,15 +111,13 @@ function FeeConcession() {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <h1 style={{ fontSize: "42px", marginBottom: "15px" }}>
-          Apply for Fee Concession
-        </h1>
+        <h1 style={{ fontSize: "42px", marginBottom: "15px" }}>Apply for Fee Concession</h1>
         <p style={{ fontSize: "18px", marginBottom: "40px" }}>
           Fill out the form below to request a fee concession. Provide all required details and upload any supporting documents.
         </p>
       </section>
 
-      {/* Form + Tips Section */}
+      {/* Form + Tips + Status Section */}
       <section
         style={{
           display: "flex",
@@ -163,33 +145,7 @@ function FeeConcession() {
             gap: "20px",
           }}
         >
-          <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
-            Fee Concession Application Form
-          </h2>
-
-          <label>
-            Course
-            <input
-              type="text"
-              name="course"
-              value={formData.course}
-              onChange={handleChange}
-              style={inputStyle}
-              required
-            />
-          </label>
-
-          <label>
-            Year / Semester
-            <input
-              type="text"
-              name="semester"
-              value={formData.semester}
-              onChange={handleChange}
-              style={inputStyle}
-              required
-            />
-          </label>
+          <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Fee Concession Application Form</h2>
 
           <label>
             Reason
@@ -214,8 +170,7 @@ function FeeConcession() {
               name="family_income"
               value={formData.family_income}
               onChange={handleChange}
-              style={inputStyle}
-              readOnly
+              style={inputStyle}              
             />
           </label>
 
@@ -232,29 +187,32 @@ function FeeConcession() {
               <option value="50">50%</option>
               <option value="75">75%</option>
             </select>
-          </label>
+          </label>        
 
-          <div style={{ position: "relative" }}>
+          <div className="form-field" style={{ position: "relative" }}>
             <label>Upload Supporting Document (Optional)</label>
             <input
-              type="file"
-              name="supporting_doc"
-              onChange={handleChange}
-              style={{ width: "100%", marginTop: "5px" }}
+                type="file"
+                name="supporting_doc"
+                onChange={handleChange}
+                style={{ paddingRight: formData.supporting_doc ? "30px" : "0" }}
             />
             {formData.supporting_doc && (
-              <span
+              <a
+                href={`${process.env.REACT_APP_API_URL}/uploads/${formData.supporting_doc}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
                   position: "absolute",
                   right: "10px",
-                  top: "50%",
+                  top: "70%",
                   transform: "translateY(-50%)",
                   color: "#007bff",
                   cursor: "pointer",
                 }}
               >
                 <FaEye size={20} />
-              </span>
+              </a>
             )}
           </div>
 
@@ -268,34 +226,94 @@ function FeeConcession() {
           </button>
         </form>
 
-        {/* Tips Card */}
+        {/* Tips + Status Card */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+            minWidth: "250px",
+            maxWidth: "400px",
+          }}
+        >
+             {/* Application Status */}
+          {latestApplication && (
             <div
-            style={{
-                background: "#2d6cdf",
-                color: "white",
+              style={{
+                background: "#ffffff",
+                color: "#2d6cdf",
                 padding: "20px",
                 borderRadius: "12px",
                 boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-                flex: "1",
-                minWidth: "250px",
-                maxWidth: "400px",
-            }}
+              }}
             >
+              <h3 style={{ marginBottom: "10px" }}>Latest Application Status</h3>
+              <p><strong>Course:</strong> {latestApplication.course}</p>
+              <p><strong>Semester:</strong> {latestApplication.semester}</p>
+              <p>
+                <strong>Status:</strong>{" "}
+                <span
+                  style={{
+                    color: "white",
+                    background: getStatusColor(latestApplication.status),
+                    padding: "5px 12px",
+                    borderRadius: "50px",
+                  }}
+                >
+                  {latestApplication.status}
+                </span>
+              </p>
+              {latestApplication.admin_remarks && (
+                <p><strong>Admin Remarks:</strong> {latestApplication.admin_remarks}</p>
+              )}
+              <p>
+                <strong>Applied On:</strong>{" "}
+                {new Date(latestApplication.created_at).toLocaleDateString()}
+              </p>
+            {/* Pending Verification Message */}
+            {latestApplication.status === "Pending" && (
+              <div
+                style={{
+                  marginTop: "20px",
+                  padding: "15px",
+                  background: "#f0ad4e",
+                  color: "white",
+                  borderRadius: "8px",
+                  textAlign: "center",
+                  fontWeight: "bold",
+                }}
+              >
+            🕒 Your application is under review. Please wait for admin verification.
+              </div>
+            )}
+            </div>
+          )}
+          {/* Tips */}
+          <div
+            style={{
+              background: "#2d6cdf",
+              color: "white",
+              padding: "20px",
+              borderRadius: "12px",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+            }}
+          >
             <h3 style={{ marginBottom: "15px" }}>Tips to Apply Successfully</h3>
             <ul style={{ listStyle: "disc", paddingLeft: "20px", lineHeight: "1.6" }}>
-            <li>Fill in the form carefully and double-check all information before submitting.</li>
-            <li>Ensure your course and semester details are correct.</li>
-            <li>Select the correct reason for applying (Family Issues, Financial Problems, Medical Issues).</li>
-            <li>Verify your annual family income is accurate; it is auto-filled for reference.</li>
-            <li>Choose the appropriate percentage of fee concession you want to request.</li>
-            <li>Upload supporting documents clearly and in the correct format (PDF or image).</li>
-            <li>Provide any optional explanations concisely but clearly.</li>
-            <li>Keep a copy of the submitted application for your records.</li>
-            <li>Check all fields again before clicking submit to avoid errors.</li>
+              <li>Fill in the form carefully and double-check all information before submitting.</li>
+              <li>Ensure your course and semester details are correct.</li>
+              <li>Select the correct reason for applying.</li>
+              <li>Verify your annual family income is accurate.</li>
+              <li>Choose the appropriate percentage of fee concession.</li>
+              <li>Upload supporting documents clearly in PDF or image format.</li>
+              <li>Provide optional explanations concisely but clearly.</li>
+              <li>Keep a copy of the submitted application for your records.</li>
+              <li>Check all fields again before submitting.</li>
             </ul>
+          </div>
 
-            </div>
-
+         
+        </div>
       </section>
 
       <Footer />
@@ -303,7 +321,6 @@ function FeeConcession() {
   );
 }
 
-// Input & Button Styles
 const inputStyle = {
   width: "100%",
   padding: "12px",

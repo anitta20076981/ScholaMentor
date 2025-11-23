@@ -148,126 +148,6 @@ exports.getScholarshipCount = async (req, res) => {
   }
 };
 
-
-// exports.applyScholarshipByType = async (req, res) => {
-//   const { studentId, type } = req.params;   
-//   const {
-//     academic_percentage,
-//     attendance_percentage,
-//     merit_reason,
-//     family_income,
-//     father_occupation,
-//     mother_occupation,
-//     dependents,
-//     need_reason,
-//     sport_name,
-//     level,
-//     team_or_individual,
-//     coach_name,
-//     coach_contact,
-//     sports_reason,
-//     category_type,
-//     scheme_reason,
-//   } = req.body;
-
-//   // Files
-//   const marksheet_file = req.files?.marksheet_file ? req.files.marksheet_file[0].filename : null;
-//   const income_certificate = req.files?.income_certificate ? req.files.income_certificate[0].filename : null;
-//   const sports_certificate = req.files?.sports_certificate ? req.files.sports_certificate[0].filename : null;
-//   const category_certificate = req.files?.category_certificate ? req.files.category_certificate[0].filename : null;
-//   const disability_certificate = req.files?.disability_certificate ? req.files.disability_certificate[0].filename : null;
-// console.log(marksheet_file);
-//   try {
-//     const [existingApplication] = await db.execute(
-//       `SELECT * FROM scholarship_applications WHERE student_id = ? AND scholarship_type = ?`,
-//       [studentId, type]
-//     );
-
-//     if (existingApplication.length > 0) {
-//       // Entry exists: update scholarship application
-//       const updateQuery = `
-//     UPDATE scholarship_applications
-//       SET academic_percentage = ?, attendance_percentage = ?, marksheet_file = ?,  merit_reason = ?, family_income = ?, father_occupation = ?,
-//       mother_occupation = ?,dependents = ?, need_reason = ?, sport_name = ?,level = ?,team_or_individual = ?,coach_name = ?, coach_contact= ?, sports_reason = ?, category_type = ?, scheme_reason = ?,income_certificate = ?,sports_certificate = ?, category_certificate = ?, disability_certificate = ? WHERE student_id = ? AND scholarship_type = ?
-//     `;
-
-//     await db.execute(updateQuery, [
-//       academic_percentage ?? null,
-//       attendance_percentage ?? null,
-//       marksheet_file ?? null,
-//       merit_reason ?? null,
-//       family_income ?? null,
-//       father_occupation ?? null,
-//       mother_occupation ?? null,
-//       dependents ?? null,
-//       need_reason ?? null,
-//       sport_name ?? null,
-//       level ?? null,
-//       team_or_individual ?? null,
-//       coach_name ?? null,
-//       coach_contact ?? null,
-//       sports_reason ?? null,
-//       category_type ?? null,
-//       scheme_reason ?? null,
-//       income_certificate ?? null,
-//       sports_certificate ?? null,
-//       category_certificate ?? null,
-//       disability_certificate ?? null,
-//       studentId,         
-//       type                
-//     ]);
-
-//     } else {
-//       // Entry does not exist :create new scholarship application
-//     const insertQuery = `
-//       INSERT INTO scholarship_applications (
-//         student_id, scholarship_type,academic_percentage,attendance_percentage,marksheet_file,merit_reason,       
-//         family_income,father_occupation,mother_occupation,dependents,need_reason,sport_name,level,
-//         team_or_individual,coach_name, coach_contact,sports_reason,category_type,scheme_reason,income_certificate,
-//         sports_certificate,category_certificate,disability_certificate
-//       )
-//       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-//     `;
-
-//       await db.execute(insertQuery, [
-//         studentId,  type,
-//         academic_percentage ?? null,
-//         attendance_percentage ?? null,
-//         marksheet_file ?? null,
-//         merit_reason ?? null,
-
-//         family_income ?? null,
-//         father_occupation ?? null,
-//         mother_occupation ?? null,
-//         dependents ?? null,
-//         need_reason ?? null,
-
-//         sport_name ?? null,
-//         level ?? null,
-//         team_or_individual ?? null,
-//         coach_name ?? null,
-//         coach_contact ?? null,
-//         sports_reason ?? null,
-
-//         category_type ?? null,
-//         scheme_reason ?? null,
-
-//         income_certificate ?? null,
-//         sports_certificate ?? null,
-//         category_certificate ?? null,
-//         disability_certificate ?? null
-//       ]);
-
-//     }
-
-//     res.json({ success: true, message: "Scholarship application submitted successfully!" });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ success: false, error: "Failed to submit scholarship application" });
-//   }
-// };
-
-
 exports.applyScholarshipByType = async (req, res) => {
   const { studentId, type } = req.params;
 
@@ -445,6 +325,113 @@ exports.trackScholarship = async (req, res) => {
   } catch (error) {
     console.error("Error fetching track status:", error);
     res.status(500).json({ error: "Failed to fetch application data" });
+  }
+};
+
+exports.getFeeConcession = async (req, res) => {
+  const { studentId } = req.params;
+
+  try {
+    const query = `
+      SELECT * FROM fee_concession_applications 
+      WHERE student_id = ? AND deleted_at IS NULL
+    `;
+
+    const [rows] = await db.execute(query, [studentId]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: "Fee concession application not found" });
+    }
+
+    res.json(rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch fee concession details" });
+  }
+};
+
+
+
+exports.applyFeeConcession = async (req, res) => {
+  const { studentId } = req.params;
+
+  const {
+    family_income,
+    reason,
+    concession_requested,   
+  } = req.body;
+
+  // Uploaded files (if available)
+  const supporting_doc = req.files?.supporting_doc?.[0]?.filename || null;
+
+  try {
+
+    const [studentDetails] = await db.execute(
+      `SELECT course, year AS semester FROM studentdetails WHERE student_id = ?`,
+      [studentId]
+    );
+    const course = studentDetails[0]?.course || null;
+    const semester = studentDetails[0]?.semester || null;
+
+    // Check for existing application
+    const [existingApplication] = await db.execute(
+      `SELECT * FROM fee_concession_applications WHERE student_id = ?`,
+      [studentId]
+    );    
+
+    if (existingApplication.length > 0) {
+
+      const current = existingApplication[0];
+
+      // Keep old file if new is not uploaded
+      const supporting_doc = marksheet_file || current.supporting_doc;
+      const updateQuery = `
+        UPDATE fee_concession_applications SET
+          family_income = ?, 
+          reason = ?, 
+          concession_requested = ?,  
+          supporting_doc = ?, 
+          course = ? ,
+          semester = ? 
+        WHERE student_id = ?
+      `;
+
+      await db.execute(updateQuery, [
+        family_income || current.family_income,
+        reason || current.reason,
+        supporting_doc,
+        concession_requested || current.concession_requested,
+        course,
+        semester,
+        studentId,
+      ]);
+
+    } else {
+
+      const insertQuery = `
+        INSERT INTO fee_concession_applications (
+          student_id, family_income,
+          reason, supporting_doc, concession_requested, course, semester
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `;
+
+      await db.execute(insertQuery, [
+        studentId,
+        family_income || null,
+        reason || null,
+        supporting_doc || null,
+        concession_requested || null,
+        course,
+        semester,
+      ]);
+    }
+
+    res.json({ success: true, message: "Fee concession application submitted successfully!" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: "Failed to submit fee concession application" });
   }
 };
 
