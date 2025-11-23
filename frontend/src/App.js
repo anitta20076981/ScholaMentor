@@ -7,6 +7,8 @@ import StudentDashboard from "./pages/student/StudentDashboard";
 import AdminStudentList from "./pages/AdminStudentList"; 
 import StudentProfile from "./pages/student/StudentProfile"; 
 import ApplyScholarship from "./pages/student/ApplyScholarship"; 
+import TrackAppliactionStatus from "./pages/student/TrackApplicationStatus"; 
+
 
 
 function App() {
@@ -21,6 +23,8 @@ function App() {
         <Route path="/admin/students_list" element={<AdminStudentList />} /> 
         <Route path="/student/profile/:studentId" element={<StudentProfile />} /> 
         <Route path="/student/apply_scholarship/:type/:studentId" element={<ApplyScholarship />} /> 
+        <Route path="/student/track-status/:studentId" element={<TrackAppliactionStatus />} /> 
+        
 
       </Routes>
     </Router>

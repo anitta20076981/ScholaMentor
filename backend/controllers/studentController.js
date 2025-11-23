@@ -430,3 +430,22 @@ exports.applyScholarshipByType = async (req, res) => {
   }
 };
 
+exports.trackScholarship = async (req, res) => {
+  const { studentId } = req.params;
+
+  try {
+    const [rows] = await db.query(
+      `SELECT id, scholarship_type, created_at, status
+       FROM scholarship_applications
+       WHERE student_id = ? AND deleted_at IS NULL`,
+      [studentId]
+    );
+
+    res.json({ applications: rows });
+  } catch (error) {
+    console.error("Error fetching track status:", error);
+    res.status(500).json({ error: "Failed to fetch application data" });
+  }
+};
+
+

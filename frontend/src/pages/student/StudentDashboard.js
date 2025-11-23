@@ -98,7 +98,7 @@ function StudentDashboard() {
             fontWeight: "bold",
             cursor: "pointer",
           }}
-          onClick={() => navigate(`/student/${studentId}/track-status`)}
+          onClick={() => navigate(`/student/track-status/${studentId}`)}
         >
           View My Applications
         </button>
