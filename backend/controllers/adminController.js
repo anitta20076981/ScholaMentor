@@ -1,15 +1,12 @@
 const db = require("../config/db");
-exports.getAllStudents = (req, res) => {
-   const query ="SELECT * FROM users WHERE type = 'student'";
-
-
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ message: "Server error" });
-    }
+exports.getAllStudents = async (req, res) => {
+  try {
+    const [results] = await db.query("SELECT * FROM users WHERE type = 'student'");
     res.json(results);
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
 };
 
 exports.login = (req, res) => {
