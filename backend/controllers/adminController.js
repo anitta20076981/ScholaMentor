@@ -54,6 +54,17 @@ exports.getDashboardStatus = async (req, res) => {
   }
 };
 
+exports.getAllScholarshipApplications = async (req, res) => {
+  try {
+    const [results] = await db.query(`SELECT sa.id, sa.status, sa.created_at, u.name AS student_name
+                                    FROM scholarship_applications sa JOIN users u ON sa.user_id = u.id`);
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 
 
 
