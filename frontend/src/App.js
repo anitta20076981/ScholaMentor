@@ -2,13 +2,14 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainPage from "./components/MainPage";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
-import AdminDashboard from "./pages/AdminDashboard"; 
+import AdminDashboard from "./pages/admin/AdminDashboard"; 
 import StudentDashboard from "./pages/student/StudentDashboard"; 
-import AdminStudentList from "./pages/AdminStudentList"; 
+import AdminStudentList from "./pages/admin/AdminStudentList"; 
 import StudentProfile from "./pages/student/StudentProfile"; 
 import ApplyScholarship from "./pages/student/ApplyScholarship"; 
 import TrackAppliactionStatus from "./pages/student/TrackApplicationStatus"; 
 import FeeConcession from "./pages/student/FeeConcession"; 
+// import AdminScholarshipApplication from "./pages/admin/AdminScholarshipApplication"; 
 
 
 
@@ -27,6 +28,10 @@ function App() {
         <Route path="/student/apply_scholarship/:type/:studentId" element={<ApplyScholarship />} /> 
         <Route path="/student/track-status/:studentId" element={<TrackAppliactionStatus />} /> 
         <Route path="/student/fee-concession/:studentId" element={<FeeConcession />} /> 
+
+        {/* <Route path="/admin/getall_scholarship_applications" element={<AdminScholarshipApplication />} />  */}
+
+        
         
 
       </Routes>

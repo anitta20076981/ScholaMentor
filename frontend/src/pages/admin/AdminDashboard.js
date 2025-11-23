@@ -1,5 +1,5 @@
-import AdminSidebar from "../components/AdminSidebar";
-import AdminTopbar from "../components/AdminTopbar";
+import AdminSidebar from "../../components/AdminSidebar";
+import AdminTopbar from "../../components/AdminTopbar";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
