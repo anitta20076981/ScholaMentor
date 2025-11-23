@@ -56,8 +56,8 @@ exports.getDashboardStatus = async (req, res) => {
 
 exports.getAllScholarshipApplications = async (req, res) => {
   try {
-    const [results] = await db.query(`SELECT sa.id, sa.status, sa.created_at, u.name AS student_name
-                                    FROM scholarship_applications sa JOIN users u ON sa.user_id = u.id`);
+    const [results] = await db.query(`SELECT sa.id, sa.status, sa.created_at, sa.scholarship_type, u.name AS student_name
+                                    FROM scholarship_applications sa JOIN users u ON sa.student_id = u.id`);
     res.json(results);
   } catch (err) {
     console.error(err);

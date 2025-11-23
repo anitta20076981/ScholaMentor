@@ -9,7 +9,7 @@ import StudentProfile from "./pages/student/StudentProfile";
 import ApplyScholarship from "./pages/student/ApplyScholarship"; 
 import TrackAppliactionStatus from "./pages/student/TrackApplicationStatus"; 
 import FeeConcession from "./pages/student/FeeConcession"; 
-// import AdminScholarshipApplication from "./pages/admin/AdminScholarshipApplication"; 
+import AdminScholarshipApplication from "./pages/admin/AdminScholarshipApplication"; 
 
 
 
@@ -29,7 +29,7 @@ function App() {
         <Route path="/student/track-status/:studentId" element={<TrackAppliactionStatus />} /> 
         <Route path="/student/fee-concession/:studentId" element={<FeeConcession />} /> 
 
-        {/* <Route path="/admin/getall_scholarship_applications" element={<AdminScholarshipApplication />} />  */}
+        <Route path="/admin/getall_scholarship_applications" element={<AdminScholarshipApplication />} /> 
 
         
         

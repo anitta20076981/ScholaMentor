@@ -5,6 +5,9 @@ const adminController = require("../controllers/adminController");
 router.get("/students_list", adminController.getAllStudents);
 router.post("/create-scholarship", adminController.createScholarship);
 router.get("/dashboard-stats", adminController.getDashboardStatus);
+router.get("/get-scholarshp-applications", adminController.getAllScholarshipApplications);
+
+
 
 
 module.exports = router;
