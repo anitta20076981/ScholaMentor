@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import AdminSidebar from "../../components/AdminSidebar";
 import axios from "axios";
 import { FaEye, FaEdit ,FaTrash} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
-function AdminStudentList() {
+function AdminScholarshipApplication() {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,7 +17,7 @@ function AdminStudentList() {
   useEffect(() => {
     const fetchApplication = async () => {
       try {
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/get-scholarshp-applications`);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/get-all-scholarshp-applications`);
         setApplications(res.data);
         setLoading(false);
       } catch (err) {
@@ -27,9 +30,9 @@ function AdminStudentList() {
 
   // Calculate pagination
   const totalPages = Math.ceil(applications.length / applicationPerPage);
-  const indexOfLastStudent = currentPage * applicationPerPage;
-  const indexOfFirstApplication = indexOfLastStudent - applicationPerPage;
-  const currentScholarshipApplication = applications.slice(indexOfFirstApplication, indexOfLastStudent);
+  const indexOfLastApplication = currentPage * applicationPerPage;
+  const indexOfFirstApplication = indexOfLastApplication - applicationPerPage;
+  const currentScholarshipApplication = applications.slice(indexOfFirstApplication, indexOfLastApplication);
 
   // Pagination handler
   const goToPage = (page) => {
@@ -99,7 +102,7 @@ function AdminStudentList() {
 
   return (
     <AdminSidebar>
-      <h1 style={headingStyle}>Student List</h1>
+      <h1 style={headingStyle}>List of Scholarship Applications</h1>
       {loading ? (
         <p style={loadingStyle}>Loading...</p>
       ) : (
@@ -139,7 +142,8 @@ function AdminStudentList() {
                         color: "#1e1e2f",
                         marginRight: "10px",
                         }}
-                        onClick={() => console.log("View student", application.id)}
+                        onClick={() => navigate(`/admin/view-scholarship-application/${application.id}`)}
+
                     >
                         <FaEye />
                     </button>
@@ -213,4 +217,4 @@ function AdminStudentList() {
   );
 }
 
-export default AdminStudentList;
+export default AdminScholarshipApplication;
