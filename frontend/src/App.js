@@ -10,6 +10,7 @@ import ApplyScholarship from "./pages/student/ApplyScholarship";
 import TrackAppliactionStatus from "./pages/student/TrackApplicationStatus"; 
 import FeeConcession from "./pages/student/FeeConcession"; 
 import AdminScholarshipApplication from "./pages/admin/AdminScholarshipApplication"; 
+import ViewScholarshipApplication from "./pages/admin/ViewScholarshipApplication"; 
 
 
 
@@ -30,6 +31,7 @@ function App() {
         <Route path="/student/fee-concession/:studentId" element={<FeeConcession />} /> 
 
         <Route path="/admin/getall_scholarship_applications" element={<AdminScholarshipApplication />} /> 
+        <Route path="/admin/view-scholarship-application/:applicationId" element={<ViewScholarshipApplication />} /> 
 
         
         

@@ -66,5 +66,32 @@ exports.getAllScholarshipApplications = async (req, res) => {
 };
 
 
+exports.getScholarshipApplicationById = async (req, res) => {
+  try {
+    const { applicationId } = req.params;
+ 
+    const [results] = await db.query(
+      `SELECT 
+          sa.*, 
+          u.name AS student_name,
+          u.email AS student_email
+       FROM scholarship_applications sa
+       JOIN users u ON sa.student_id = u.id
+       WHERE sa.id = ?`,
+      [applicationId]
+    );
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    res.json(results[0]); // return single result
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
 
 
