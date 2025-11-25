@@ -132,7 +132,35 @@ function AdminScholarshipApplication() {
                     <td style={tdStyle}>{indexOfFirstApplication + index + 1}</td>
                     <td style={tdStyle}>{application.student_name}</td>
                     <td style={tdStyle}>{application.scholarship_type}</td>
-                    <td style={tdStyle}>{application.status}</td>
+                    <td style={tdStyle}>
+                      <span
+                        style={{
+                          padding: "2px 6px",        
+                          fontSize: "12px",         
+                          borderRadius: "4px",       
+                          fontWeight: 600,
+                          display: "inline-block",
+                          border: "1px solid",       
+                          borderColor:
+                            application.status === "Approved"
+                              ? "#2e7d32" 
+                              : application.status === "Rejected"
+                              ? "#c62828" 
+                              : "#ed6c02", 
+                          color:
+                            application.status === "Approved"
+                              ? "#2e7d32"
+                              : application.status === "Rejected"
+                              ? "#c62828"
+                              : "#ed6c02",
+                          width: "fit-content",      // prevents long border
+                        }}
+                      >
+                        {application.status}
+                      </span>
+                    </td>
+
+
                      <td style={tdStyle}>
                     <button
                         style={{
@@ -147,7 +175,7 @@ function AdminScholarshipApplication() {
                     >
                         <FaEye />
                     </button>
-                    <button
+                    {/* <button
                         style={{
                         border: "none",
                         background: "none",
@@ -157,19 +185,21 @@ function AdminScholarshipApplication() {
                         onClick={() => console.log("Edit student", application.id)}
                     >
                         <FaEdit />
-                    </button>
+                    </button> */}
                     <button
-                    style={{
+                      style={{
                         border: "none",
                         background: "none",
                         cursor: "pointer",
                         color: "red",
-                    }}
-                    onClick={() => console.log("Delete student", application.id)}
+                      }}
+                      onClick={() => handleDelete(application.id)}
                     >
-                    <FaTrash />
+                      <FaTrash />
                     </button>
-        </td>
+
+                    <FaTrash />
+                </td>
                     </tr>
                   ))
                 ) : (
