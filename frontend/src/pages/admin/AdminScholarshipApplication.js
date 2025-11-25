@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 function AdminScholarshipApplication() {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState("All");
+
   const navigate = useNavigate();
 
 
@@ -29,10 +31,17 @@ function AdminScholarshipApplication() {
   }, []);
 
   // Calculate pagination
-  const totalPages = Math.ceil(applications.length / applicationPerPage);
+
+  const filteredApplications =
+    statusFilter === "All"
+      ? applications
+      : applications.filter(app => app.status === statusFilter);
+
+  const totalPages = Math.ceil(filteredApplications.length / applicationPerPage);
   const indexOfLastApplication = currentPage * applicationPerPage;
   const indexOfFirstApplication = indexOfLastApplication - applicationPerPage;
-  const currentScholarshipApplication = applications.slice(indexOfFirstApplication, indexOfLastApplication);
+  const currentScholarshipApplication = filteredApplications.slice(indexOfFirstApplication, indexOfLastApplication);
+
 
   // Pagination handler
   const goToPage = (page) => {
@@ -107,6 +116,36 @@ function AdminScholarshipApplication() {
         <p style={loadingStyle}>Loading...</p>
       ) : (
         <>
+      <div style={{
+        display: "flex",
+        justifyContent: "flex-end",   
+        alignItems: "center",
+        marginBottom: "15px",
+        gap: "10px"                  
+      }}>
+        <label style={{ fontWeight: 600, fontSize: "14px" }}>
+          Filter by Status:
+        </label>
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          style={{
+            padding: "6px 12px",
+            borderRadius: "4px",
+            border: "1px solid #ccc",
+            fontSize: "14px",
+            cursor: "pointer",
+            backgroundColor: "#fff",
+          }}
+        >
+          <option value="All">All</option>
+          <option value="Pending">Pending</option>
+          <option value="Approved">Approved</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+      </div>
+
+
           <div style={tableContainerStyle}>
             <table style={tableStyle}>
               <thead>
