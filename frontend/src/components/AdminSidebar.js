@@ -10,7 +10,7 @@ function AdminSidebar({ children }) {
           <li><Link to="/admin/dashboard">Home</Link></li>
           <li><Link to="/admin/students_list">Student List</Link></li>
           <li><Link to="/admin/getall_scholarship_applications">Scholarship Applications</Link></li>
-          <li><Link to="/admin/students_list">Fee Concession Applications</Link></li>
+          <li><Link to="/admin/getall_fee_concession_applications">Fee Concession Applications</Link></li>
           <li><Link to="/admin/scholarships">Scholarships</Link></li>
           <li><Link to="/admin/add-scholarship">Add Scholarship</Link></li>
         </ul>
