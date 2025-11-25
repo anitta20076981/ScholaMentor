@@ -9,7 +9,8 @@ router.get("/get-all-scholarshp-applications", adminController.getAllScholarship
 router.get("/get-scholarship-application/:applicationId", adminController.getScholarshipApplicationById);
 
 router.post("/scholarship-application/:applicationId/approve",adminController.approveScholarshipApplication);
-router.post("/scholarship-application/:applicationId/reject",adminController.rejectScholarshipApplication);
+router.post("/scholarship-application/:applicationId/approve",adminController.approveScholarshipApplication);
+router.post("/delete-scholarship-application/:applicationId",adminController.deleteScholarshipApplication);
 
 
 

@@ -141,5 +141,33 @@ exports.rejectScholarshipApplication = async (req, res) => {
   }
 };
 
+exports.deleteScholarshipApplication = async (req, res) => {
+  const { applicationId } = req.params;
+
+  try {
+    const [existing] = await db.query(
+      "SELECT * FROM scholarship_applications WHERE id = ?",
+      [applicationId]
+    );
+
+    if (existing.length === 0) {
+      return res.status(404).json({ message: "Application not found." });
+    }
+
+     await db.query(
+      "UPDATE scholarship_applications SET deleted_at = NOW() WHERE id = ?",
+      [applicationId]
+    );
+
+
+    return res.json({ message: "Application deleted successfully." });
+
+  } catch (err) {
+    console.error("Error deleting application:", err);
+    return res.status(500).json({ message: "Server error while deleting application." });
+  }
+};
+
+
 
 
