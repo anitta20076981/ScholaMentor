@@ -186,31 +186,34 @@ function AdminScholarshipApplication() {
                     >
                         <FaEdit />
                     </button> */}
+                   {application.status === "Pending" && (
                     <button
-                        style={{
-                          border: "none",
-                          background: "none",
-                          cursor: "pointer",
-                          color: "red",
-                        }}
-                        onClick={async () => {
-                          if (!window.confirm("Are you sure you want to delete this application?")) return;
-                          try {
-                            const res = await axios.post(
-                              `${process.env.REACT_APP_API_URL}/api/admin/delete-scholarship-application/${application.id}`
-                            );
-                            window.alert("Application deleted successfully.");
-                            setApplications((prev) =>
-                              prev.filter((app) => app.id !== application.id)
-                            );
-                          } catch (err) {
-                            console.error(err);
-                            window.alert("Failed to delete application.");
-                          }
-                        }}
-                      >
+                      style={{
+                        border: "none",
+                        background: "none",
+                        cursor: "pointer",
+                        color: "red",
+                      }}
+                      onClick={async () => {
+                        if (!window.confirm("Are you sure you want to delete this application?")) return;
+                        try {
+                          const res = await axios.post(
+                            `${process.env.REACT_APP_API_URL}/api/admin/delete-scholarship-application/${application.id}`
+                          );
+                          window.alert("Application deleted successfully.");
+                          setApplications((prev) =>
+                            prev.filter((app) => app.id !== application.id)
+                          );
+                        } catch (err) {
+                          console.error(err);
+                          window.alert("Failed to delete application.");
+                        }
+                      }}
+                    >
                       <FaTrash />
                     </button>
+                  )}
+
                   </td>
                     </tr>
                   ))
