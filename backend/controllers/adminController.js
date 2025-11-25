@@ -93,5 +93,53 @@ exports.getScholarshipApplicationById = async (req, res) => {
 };
 
 
+exports.approveScholarshipApplication = async (req, res) => {
+  try {
+    const { applicationId } = req.params;
+    const { admin_remarks } = req.body;
+
+    await db.query(
+      `UPDATE scholarship_applications 
+       SET status = 'Approved', admin_remarks = ? 
+       WHERE id = ?`,
+      [admin_remarks, applicationId]
+    );
+
+    const [updated] = await db.query(
+      `SELECT * FROM scholarship_applications WHERE id = ?`,
+      [applicationId]
+    );
+
+    res.json(updated[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to approve application" });
+  }
+};
+
+exports.rejectScholarshipApplication = async (req, res) => {
+  try {
+    const { applicationId } = req.params;
+    const { admin_remarks } = req.body;
+
+    await db.query(
+      `UPDATE scholarship_applications 
+       SET status = 'Rejected', admin_remarks = ? 
+       WHERE id = ?`,
+      [admin_remarks, applicationId]
+    );
+
+    const [updated] = await db.query(
+      `SELECT * FROM scholarship_applications WHERE id = ?`,
+      [applicationId]
+    );
+
+    res.json(updated[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to reject application" });
+  }
+};
+
 
 

@@ -8,7 +8,8 @@ router.get("/dashboard-stats", adminController.getDashboardStatus);
 router.get("/get-all-scholarshp-applications", adminController.getAllScholarshipApplications);
 router.get("/get-scholarship-application/:applicationId", adminController.getScholarshipApplicationById);
 
-
+router.post("/scholarship-application/:applicationId/approve",adminController.approveScholarshipApplication);
+router.post("/scholarship-application/:applicationId/reject",adminController.rejectScholarshipApplication);
 
 
 

@@ -38,6 +38,28 @@ export default function ViewScholarshipApplication() {
     fetchApplication();
   }, [applicationId]);
 
+   const handleAction = async (action) => {
+    if (!window.confirm(`Are you sure you want to ${action} this application?`)) return;
+
+    try {
+      setProcessing(true);
+      const endpoint =
+        action === "approve"
+          ? `/api/admin/scholarship-application/${applicationId}/approve`
+          : `/api/admin/scholarship-application/${applicationId}/reject`;
+
+      const payload = { admin_remarks: adminRemarks || "" };
+      const res = await axiosInstance.post(endpoint, payload);
+      setApplication(res.data);
+      window.alert(`Application ${action}d successfully.`);
+      navigate("/admin/getall_scholarship_applications");
+    } catch (err) {
+      console.error(err);
+      window.alert(err.response?.data?.message || `Failed to ${action} application.`);
+    } finally {
+      setProcessing(false);
+    }
+  };
 
   const backToList = () => navigate("/admin/getall_scholarship_applications");
 
@@ -235,7 +257,26 @@ export default function ViewScholarshipApplication() {
           )}
          
         </div>
-
+       {/* Admin Actions */}
+        <div className="section">
+          <h3>Admin Actions</h3>
+          <textarea
+            value={adminRemarks}
+            onChange={(e) => setAdminRemarks(e.target.value)}
+            rows={4}
+          />
+          <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
+            <button onClick={() => handleAction("approve")} className="button button-approve" disabled={processing}>
+              {processing ? "Processing..." : "Approve"}
+            </button>
+            <button onClick={() => handleAction("reject")} className="button button-reject" disabled={processing}>
+              {processing ? "Processing..." : "Reject"}
+            </button>
+            <button onClick={backToList} className="button button-back">
+              Back to list
+            </button>
+          </div>
+        </div>
        
       </div>
     </AdminSidebar>
