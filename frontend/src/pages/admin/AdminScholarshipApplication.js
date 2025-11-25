@@ -211,8 +211,6 @@ function AdminScholarshipApplication() {
                       >
                       <FaTrash />
                     </button>
-
-                    <FaTrash />
                   </td>
                     </tr>
                   ))
