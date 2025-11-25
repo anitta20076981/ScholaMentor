@@ -9,27 +9,40 @@ export default function ViewScholarshipApplication() {
   const navigate = useNavigate();
 
   const [application, setApplication] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [processing, setProcessing] = useState(false);
+  const [adminRemarks, setAdminRemarks] = useState("");
+  const [error, setError] = useState(null);
 
-
+  const axiosInstance = axios.create({
+    baseURL: process.env.REACT_APP_API_URL || "",
+    headers: { "Content-Type": "application/json" },
+  });
 
   useEffect(() => {
     const fetchApplication = async () => {
       try {
-         const res = await axios.get(
+        setLoading(true);
+        const res = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/admin/get-scholarship-application/${applicationId}`
         );
         setApplication(res.data);
-       } catch (err) {
+        setAdminRemarks(res.data.admin_remarks || "");
+      } catch (err) {
         console.error(err);
-       } finally {
-       }
+        setError(err.response?.data?.message || "Failed to fetch application data.");
+      } finally {
+        setLoading(false);
+      }
     };
     fetchApplication();
   }, [applicationId]);
 
 
+
   const backToList = () => navigate("/admin/getall_scholarship_applications");
 
+  
 
   if (!application)
     return (
@@ -74,6 +87,103 @@ export default function ViewScholarshipApplication() {
             <span className="label">Applied For:</span>
             <span className="value">{application.scholarship_type}</span>
           </p>
+         {application.scholarship_type === "Merit" && (
+          <>
+            <p>
+              <span className="label">Academic Percentage:</span>
+              <span className="value">{application.academic_percentage}</span>
+            </p>
+
+            <p>
+              <span className="label">Attendance Percentage:</span>
+              <span className="value">{application.attendance_percentage}</span>
+            </p>
+          </>
+        )}
+        {application.scholarship_type === "Need-based" && (
+          <>
+            <p>
+              <span className="label">Family Income:</span>
+              <span className="value">{application.family_income}</span>
+            </p>
+
+            <p>
+              <span className="label">Father Occupation:</span>
+              <span className="value">{application.father_occupation}</span>
+            </p>
+            <p>
+              <span className="label">Mother Occupation:</span>
+              <span className="value">{application.mother_occupation}</span>
+            </p>
+            <p>
+              <span className="label">Dependents:</span>
+              <span className="value">{application.dependents}</span>
+            </p>
+          </>
+        )}
+        {application.scholarship_type === "Sports" && (
+          <>
+            <p>
+              <span className="label">Sport Name:</span>
+              <span className="value">{application.sport_name}</span>
+            </p>
+
+            <p>
+              <span className="label">Level:</span>
+              <span className="value">{application.level}</span>
+            </p>
+            <p>
+              <span className="label">Team or Individual:</span>
+              <span className="value">{application.team_or_individual}</span>
+            </p>
+            <p>
+              <span className="label">Coach Name:</span>
+              <span className="value">{application.coach_name}</span>
+            </p>
+             <p>
+              <span className="label">Coach Contact:</span>
+              <span className="value">{application.coach_contact}</span>
+            </p>
+          </>
+        )}
+        {application.scholarship_type === "Sports" && (
+          <>
+            <p>
+              <span className="label">Sport Name:</span>
+              <span className="value">{application.sport_name}</span>
+            </p> 
+
+            <p>
+              <span className="label">Level:</span>
+              <span className="value">{application.level}</span>
+            </p>
+            <p>
+              <span className="label">Team or Individual:</span>
+              <span className="value">{application.team_or_individual}</span>
+            </p>
+            <p>
+              <span className="label">Coach Name:</span>
+              <span className="value">{application.coach_name}</span>
+            </p>
+             <p>
+              <span className="label">Coach Contact:</span>
+              <span className="value">{application.coach_contact}</span>
+            </p>
+          </>
+        )}
+         {application.scholarship_type === "Special Scheme" && (
+          <>
+            <p>
+              <span className="label">Category Type:</span>
+              <span className="value">{application.category_type}</span>
+            </p> 
+
+            <p>
+              <span className="label">Scheme Reason:</span>
+              <span className="value">{application.scheme_reason}</span>
+            </p>
+          </>
+        )}
           <p>
             <span className="label">Status:</span>
             <span
@@ -90,7 +200,7 @@ export default function ViewScholarshipApplication() {
               {application.status}
             </span>
           </p>
-          
+         
         </div>
 
        
