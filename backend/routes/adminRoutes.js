@@ -9,9 +9,13 @@ router.get("/get-all-scholarshp-applications", adminController.getAllScholarship
 router.get("/get-scholarship-application/:applicationId", adminController.getScholarshipApplicationById);
 
 router.post("/scholarship-application/:applicationId/approve",adminController.approveScholarshipApplication);
-router.post("/scholarship-application/:applicationId/approve",adminController.approveScholarshipApplication);
+router.post("/scholarship-application/:applicationId/reject",adminController.rejectScholarshipApplication);
 router.post("/delete-scholarship-application/:applicationId",adminController.deleteScholarshipApplication);
 
+router.get("/get-all-fee-concession-applications", adminController.getAllFeeConcessionpApplications);
+router.get("/get-fee-concession-application/:applicationId", adminController.getFeeConcessionApplicationById);
+router.post("/fee-concession-application/:applicationId/approve",adminController.approveFeeConcessionApplication);
+router.post("/fee-concession-application/:applicationId/reject",adminController.rejectFeeConcessioApplication);
 
 
 module.exports = router;

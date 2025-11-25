@@ -179,5 +179,98 @@ exports.deleteScholarshipApplication = async (req, res) => {
 };
 
 
+exports.getAllFeeConcessionpApplications = async (req, res) => {
+  try {
+    const [results] = await db.query(`SELECT sa.id, sa.status, sa.created_at, sa.course,sa.concession_requested, u.name AS student_name
+      FROM fee_concession_applications sa JOIN users u ON sa.student_id = u.id WHERE sa.deleted_at IS NULL
+      ORDER BY 
+        CASE 
+          WHEN sa.status = 'Pending' THEN 1
+          WHEN sa.status = 'Approved' THEN 2
+          WHEN sa.status = 'Rejected' THEN 3
+          ELSE 4
+        END,
+        sa.created_at DESC
+    `);
+
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 
+exports.getFeeConcessionApplicationById = async (req, res) => {
+  try {
+    const { applicationId } = req.params;
+ 
+    const [results] = await db.query(
+      `SELECT 
+          sa.*, 
+          u.name AS student_name,
+          u.email AS student_email
+       FROM fee_concession_applications sa
+       JOIN users u ON sa.student_id = u.id
+       WHERE sa.id = ?`,
+      [applicationId]
+    );
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    res.json(results[0]); // return single result
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.approveFeeConcessionApplication = async (req, res) => {
+  try {
+    const { applicationId } = req.params;
+    const { admin_remarks } = req.body;
+
+    await db.query(
+      `UPDATE fee_concession_applications 
+       SET status = 'Approved', admin_remarks = ? 
+       WHERE id = ?`,
+      [admin_remarks, applicationId]
+    );
+
+    const [updated] = await db.query(
+      `SELECT * FROM fee_concession_applications WHERE id = ?`,
+      [applicationId]
+    );
+
+    res.json(updated[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to approve application" });
+  }
+};
+
+exports.rejectFeeConcessioApplication = async (req, res) => {
+  try {
+    const { applicationId } = req.params;
+    const { admin_remarks } = req.body;
+
+    await db.query(
+      `UPDATE fee_concession_applications 
+       SET status = 'Rejected', admin_remarks = ? 
+       WHERE id = ?`,
+      [admin_remarks, applicationId]
+    );
+
+    const [updated] = await db.query(
+      `SELECT * FROM fee_concession_applications WHERE id = ?`,
+      [applicationId]
+    );
+
+    res.json(updated[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to reject application" });
+  }
+};

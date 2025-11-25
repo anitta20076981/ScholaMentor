@@ -1,0 +1,62 @@
+/* ViewScholarshipApplication.css */
+
+.container {
+  padding: 16px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.section {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  margin-bottom: 16px;
+}
+
+.label {
+  color: #555;
+  margin-right: 8px;
+}
+
+.value {
+  font-weight: 600;
+}
+
+textarea {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.button {
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+}
+
+.button-approve {
+  background: #2f8f4a;
+  color: white;
+}
+
+.button-reject {
+  background: #d9534f;
+  color: white;
+}
+
+.button-back {
+  background: #f0f0f0;
+}
+
+.doc-link {
+  margin-bottom: 8px;
+}
