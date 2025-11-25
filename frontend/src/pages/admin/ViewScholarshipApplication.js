@@ -39,8 +39,24 @@ export default function ViewScholarshipApplication() {
   }, [applicationId]);
 
 
-
   const backToList = () => navigate("/admin/getall_scholarship_applications");
+
+  {/* renderDocLink generate link to view or downlaod */}
+
+    const renderDocLink = (label, filePath) => {
+    if (!filePath) return null;
+
+    const href = `${process.env.REACT_APP_API_URL}/uploads/${filePath}`;
+
+    return (
+      <p className="doc-link">
+        <strong>{label}:</strong>{" "}
+        <a href={href} target="_blank" rel="noopener noreferrer">
+          View 
+        </a>
+      </p>
+    );
+  };
 
   
 
@@ -121,31 +137,7 @@ export default function ViewScholarshipApplication() {
             </p>
           </>
         )}
-        {application.scholarship_type === "Sports" && (
-          <>
-            <p>
-              <span className="label">Sport Name:</span>
-              <span className="value">{application.sport_name}</span>
-            </p>
-
-            <p>
-              <span className="label">Level:</span>
-              <span className="value">{application.level}</span>
-            </p>
-            <p>
-              <span className="label">Team or Individual:</span>
-              <span className="value">{application.team_or_individual}</span>
-            </p>
-            <p>
-              <span className="label">Coach Name:</span>
-              <span className="value">{application.coach_name}</span>
-            </p>
-             <p>
-              <span className="label">Coach Contact:</span>
-              <span className="value">{application.coach_contact}</span>
-            </p>
-          </>
-        )}
+       
         {application.scholarship_type === "Sports" && (
           <>
             <p>
@@ -200,6 +192,47 @@ export default function ViewScholarshipApplication() {
               {application.status}
             </span>
           </p>
+          {/* renderDocLink generate link to view or downlaod */}
+          {application.scholarship_type === "Merit" && (
+            <>
+              {renderDocLink(
+                "Marksheet",
+                application.marksheet_file
+              )}
+            </>
+          )}
+           {application.scholarship_type === "Need-based" && (
+            <>
+              {renderDocLink(
+                "Income Certificate",
+                application.income_certificate
+              )}
+            </>
+          )}
+          {application.scholarship_type === "Sports" && (
+            <>
+              {renderDocLink(
+                "Sports Certificate",
+                application.sports_certificate
+              )}
+            </>
+          )}
+          {application.scholarship_type === "Special Scheme" && (
+            <>
+              {renderDocLink(
+                "Category Certificate",
+                application.category_certificate
+              )}
+               {renderDocLink(
+                "Disability Certificate",
+                application.disability_certificate
+              )}
+               {renderDocLink(
+                "Income Certificate",
+                application.income_certificate
+              )}
+            </>
+          )}
          
         </div>
 
