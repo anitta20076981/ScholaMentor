@@ -3,6 +3,8 @@ import axios from "axios";
 import TopBar from "../../components/student/TopBar";  
 import Footer from "../../components/student/Footer";
 import { useParams, useNavigate } from "react-router-dom"; 
+import { FaDownload } from "react-icons/fa";
+
 
 function TrackApplicationStatus() {
   const navigate = useNavigate();
@@ -141,34 +143,69 @@ function TrackApplicationStatus() {
                     })}
                   </p>                  
                   <p style={{ margin: "5px 0" }}><strong>Status:</strong> {app.status}</p>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginTop: "12px",
+                  }}
+                >
+                  {/* Status Badge */}
                   <span
                     style={{
-                      padding: "6px 15px",
+                      display: "inline-block",
+                      padding: "6px 18px",
                       background: getStatusColor(app.status),
                       color: "#fff",
                       borderRadius: "50px",
-                      fontWeight: "bold",
+                      fontWeight: "600",
+                      fontSize: "14px",
+                      minWidth: "90px",
+                      textAlign: "center",
+                      boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+                      transition: "transform 0.2s, box-shadow 0.2s",
+                      cursor: "default",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "translateY(-2px)";
+                      e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.3)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "translateY(0)";
+                      e.currentTarget.style.boxShadow = "0 2px 6px rgba(0,0,0,0.2)";
                     }}
                   >
                     {app.application_status}
                   </span>
+
+                  {/* Download Icon/Button */}
                   {app.status === "Approved" && (
-  <button
-    onClick={() => handleDownloadCertificate(app.id)}
-    style={{
-      marginTop: "10px",
-      padding: "8px 16px",
-      backgroundColor: "#4CAF50",
-      color: "#fff",
-      border: "none",
-      borderRadius: "6px",
-      cursor: "pointer",
-      fontWeight: "bold",
-    }}
-  >
-    Download Certificate
-  </button>
-)}
+                    <div
+                      onClick={() => handleDownloadCertificate(app.id)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
+                        padding: "6px 12px",
+                        backgroundColor: "#4CAF50",
+                        color: "#fff",
+                        borderRadius: "8px",
+                        cursor: "pointer",
+                        fontWeight: "500",
+                        fontSize: "14px",
+                        transition: "background-color 0.2s",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#45a049")}
+                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#4CAF50")}
+                      title="Download Certificate"
+                    >
+                      <FaDownload style={{ fontSize: "16px" }} />
+                      Download
+                    </div>
+                  )}
+                </div>
+
 
                 </div>
               ))}
