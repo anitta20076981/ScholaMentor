@@ -300,14 +300,18 @@ exports.getAllFeeConcessionpApplications = async (req, res) => {
 exports.getFeeConcessionApplicationById = async (req, res) => {
   try {
     const { applicationId } = req.params;
- 
-    const [results] = await db.query(
+
+     const [results] = await db.query(
       `SELECT 
           sa.*, 
           u.name AS student_name,
-          u.email AS student_email
+          u.email AS student_email,
+          sf.tuition_fee,
+          sf.fee_balance
        FROM fee_concession_applications sa
        JOIN users u ON sa.student_id = u.id
+       LEFT JOIN student_fees sf 
+      ON sa.student_id = sf.student_id
        WHERE sa.id = ?`,
       [applicationId]
     );
@@ -323,16 +327,101 @@ exports.getFeeConcessionApplicationById = async (req, res) => {
   }
 };
 
+// exports.approveFeeConcessionApplication = async (req, res) => {
+//   try {
+//     const { applicationId } = req.params;
+//     const { admin_remarks } = req.body;
+
+//     const [results] = await db.query(
+//       `SELECT 
+//         sa.*, 
+//         u.name AS student_name,
+//         u.email AS student_email,
+//         sf.tuition_fee,
+//         sf.fee_balance,
+//         sf.scholarship_amount,
+//         sf.fee_concession_amount
+//         FROM fee_concession_applications sa
+//         JOIN users u ON sa.student_id = u.id
+//         LEFT JOIN student_fees sf ON sa.student_id = sf.student_id
+//         WHERE sa.id = ?`,
+//       [applicationId]
+//     );
+
+//     const app = results[0];
+//     console.log(app);
+    
+   
+
+//     await db.query(
+//       `UPDATE fee_concession_applications 
+//        SET status = 'Approved', admin_remarks = ? ,
+//        WHERE id = ?`,
+//       [admin_remarks, applicationId]
+//     );
+
+//     const [updated] = await db.query(
+//       `SELECT * FROM fee_concession_applications WHERE id = ?`,
+//       [applicationId]
+//     );
+
+//     res.json(updated[0]);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Failed to approve application" });
+//   }
+// };
+
+
 exports.approveFeeConcessionApplication = async (req, res) => {
   try {
     const { applicationId } = req.params;
     const { admin_remarks } = req.body;
 
+    const [results] = await db.query(
+      `SELECT 
+        sa.*, 
+        u.name AS student_name,
+        u.email AS student_email,
+        sf.tuition_fee,
+        sf.fee_balance,
+        sf.scholarship_amount,
+        sf.fee_concession_amount
+      FROM fee_concession_applications sa
+      JOIN users u ON sa.student_id = u.id
+      LEFT JOIN student_fees sf ON sa.student_id = sf.student_id
+      WHERE sa.id = ?`,
+      [applicationId]
+    );
+
+    if (!results.length) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    const app = results[0];
+
+    const tuitionFee = Number(app.tuition_fee) || 0;
+    const currentPayable = Number(app.fee_balance);
+
+    const concessionPercentage = Number(app.concession_requested) || 0;
+    const concessionAmount = (tuitionFee * concessionPercentage) / 100;
+
+    const newFeeBalance = currentPayable - concessionAmount;
+
+
     await db.query(
-      `UPDATE fee_concession_applications 
-       SET status = 'Approved', admin_remarks = ? 
+      `UPDATE student_fees
+      SET fee_concession_amount = ?, 
+          fee_balance = ?
+      WHERE student_id = ?`,
+      [concessionAmount, newFeeBalance, app.student_id]
+    );
+
+    await db.query(
+      `UPDATE fee_concession_applications
+       SET status = 'Approved', admin_remarks = ?, concession_amount =?
        WHERE id = ?`,
-      [admin_remarks, applicationId]
+      [admin_remarks || "", concessionAmount , applicationId]
     );
 
     const [updated] = await db.query(

@@ -93,7 +93,7 @@ export default function ViewFeeConcessionApplication() {
     <AdminSidebar>
       <div className="container">
         <div className="header">
-          <h2>Scholarship Application</h2>
+          <h2>Fee Concession Application</h2>
           <button onClick={backToList} className="button button-back">
             ← Back
           </button>
@@ -116,6 +116,18 @@ export default function ViewFeeConcessionApplication() {
               {application.course} / {application.semester}
             </span>
           </p>
+           <p>
+            <span className="label">Tution Fee:</span>
+            <span className="value">
+               {application.tuition_fee}
+            </span>
+          </p>
+          <p>
+            <span className="label">Payable Fee:</span>
+            <span className="value">
+               {application.fee_balance}
+            </span>
+          </p>
         </div>
 
         {/* Application Info */}
@@ -133,7 +145,7 @@ export default function ViewFeeConcessionApplication() {
 
             <p>
               <span className="label">Concession Requested:</span>
-              <span className="value">{application.concession_requested}</span>
+              <span className="value">{application.concession_requested} %</span>
             </p>
           <p>
             <span className="label">Status:</span>
