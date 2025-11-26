@@ -194,7 +194,7 @@ function ApplyScholarship() {
        <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
         {type === "merit" 
             ? "Merit Scholarship Application"
-            : type === "need" 
+            : type === "Need-based" 
             ? "Need-Based Scholarship Application"
             : type === "sports"
             ? "Sports Scholarship Application"
@@ -288,7 +288,7 @@ function ApplyScholarship() {
         </>
         )}
 
-        {type === "need" && (
+        {type === "Need-based" && (
         <>
             <label>
             Family Income
@@ -549,7 +549,7 @@ function ApplyScholarship() {
         </>
         )}
 
-         {type === "special" && (
+         {type === "Special Scheme" && (
         <>
             <label>
             Category Type

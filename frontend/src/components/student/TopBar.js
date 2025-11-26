@@ -18,9 +18,9 @@ function TopBar({ studentId, successMessage, errorMessage }) {
 
   const scholarshipTypes = [
     { type: "Merit", route: "merit" },
-    { type: "Need-Based", route: "need" },
+    { type: "Need-Based", route: "Need-based" },
     { type: "Sports", route: "sports" },
-    { type: "Special Scheme", route: "special" },
+    { type: "Special Scheme", route: "Special Scheme" },
   ];
 
   return (
