@@ -156,9 +156,7 @@ exports.approveScholarshipApplication = async (req, res) => {
     if (!results.length) {
       return res.status(404).json({ message: "Application not found" });
     }
-
     const app = results[0];
-    console.log(results[0]['scholarship_amount']);
 
     const [settings] = await db.query(
       `SELECT * FROM scholarship_settings WHERE type = ? AND active = 1`,
@@ -203,9 +201,9 @@ exports.approveScholarshipApplication = async (req, res) => {
     await db.query(
       `UPDATE scholarship_applications 
       SET status = 'Approved',
-      admin_remarks = ?
+      admin_remarks = ? , scholarship_amount = ? 
        WHERE id = ?`,
-      [admin_remarks || "", applicationId]
+      [admin_remarks || "", concessionAmount, applicationId]
     );
 
     const [updated] = await db.query(
