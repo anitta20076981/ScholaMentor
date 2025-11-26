@@ -107,16 +107,105 @@ exports.getScholarshipApplicationById = async (req, res) => {
 };
 
 
+// exports.approveScholarshipApplication = async (req, res) => {
+//   try {
+//     const { applicationId } = req.params;
+//     const { admin_remarks } = req.body;
+
+//     await db.query(
+//       `UPDATE scholarship_applications 
+//        SET status = 'Approved', admin_remarks = ? 
+//        WHERE id = ?`,
+//       [admin_remarks, applicationId]
+//     );
+
+//     const [updated] = await db.query(
+//       `SELECT * FROM scholarship_applications WHERE id = ?`,
+//       [applicationId]
+//     );
+
+//     res.json(updated[0]);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Failed to approve application" });
+//   }
+// };
+
+
 exports.approveScholarshipApplication = async (req, res) => {
   try {
     const { applicationId } = req.params;
-    const { admin_remarks } = req.body;
+    const { admin_remarks, custom_amount } = req.body;
+
+    const [results] = await db.query(
+      `SELECT 
+         sa.*, 
+         u.name AS student_name,
+         u.email AS student_email,
+         sf.tuition_fee,
+         sf.fee_balance,
+         sf.scholarship_amount,
+         sf.fee_concession_amount
+       FROM scholarship_applications sa
+       JOIN users u ON sa.student_id = u.id
+       LEFT JOIN student_fees sf ON sa.student_id = sf.student_id
+       WHERE sa.id = ?`,
+      [applicationId]
+    );
+
+    if (!results.length) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    const app = results[0];
+    console.log(results[0]['scholarship_amount']);
+
+    const [settings] = await db.query(
+      `SELECT * FROM scholarship_settings WHERE type = ? AND active = 1`,
+      [app.scholarship_type]
+    );
+
+    if (!settings.length) {
+      return res.status(400).json({ message: "Scholarship setting not found" });
+    }
+
+    const scholarship = settings[0];
+
+    let finalAmount = 0;
+    let concessionAmount = 0;
+
+    if (app.scholarship_type === "Special Scheme") {
+      if (!custom_amount || Number(custom_amount) <= 0) {
+        return res.status(400).json({
+          message: "Custom amount is required for Special Scheme scholarship."
+        });
+      }
+      concessionAmount = Number(custom_amount);
+    } else {
+      if (scholarship.amount_type === "fixed") {
+        concessionAmount = scholarship.amount_value;
+      }
+      if (scholarship.amount_type === "percentage") {
+        concessionAmount = (app.tuition_fee * scholarship.percentage) / 100;
+      }
+    }
+ 
+    const payableFeeAmount = Number(app.fee_balance) - Number(concessionAmount) ;      
+    const totalScholarshipAmount = Number(app.scholarship_amount) +  Number(concessionAmount) ;
+
+    await db.query(
+      `UPDATE student_fees 
+       SET scholarship_amount = ?, fee_balance = ?, scholarship_amount = ?
+       WHERE student_id = ?`,
+      [finalAmount, payableFeeAmount, totalScholarshipAmount, app.student_id]
+    );
 
     await db.query(
       `UPDATE scholarship_applications 
-       SET status = 'Approved', admin_remarks = ? 
+      SET status = 'Approved',
+      admin_remarks = ?
        WHERE id = ?`,
-      [admin_remarks, applicationId]
+      [admin_remarks || "", applicationId]
     );
 
     const [updated] = await db.query(
@@ -125,11 +214,16 @@ exports.approveScholarshipApplication = async (req, res) => {
     );
 
     res.json(updated[0]);
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to approve application" });
   }
 };
+
+
+
+
 
 exports.rejectScholarshipApplication = async (req, res) => {
   try {

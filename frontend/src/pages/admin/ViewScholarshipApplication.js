@@ -12,6 +12,8 @@ export default function ViewScholarshipApplication() {
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [adminRemarks, setAdminRemarks] = useState("");
+  const [customAmount, setCustomAmount] = useState("");
+
   const [error, setError] = useState(null);
 
   const axiosInstance = axios.create({
@@ -40,7 +42,15 @@ export default function ViewScholarshipApplication() {
 
    const handleAction = async (action) => {
     if (!window.confirm(`Are you sure you want to ${action} this application?`)) return;
-
+    if (
+        action === "approve" &&
+        application.scholarship_type === "Special Scheme" &&
+        (!customAmount || Number(customAmount) <= 0)
+      ) {
+        window.alert("Please enter a valid amount for Special Scheme scholarship.");
+        return; 
+      }
+      console.log(customAmount);
     try {
       setProcessing(true);
       const endpoint =
@@ -48,7 +58,13 @@ export default function ViewScholarshipApplication() {
           ? `/api/admin/scholarship-application/${applicationId}/approve`
           : `/api/admin/scholarship-application/${applicationId}/reject`;
 
-      const payload = { admin_remarks: adminRemarks || "" };
+        const payload = {
+        admin_remarks: adminRemarks || "",
+        custom_amount:
+          application.scholarship_type === "Special Scheme"
+            ? Number(customAmount)
+            : null,  
+        };
       const res = await axiosInstance.post(endpoint, payload);
       setApplication(res.data);
       window.alert(`Application ${action}d successfully.`);
@@ -269,6 +285,26 @@ export default function ViewScholarshipApplication() {
           )}
          
         </div>
+        {application.scholarship_type === "Special Scheme" && (
+          <div className="section" style={{ marginBottom: 12 }}>
+            <label className="label">Enter Special Scheme Amount:</label>
+            <input
+              type="number"
+              value={customAmount}
+              onChange={(e) => setCustomAmount(e.target.value)}
+              placeholder="Enter amount to reduce"
+              className="special-input"
+              style={{
+                width: "200px",
+                padding: "8px",
+                borderRadius: "6px",
+                border: "1px solid #ccc",
+                marginTop: "6px"
+              }}
+            />
+          </div>
+        )}
+
        {/* Admin Actions */}
         <div className="section">
           <h3>Admin Actions</h3>
