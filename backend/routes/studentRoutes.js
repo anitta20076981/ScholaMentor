@@ -49,7 +49,7 @@ router.get("/:studentId/track-status", studentController.trackScholarship);
 router.get("/getFeeConcession/:studentId", studentController.getFeeConcession);
 
 router.put(
-  "/apply_fee_concessiom/:studentId",
+  "/apply_fee_concession/:studentId",
   upload.fields([
     { name: "supporting_doc", maxCount: 1 }, // for supporting_doc
   ]),

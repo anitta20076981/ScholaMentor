@@ -174,7 +174,7 @@ function FeeConcession() {
               value={formData.family_income}
               onChange={handleChange}
               style={inputStyle}
-              readOnly
+              disabled={isReadOnly}
             />
           </label>
 
