@@ -1,4 +1,7 @@
 const db = require("../config/db");
+const fs = require("fs");
+const path = require("path");
+const puppeteer = require("puppeteer");
 
 exports.getAllScholarships = (req, res) => {
     res.send("List of all scholarship");
@@ -464,6 +467,69 @@ exports.applyFeeConcession = async (req, res) => {
 
 
 exports.downloadCertificate = async (req, res) => {
+  try {
+    //reference from chatgpt
+  const { studentId, applicationId } = req.params;
 
+   const [results] = await db.query(
+  `SELECT 
+      sa.*, 
+      u.name AS student_name,
+      u.email AS student_email,
+      sf.tuition_fee
+    FROM scholarship_applications sa
+    JOIN users u ON sa.student_id = u.id
+    LEFT JOIN student_fees sf ON sa.student_id = sf.student_id
+    WHERE sa.id = ?`,
+  [applicationId]
+);
+    const app = results[0];
+
+    // Fetch student/application data from DB
+    const studentName = [app.student_name]; // Replace with DB query
+    const scholarshipType =  [app.scholarship_type];
+    const course =  [app.course];
+    const tution_fee =  [app.tuition_fee];
+    const amount = [app.scholarship_amount];
+    const reducedFee = [app.tuition_fee] - [app.scholarship_amount];
+    const date = new Date().toLocaleDateString("en-GB");
+
+    let html = fs.readFileSync(
+      path.join(__dirname, "../templates/certificateTemplate.html"),
+      "utf-8"
+    );
+
+    html = html.replace("{{name}}", studentName)
+               .replace("{{scholarship}}", scholarshipType)
+               .replace("{{amount}}", amount)
+               .replace("{{date}}", date)
+               .replace("{{tution_fee}}", tution_fee)
+               .replace("{{reducedFee}}", reducedFee)
+               .replace("{{logo}}", logoUrl);
+
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(html, { waitUntil: "networkidle0" });
+
+    const pdfBuffer = await page.pdf({
+      format: "A4",
+      printBackground: true,
+      margin: { top: "40px", bottom: "40px", left: "40px", right: "40px" },
+    });
+
+    await browser.close();
+
+    // Send PDF as download
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=Scholarship_Certificate_${applicationId}.pdf`
+    );
+    res.setHeader("Content-Type", "application/pdf");
+    res.send(pdfBuffer);
+
+  } catch (error) {
+    console.error("Error generating PDF certificate:", error);
+    res.status(500).json({ message: "Failed to generate certificate" });
+  }
 };
 
