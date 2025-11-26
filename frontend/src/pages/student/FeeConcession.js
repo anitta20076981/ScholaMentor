@@ -4,6 +4,7 @@ import TopBar from "../../components/student/TopBar";
 import Footer from "../../components/student/Footer";
 import axios from "axios";
 import { FaEye } from "react-icons/fa";
+import { FaDownload } from "react-icons/fa";
 
 function FeeConcession() {
   const { studentId } = useParams();
@@ -20,6 +21,27 @@ function FeeConcession() {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [latestApplication, setLatestApplication] = useState(null); // Latest application for status
+
+   const handleDownloadCertificate = async (applicationId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/student/${studentId}/download-fee-concession-certificate/${applicationId}`,
+        { responseType: "blob" } // Important to handle binary files
+      );
+
+      // Create a URL for the file
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `Scholarship_Certificate_${applicationId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error("Error downloading certificate:", error);
+      alert("Failed to download certificate. Please try again later.");
+    }
+  };
 
   useEffect(() => {
     async function fetchFeeConcessionApplication() {
@@ -250,21 +272,66 @@ function FeeConcession() {
               }}
             >
               <h3 style={{ marginBottom: "10px" }}>Latest Application Status</h3>
+              
               <p><strong>Course:</strong> {latestApplication.course}</p>
               <p><strong>Semester:</strong> {latestApplication.semester}</p>
-              <p>
-                <strong>Status:</strong>{" "}
-                <span
+           <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginTop: "5px",
+              }}
+>
+            <p style={{ margin: 0 }}>
+              <strong>Status:</strong>{" "}
+              <span
+                style={{
+                  color: "white",
+                  background: getStatusColor(latestApplication.status),
+                  padding: "5px 12px",
+                  borderRadius: "50px",
+                }}
+              >
+                {latestApplication.status}
+              </span>
+            </p>
+
+              {latestApplication.status === "Approved" && (
+                <div
+                  onClick={() => handleDownloadCertificate(latestApplication.id)}
                   style={{
-                    color: "white",
-                    background: getStatusColor(latestApplication.status),
-                    padding: "5px 12px",
-                    borderRadius: "50px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding: "10px 20px",
+                    backgroundColor: "#5cb85c",
+                    color: "#fff",
+                    borderRadius: "12px",
+                    cursor: "pointer",
+                    fontWeight: "600",
+                    fontSize: "15px",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                    transition: "all 0.3s ease",
+                    userSelect: "none",
                   }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "#5cb85c";
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow = "0 6px 16px rgba(0,0,0,0.2)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "#5cb85c";
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
+                  }}
+                  title="Download Certificate"
                 >
-                  {latestApplication.status}
-                </span>
-              </p>
+                  <FaDownload style={{ fontSize: "18px" }} />
+                </div>
+              )}
+            </div>
+
               {latestApplication.admin_remarks && (
                 <p><strong>Admin Remarks:</strong> {latestApplication.admin_remarks}</p>
               )}
@@ -303,7 +370,11 @@ function FeeConcession() {
               >
                 ✅ Your fee concession application has been approved.
               </div>
+              
             )}
+
+         
+
 
             {latestApplication.status === "Rejected" && (
               <div

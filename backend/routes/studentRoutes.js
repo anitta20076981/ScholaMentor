@@ -57,6 +57,7 @@ router.put(
 );
 
 router.get("/:studentId/download-certificate/:applicationId", studentController.downloadCertificate);
+router.get("/:studentId/download-fee-concession-certificate/:applicationId", studentController.downloadFeeConcessionCertificate);
 
 
 

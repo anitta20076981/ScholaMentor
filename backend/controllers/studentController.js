@@ -532,3 +532,71 @@ exports.downloadCertificate = async (req, res) => {
   }
 };
 
+exports.downloadFeeConcessionCertificate = async (req, res) => {
+  try {
+    //reference from chatgpt
+  const { studentId, applicationId } = req.params;
+
+  const [results] = await db.query(
+    `SELECT 
+        sa.*, 
+        u.name AS student_name,
+        u.email AS student_email,
+        sf.tuition_fee
+      FROM fee_concession_applications sa
+      JOIN users u ON sa.student_id = u.id
+      LEFT JOIN student_fees sf ON sa.student_id = sf.student_id
+      WHERE sa.id = ?`,
+    [applicationId]
+  );
+    const app = results[0];
+
+    // Fetch student/application data from DB
+    const studentName = [app.student_name]; // Replace with DB query
+    const scholarshipType =  [app.scholarship_type];
+    const course =  [app.course];
+    const tuitionFee =  [app.tuition_fee];
+    const concessionPercent =  [app.concession_requested];
+    const concessionAmount = [app.concession_amount];
+    const newPayableFee = [app.tuition_fee] - [app.concession_amount];
+    const date = new Date().toLocaleDateString("en-GB");
+
+    let html = fs.readFileSync(
+      path.join(__dirname, "../templates/feeConcessionCertificateTemplate.html"),
+      "utf-8"
+    );
+
+    html = html.replace("{{name}}", studentName)
+               .replace("{{scholarship}}", scholarshipType)
+               .replace("{{concessionAmount}}", concessionAmount)
+               .replace("{{concessionPercent}}", concessionPercent)
+               .replace("{{date}}", date)
+               .replace("{{tuitionFee}}", tuitionFee)
+               .replace("{{newPayableFee}}", newPayableFee);
+
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(html, { waitUntil: "networkidle0" });
+
+    const pdfBuffer = await page.pdf({
+      format: "A4",
+      printBackground: true,
+      margin: { top: "40px", bottom: "40px", left: "40px", right: "40px" },
+    });
+
+    await browser.close();
+
+    // Send PDF as download
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=Fee_Concession_Certificate_${applicationId}.pdf`
+    );
+    res.setHeader("Content-Type", "application/pdf");
+    res.send(pdfBuffer);
+
+  } catch (error) {
+    console.error("Error generating PDF certificate:", error);
+    res.status(500).json({ message: "Failed to generate certificate" });
+  }
+};
+
