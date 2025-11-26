@@ -274,3 +274,16 @@ exports.rejectFeeConcessioApplication = async (req, res) => {
     res.status(500).json({ message: "Failed to reject application" });
   }
 };
+
+
+exports.getScholarshipSettings = async (req, res) => {
+  try {
+    const [results] = await db.query(
+      `SELECT * FROM scholarship_settings ORDER BY id ASC`
+    );
+    res.json(results);
+  } catch (err) {
+    console.error("Error fetching scholarship settings:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};

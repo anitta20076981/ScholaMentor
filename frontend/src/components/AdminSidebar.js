@@ -13,6 +13,7 @@ function AdminSidebar({ children }) {
           <li><Link to="/admin/getall_fee_concession_applications">Fee Concession Applications</Link></li>
           <li><Link to="/admin/scholarships">Scholarships</Link></li>
           <li><Link to="/admin/add-scholarship">Add Scholarship</Link></li>
+          <li><Link to="/admin/scholarship-settings">Scholarship Settings</Link></li>
         </ul>
       </aside>
 

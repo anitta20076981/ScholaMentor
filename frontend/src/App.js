@@ -13,6 +13,7 @@ import AdminScholarshipApplication from "./pages/admin/AdminScholarshipApplicati
 import ViewScholarshipApplication from "./pages/admin/ViewScholarshipApplication"; 
 import AdminFeeConcessionApplication from "./pages/admin/AdminFeeConcessionApplication"; 
 import ViewFeeConcessionApplication from "./pages/admin/ViewFeeConcessionApplication"; 
+import ScholarshipSettings from "./pages/admin/AdminScholarshipSettings"; 
 
 
 
@@ -38,6 +39,9 @@ function App() {
 
         <Route path="/admin/getall_fee_concession_applications" element={<AdminFeeConcessionApplication />} /> 
         <Route path="/admin/view-fee-concession-application/:applicationId" element={<ViewFeeConcessionApplication />} /> 
+
+        <Route path="/admin/scholarship-settings" element={<ScholarshipSettings />} /> 
+
 
 
 
