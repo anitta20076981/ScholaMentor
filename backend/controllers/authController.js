@@ -70,6 +70,10 @@ exports.register = async (req, res) => {
                 `INSERT INTO studentdetails (student_id) VALUES (?)`,
                 [userId]
             );
+             await db.query(
+                `INSERT INTO student_fees (student_id) VALUES (?)`,
+                [userId]
+            );
         }
 
         return res.status(201).json({
