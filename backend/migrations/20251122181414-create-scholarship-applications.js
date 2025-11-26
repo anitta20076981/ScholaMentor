@@ -28,6 +28,11 @@ module.exports = {
         allowNull: false,
         defaultValue: 'Pending',
       },
+       scholarship_amount: {
+        type: Sequelize.DECIMAL(10, 2),
+        allowNull: false,
+        defaultValue: 0,
+      },
       admin_remarks: { type: Sequelize.TEXT, allowNull: true },
 
       // Common fields

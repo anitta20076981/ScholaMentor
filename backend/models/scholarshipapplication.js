@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     course: { type: DataTypes.STRING(50), allowNull: false },
     semester: { type: DataTypes.STRING(20), allowNull: false },
     status: { type: DataTypes.ENUM('Pending','Approved','Rejected'), allowNull: false, defaultValue: 'Pending' },
+    scholarship_amount: { type: DataTypes.DECIMAL(10, 2), allowNull: false, defaultValue: 0 },
     admin_remarks: { type: DataTypes.TEXT },
     academic_percentage: { type: DataTypes.DECIMAL(5,2) },
     attendance_percentage: { type: DataTypes.DECIMAL(5,2) },
