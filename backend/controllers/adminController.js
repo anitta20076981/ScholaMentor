@@ -287,3 +287,39 @@ exports.getScholarshipSettings = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+exports.updateScholarshipSetting = async (req, res) => {
+  const { id } = req.params;
+  const { amount_type, amount_value, percentage, description } = req.body;
+
+  try {
+    await db.query(
+      "UPDATE scholarship_settings SET amount_type = ?, amount_value = ?, percentage = ?, description = ? WHERE id = ?",
+      [amount_type, amount_value, percentage, description, id]
+    );
+
+    const [updated] = await db.query("SELECT * FROM scholarship_settings WHERE id = ?", [id]);
+    res.json(updated[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+ 
+exports.toggleScholarshipSetting = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await db.query(
+      "UPDATE scholarship_settings SET active = NOT active WHERE id = ?",
+      [id]
+    );
+
+    const [updated] = await db.query("SELECT * FROM scholarship_settings WHERE id = ?", [id]);
+    res.json(updated[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
