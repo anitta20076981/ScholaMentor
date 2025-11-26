@@ -504,8 +504,7 @@ exports.downloadCertificate = async (req, res) => {
                .replace("{{amount}}", amount)
                .replace("{{date}}", date)
                .replace("{{tution_fee}}", tution_fee)
-               .replace("{{reducedFee}}", reducedFee)
-               .replace("{{logo}}", logoUrl);
+               .replace("{{reducedFee}}", reducedFee);
 
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
