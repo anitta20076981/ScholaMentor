@@ -50,6 +50,11 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true
       },
+      concession_amount: {
+        type: Sequelize.DECIMAL(10, 2),
+        allowNull: false,
+        defaultValue: 0,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

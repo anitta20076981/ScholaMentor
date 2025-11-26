@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     concession_requested: DataTypes.STRING,
     supporting_doc: DataTypes.STRING,
     status: DataTypes.ENUM('Pending','Approved','Rejected'),
+    concession_amount: { type: DataTypes.DECIMAL(10, 2), allowNull: false, defaultValue: 0 },
     admin_remarks: DataTypes.TEXT
   }, {
     sequelize,
