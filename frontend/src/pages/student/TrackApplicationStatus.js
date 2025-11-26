@@ -10,6 +10,27 @@ function TrackApplicationStatus() {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const handleDownloadCertificate = async (applicationId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/student/${studentId}/download-certificate/${applicationId}`,
+        { responseType: "blob" } // Important to handle binary files
+      );
+
+      // Create a URL for the file
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `Scholarship_Certificate_${applicationId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error("Error downloading certificate:", error);
+      alert("Failed to download certificate. Please try again later.");
+    }
+  };
+
   // Fetch applications
   useEffect(() => {
     const fetchApplications = async () => {
@@ -131,6 +152,24 @@ function TrackApplicationStatus() {
                   >
                     {app.application_status}
                   </span>
+                  {app.status === "Approved" && (
+  <button
+    onClick={() => handleDownloadCertificate(app.id)}
+    style={{
+      marginTop: "10px",
+      padding: "8px 16px",
+      backgroundColor: "#4CAF50",
+      color: "#fff",
+      border: "none",
+      borderRadius: "6px",
+      cursor: "pointer",
+      fontWeight: "bold",
+    }}
+  >
+    Download Certificate
+  </button>
+)}
+
                 </div>
               ))}
             </div>

@@ -56,5 +56,9 @@ router.put(
   studentController.applyFeeConcession
 );
 
+router.get("/:studentId/download-certificate/:applicationId", studentController.downloadCertificate);
+
+
+
 
 module.exports = router;

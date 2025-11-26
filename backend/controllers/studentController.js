@@ -462,3 +462,8 @@ exports.applyFeeConcession = async (req, res) => {
   }
 };
 
+
+exports.downloadCertificate = async (req, res) => {
+
+};
+
