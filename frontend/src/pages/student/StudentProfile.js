@@ -48,6 +48,7 @@ function StudentProfile() {
           address: res.data.address || "",
           school_or_college: res.data.school_or_college || "",
           course: res.data.course || "",
+          tuition_fee: res.data.tuition_fee || "",
           department: res.data.department || "",
           year: res.data.year || "",
           cgpa: res.data.cgpa || "",
@@ -322,15 +323,15 @@ function StudentProfile() {
                       />
                     </div>
                     <div className="form-field">
-                      <label>CGPA</label>
+                      <label>Tution Fee</label>
                       <input
                         type="text"
-                        name="cgpa"
-                        value={formData.cgpa}
+                        name="tuition_fee"
+                        value={formData.tuition_fee}
                         onChange={handleChange}
                       />
                     </div>
-                    <div className="form-field">
+                    {/* <div className="form-field">
                       <label>Family Income</label>
                       <input
                         type="text"
@@ -338,7 +339,7 @@ function StudentProfile() {
                         value={formData.family_income}
                         onChange={handleChange}
                       />
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               )}
@@ -402,7 +403,7 @@ function StudentProfile() {
                     )}
                   </div>
 
-                  <div className="form-field" style={{ position: "relative" }}>
+                  {/* <div className="form-field" style={{ position: "relative" }}>
                     <label>Marksheet</label>
                     <input
                       type="file"
@@ -427,11 +428,11 @@ function StudentProfile() {
                         <FaEye size={20} />
                       </a>
                     )}
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Row 2 */}
-                <div className="form-row">
+                {/* <div className="form-row">
                   <div className="form-field small-field" style={{ position: "relative" }}>
                     <label>Income Proof</label>
                     <input
@@ -458,7 +459,7 @@ function StudentProfile() {
                       </a>
                     )}
                   </div>
-                </div>
+                </div> */}
               </div>
               )}
 

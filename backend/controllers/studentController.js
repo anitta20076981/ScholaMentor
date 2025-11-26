@@ -14,11 +14,12 @@ exports.getStudentDetails = async (req, res) => {
 
   try {
      const query = `
-      SELECT u.id AS user_id, u.name, u.email, sd.*
+    SELECT u.id AS user_id,u.name,u.email,sd.*,sf.tuition_fee
       FROM users u
       LEFT JOIN studentdetails sd ON u.id = sd.student_id
+      LEFT JOIN student_fees sf ON sd.student_id = sf.student_id
       WHERE u.id = ?
-    `;
+  `;
     // const query = "SELECT * FROM users WHERE id = ?";
     const [rows] = await db.execute(query, [studentId]); 
     if (rows.length === 0) {
@@ -35,9 +36,7 @@ exports.getStudentDetails = async (req, res) => {
 exports.updateStudentDetails = async (req, res) => {
   const { studentId } = req.params;
 
-  console.log("Student ID:", studentId);
-  console.log("Request body:", req.body);
-  console.log("Uploaded files:", req.files);
+  
 
   const {
     fullName,
@@ -53,7 +52,9 @@ exports.updateStudentDetails = async (req, res) => {
     year,
     cgpa,
     family_income,
+    tuition_fee
   } = req.body;
+  console.log("studentId:", studentId);
 
   // Files
   const profile_photo = req.files?.profile_photo ? req.files.profile_photo[0].filename : null;
@@ -101,6 +102,32 @@ exports.updateStudentDetails = async (req, res) => {
       income_proof,
       studentId,
     ]);
+
+    const [feeRows] = await db.execute(
+      `SELECT * FROM student_fees WHERE student_id = ?`,
+      [studentId] 
+    );
+
+    if (feeRows.length > 0) {
+      const feeRecord = feeRows[0];
+      const fee_balance =
+        (tuition_fee || feeRecord.tuition_fee) -
+        (feeRecord.scholarship_amount || 0) -
+        (feeRecord.fee_concession_amount || 0);
+        
+      await db.execute(
+        `UPDATE student_fees
+        SET tuition_fee = ?, fee_balance = ?, course = ?, semester = ?
+        WHERE id = ?`,
+        [
+          tuition_fee || feeRecord.tuition_fee,   
+          fee_balance,                            
+          course || feeRecord.course,             
+          year || feeRecord.semester,             
+          feeRecord.id                            
+        ]
+      );
+    }
 
     res.json({ success: true, message: "Profile updated successfully!" });
   } catch (err) {

@@ -116,6 +116,18 @@ export default function ViewScholarshipApplication() {
               {application.course} / {application.semester}
             </span>
           </p>
+          <p>
+            <span className="label">Tution Fee:</span>
+            <span className="value">
+               {application.tuition_fee}
+            </span>
+          </p>
+          <p>
+            <span className="label">Payable Fee:</span>
+            <span className="value">
+               {application.fee_balance}
+            </span>
+          </p>
         </div>
 
         {/* Application Info */}

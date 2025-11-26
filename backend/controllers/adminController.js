@@ -84,9 +84,13 @@ exports.getScholarshipApplicationById = async (req, res) => {
       `SELECT 
           sa.*, 
           u.name AS student_name,
-          u.email AS student_email
+          u.email AS student_email,
+          sf.tuition_fee,
+          sf.fee_balance
        FROM scholarship_applications sa
        JOIN users u ON sa.student_id = u.id
+       LEFT JOIN student_fees sf 
+      ON sa.student_id = sf.student_id
        WHERE sa.id = ?`,
       [applicationId]
     );
