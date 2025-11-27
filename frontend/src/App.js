@@ -14,6 +14,7 @@ import ViewScholarshipApplication from "./pages/admin/ViewScholarshipApplication
 import AdminFeeConcessionApplication from "./pages/admin/AdminFeeConcessionApplication"; 
 import ViewFeeConcessionApplication from "./pages/admin/ViewFeeConcessionApplication"; 
 import ScholarshipSettings from "./pages/admin/AdminScholarshipSettings"; 
+import SponsorDashboard from "./pages/sponsor/SponsorDashboard"; 
 
 
 
@@ -45,6 +46,7 @@ function App() {
 
 
 
+        <Route path="/sponsor/dashboard/:sponsorId" element={<SponsorDashboard />} /> 
         
         
 

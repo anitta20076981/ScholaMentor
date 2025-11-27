@@ -24,6 +24,9 @@ function LoginForm() {
         navigate("/admin/dashboard"); // redirect admin
       } else if (res.data.role === "student") {// redirect student
         navigate(`/student/dashboard/${res.data.id}`);
+      }
+      else if (res.data.role === "sponsor") {// redirect student
+        navigate(`/sponsor/dashboard/${res.data.id}`);
 
       } else {
         
