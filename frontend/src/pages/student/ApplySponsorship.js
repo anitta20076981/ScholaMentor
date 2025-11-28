@@ -171,56 +171,40 @@ function ApplySponsorship() {
         }}
     >
         <div style={{ display: "flex", gap: "25px", flexWrap: "wrap" }}>
-            <label style={{ flex: "1", minWidth: "180px" }}>
-            Sponsor Type <span style={{ color: "red" }}>*</span>
-            <select
-                name="sponsor_type"
-                value={formData.sponsor_type}
-                onChange={handleChange}
-                style={inputStyle}
-                required
-                disabled={isReadOnly}
-            >
-                <option value="">Select Type</option>
-                <option value="Corporate">Corporate</option>
-                <option value="Individual">Individual</option>
-                <option value="NGO">NGO</option>
-            </select>
-            </label>
-
-            <label style={{ flex: "1", minWidth: "180px" }}>
-            Purpose of Sponsorship <span style={{ color: "red" }}>*</span>
-            <select
-                name="purpose"
-                value={formData.purpose}
-                onChange={handleChange}
-                style={inputStyle}
-                required
-                disabled={isReadOnly}
-            >
-                <option value="">Select Purpose</option>
-                <option value="Studies">Studies</option>
-                <option value="Laptop">Laptop</option>
-                <option value="Books">Books</option>
-                <option value="Hostel">Hostel</option>
-            </select>
-            </label>
+          <label style={{ flex: "1", minWidth: "180px" }}>
+          Purpose of Sponsorship <span style={{ color: "red" }}>*</span>
+          <select
+              name="purpose"
+              value={formData.purpose}
+              onChange={handleChange}
+              style={inputStyle}
+              required
+              disabled={isReadOnly}
+          >
+              <option value="">Select Purpose</option>
+              <option value="Studies">Studies</option>
+              <option value="Laptop">Laptop</option>
+              <option value="Books">Books</option>
+              <option value="Hostel">Hostel</option>
+          </select>
+          </label>
+          <label style={{ flex: "1", minWidth: "180px" }}>
+          Required Amount (€) <span style={{ color: "red" }}>*</span>
+          <input
+          type="number"
+          name="required_amount"
+          value={formData.required_amount}
+          onChange={handleChange}
+          style={inputStyle}
+          disabled={isReadOnly}
+          required
+          />
+          </label>
         </div>
 
    
         <div style={{ display: "flex", gap: "40px", flexWrap: "wrap" }}>
-        <label style={{ flex: "1", minWidth: "180px" }}>
-            Required Amount (€) <span style={{ color: "red" }}>*</span>
-            <input
-            type="number"
-            name="required_amount"
-            value={formData.required_amount}
-            onChange={handleChange}
-            style={inputStyle}
-            disabled={isReadOnly}
-            required
-            />
-        </label>
+       
 
         <label style={{ flex: "1", minWidth: "180px" }}>
             CGPA <span style={{ color: "red" }}>*</span>

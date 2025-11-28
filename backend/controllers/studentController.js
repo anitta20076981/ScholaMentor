@@ -600,3 +600,8 @@ exports.downloadFeeConcessionCertificate = async (req, res) => {
   }
 };
 
+
+exports.applySponsorship = async (req, res) => {
+  const { studentId } = req.params;
+};
+
