@@ -59,7 +59,7 @@ router.put(
 router.get("/:studentId/download-certificate/:applicationId", studentController.downloadCertificate);
 router.get("/:studentId/download-fee-concession-certificate/:applicationId", studentController.downloadFeeConcessionCertificate);
 
-router.put(
+router.post(
   "/apply_sponsorship/:studentId",
   upload.fields([
     { name: "marksheet", maxCount: 1 }, 
