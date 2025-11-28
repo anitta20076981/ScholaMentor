@@ -153,6 +153,7 @@ function ScholarshipRequest() {
                   <th style={thStyle}>S.No</th>
                   <th style={thStyle}>Student Name</th>
                   <th style={thStyle}>Purspose</th>
+                  <th style={thStyle}>Requested Amount</th>
                   <th style={thStyle}>Status</th>
                   <th style={thStyle}></th>
                   <th style={thStyle}></th>
@@ -170,7 +171,8 @@ function ScholarshipRequest() {
                     >
                     <td style={tdStyle}>{indexOfFirstApplication + index + 1}</td>
                     <td style={tdStyle}>{application.student_name}</td>
-                    <td style={tdStyle}>{application.scholarship_type}</td>
+                    <td style={tdStyle}>{application.purpose}</td>
+                    <td style={tdStyle}>{application.required_amount}</td>
                     <td style={tdStyle}>
                       <span
                         style={{
@@ -209,7 +211,7 @@ function ScholarshipRequest() {
                         color: "#1e1e2f",
                         marginRight: "10px",
                         }}
-                        onClick={() => navigate(`/admin/view-scholarship-application/${application.id}`)}
+                        onClick={() => navigate(`/admin/view-sponsorship-application/${application.id}`)}
 
                     >
                         <FaEye />

@@ -219,6 +219,26 @@ exports.approveScholarshipApplication = async (req, res) => {
   }
 };
 
+exports.getAllSponsorshipRequest = async (req, res) => {
+  try {
+    const [results] = await db.query(`SELECT sa.id, sa.status, sa.required_amount, sa.created_at, sa.purpose, u.name AS student_name
+      FROM sponsorshipapplications sa JOIN users u ON sa.student_id = u.id WHERE sa.deleted_at IS NULL
+      ORDER BY 
+        CASE 
+          WHEN sa.status = 'Pending' THEN 1
+          WHEN sa.status = 'Approved' THEN 2
+          WHEN sa.status = 'Rejected' THEN 3
+          ELSE 4
+        END,
+        sa.created_at DESC
+    `);
+
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 
 

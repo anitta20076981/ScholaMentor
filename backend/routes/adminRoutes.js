@@ -20,5 +20,7 @@ router.post("/fee-concession-application/:applicationId/reject",adminController.
 router.get("/scholarship-settings", adminController.getScholarshipSettings);
 router.patch("/scholarship-settings/:id/toggle", adminController.toggleScholarshipSetting);
 
+router.get("/get-all-sponsorship-request", adminController.getAllSponsorshipRequest);
+
 
 module.exports = router;
