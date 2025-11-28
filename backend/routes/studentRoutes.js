@@ -59,6 +59,9 @@ router.put(
 router.get("/:studentId/download-certificate/:applicationId", studentController.downloadCertificate);
 router.get("/:studentId/download-fee-concession-certificate/:applicationId", studentController.downloadFeeConcessionCertificate);
 
+
+router.get("/getSponsorship/:studentId", studentController.getSponsorship);
+
 router.post(
   "/apply_sponsorship/:studentId",
   upload.fields([

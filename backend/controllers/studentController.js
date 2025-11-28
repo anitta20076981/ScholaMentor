@@ -694,3 +694,25 @@ exports.applySponsorship = async (req, res) => {
   }
 };
 
+
+exports.getSponsorship = async (req, res) => {
+  const { studentId } = req.params;
+
+  try {
+    const query = `
+      SELECT * FROM sponsorshipapplications 
+      WHERE student_id = ?  
+    `;
+
+    const [rows] = await db.execute(query, [studentId]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: "Sponsorship request not found" });
+    }
+
+    res.json(rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch sponsorship details" });
+  }
+};

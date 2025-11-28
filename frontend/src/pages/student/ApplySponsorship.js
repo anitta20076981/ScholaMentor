@@ -14,6 +14,8 @@ function ApplySponsorship() {
     required_amount: "",
     background: "",
     marksheet: null,
+    cgpa: "",
+
   });
 
   const [successMessage, setSuccessMessage] = useState("");
@@ -45,6 +47,14 @@ function ApplySponsorship() {
         const res = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/student/getSponsorship/${studentId}`
         );
+         setFormData({
+          sponsor_type: res.data.sponsor_type || "",
+          purpose: res.data.purpose || "",
+          required_amount: res.data.required_amount || "",
+          background: res.data.background || "",
+          marksheet: res.data.marksheet || "25",
+          cgpa: res.data.cgpa || "25",
+        });
         if (res.data) setLatestApplication(res.data);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -341,6 +351,8 @@ function ApplySponsorship() {
 
     {/* Status Card */}
     {/* Status Card */}
+
+     {latestApplication && latestApplication.status === "Pending" && (
     <div
       style={{
         background: "#ffffff",
@@ -376,7 +388,45 @@ function ApplySponsorship() {
       >
       Thank you for submitting your application! It is currently under verification. We will update you once the process is complete. Please check back in 1 day for the latest status.  </p>
     </div>
+     )}
+     {latestApplication && latestApplication.status === "Approved" && (
+    <div
+      style={{
+        background: "#ffffff",
+        color: "#d9534f",
+        padding: "30px",
+        borderRadius: "12px",
+        boxShadow: "0 6px 20px rgba(0,0,0,0.08)",
+        flex: "1",
+        minWidth: "280px",
+        maxWidth: "400px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "20px",
+        textAlign: "center",
+      }}
+    >
+      {/* Add the style tag here */}
+      <style>
+        {`
+          .blink-message {
+            animation: blinker 1s linear infinite;
+          }
+          @keyframes blinker {
+            50% { opacity: 0; }
+          }
+        `}
+      </style>
 
+      <h3 style={{ marginBottom: "10px" }}>Application Submitted</h3>
+      <p
+        className="blink-message"
+        style={{ fontSize: "16px", color: "#12ad65ff", fontWeight: "bold" }}
+      >
+      🎉 Your sponsorship application has been <strong>approved by the admin</strong>! 
+      A sponsor will contact you shortly. Thank you for your patience.   </p>
+    </div>
+     )} 
 
 
     </section>
