@@ -600,8 +600,97 @@ exports.downloadFeeConcessionCertificate = async (req, res) => {
   }
 };
 
-
 exports.applySponsorship = async (req, res) => {
   const { studentId } = req.params;
+  const { purpose, required_amount, cgpa, background } = req.body;
+  const marksheet = req.files?.marksheet?.[0]?.filename || null;
+
+  try {
+    const [existingApplication] = await db.execute(
+      `SELECT * FROM sponsorshipapplications WHERE student_id = ?`,
+      [studentId]
+    );
+
+    const [existingScholarship] = await db.execute(
+      `SELECT * FROM scholarship_applications WHERE student_id = ?`,
+      [studentId]
+    );
+    const [existingFeeConcession] = await db.execute(
+      `SELECT * FROM fee_concession_applications WHERE student_id = ?`,
+      [studentId]
+    );
+
+    if (cgpa <= 8) {
+      return res.status(400).json({
+        success: false,
+        error:
+          "Unfortunately, your CGPA does not meet the eligibility criteria for this sponsorship. Keep up the good work and try again in the future!"
+      });
+    }
+
+    if (existingScholarship.length > 0 || existingFeeConcession.length > 0) {
+      return res.status(400).json({
+        success: false,
+        error:
+          "You have already applied for a scholarship or fee concession, so sponsorship is not allowed."
+      });
+    }
+
+    if (existingApplication.length > 0) {
+      const current = existingApplication[0];
+      const marksheetFile = marksheet || current.marksheet;
+
+      const updateQuery = `
+        UPDATE sponsorshipapplications SET
+          purpose = ?, 
+          required_amount = ?, 
+          cgpa = ?,  
+          background = ?, 
+          marksheet = ?
+        WHERE student_id = ?
+      `;
+
+      await db.execute(updateQuery, [
+        purpose || current.purpose,
+        required_amount || current.required_amount,
+        cgpa || current.cgpa,
+        background || current.background,
+        marksheetFile,
+        studentId
+      ]);
+
+      return res.json({
+        success: true,
+        message: "Sponsorship application updated successfully!"
+      });
+    }
+
+    const insertQuery = `
+      INSERT INTO sponsorshipapplications (
+        student_id, purpose, required_amount, cgpa, background, marksheet
+      )
+      VALUES (?, ?, ?, ?, ?, ?)
+    `;
+
+    await db.execute(insertQuery, [
+      studentId,
+      purpose || null,
+      required_amount || null,
+      cgpa || null,
+      background || null,
+      marksheet || null
+    ]);
+
+    return res.json({
+      success: true,
+      message: "Sponsorship application submitted successfully!"
+    });
+  } catch (err) {
+    console.error("Error in applySponsorship:", err);
+    return res.status(500).json({
+      success: false,
+      error: "Failed to submit sponsorship application. Please try again later."
+    });
+  }
 };
 
