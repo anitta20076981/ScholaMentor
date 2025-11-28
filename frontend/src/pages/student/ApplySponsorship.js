@@ -79,15 +79,19 @@ function ApplySponsorship() {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      setSuccessMessage("Application submitted successfully!");
+      setSuccessMessage(res.data.message || "Application submitted successfully!");
       setLatestApplication(res.data);
       setTimeout(() => setSuccessMessage(""), 3000);
     } catch (err) {
       console.error(err);
-      setErrorMessage("Failed to submit application.");
-      setTimeout(() => setErrorMessage(""), 3000);
+      // Show backend error message if available
+      const errorMsg =
+        err.response?.data?.error || "Failed to submit application. Please try again.";
+      setErrorMessage(errorMsg);
+      setTimeout(() => setErrorMessage(""), 5000);
     }
   };
+
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -274,7 +278,7 @@ function ApplySponsorship() {
     </form>
 
     {/* Status Card */}
-    {latestApplication && (
+    {/* {latestApplication && (
         <div
         style={{
             background: "#ffffff",
@@ -333,7 +337,48 @@ function ApplySponsorship() {
 
         <p><strong>Applied On:</strong> {new Date(latestApplication.created_at).toLocaleDateString()}</p>
         </div>
-    )}
+    )} */}
+
+    {/* Status Card */}
+    {/* Status Card */}
+    <div
+      style={{
+        background: "#ffffff",
+        color: "#d9534f",
+        padding: "30px",
+        borderRadius: "12px",
+        boxShadow: "0 6px 20px rgba(0,0,0,0.08)",
+        flex: "1",
+        minWidth: "280px",
+        maxWidth: "400px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "20px",
+        textAlign: "center",
+      }}
+    >
+      {/* Add the style tag here */}
+      <style>
+        {`
+          .blink-message {
+            animation: blinker 1s linear infinite;
+          }
+          @keyframes blinker {
+            50% { opacity: 0; }
+          }
+        `}
+      </style>
+
+      <h3 style={{ marginBottom: "10px" }}>Application Submitted</h3>
+      <p
+        className="blink-message"
+        style={{ fontSize: "16px", color: "#d9534f", fontWeight: "bold" }}
+      >
+      Thank you for submitting your application! It is currently under verification. We will update you once the process is complete. Please check back in 1 day for the latest status.  </p>
+    </div>
+
+
+
     </section>
 
     <Footer />
