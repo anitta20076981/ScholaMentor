@@ -17,6 +17,7 @@ import ScholarshipSettings from "./pages/admin/AdminScholarshipSettings";
 import SponsorDashboard from "./pages/sponsor/SponsorDashboard"; 
 import ApplySponsorship from "./pages/student/ApplySponsorship"; 
 import ScholarshipRequest from "./pages/admin/ScholarshipRequest"; 
+import ViewSponsorshipApplication from "./pages/admin/ViewSponsorshipApplication"; 
 
 
 
@@ -48,6 +49,7 @@ function App() {
 
         <Route path="/student/apply-sponsorship/:studentId" element={<ApplySponsorship />} /> 
         <Route path="/admin/sponsorship-request" element={<ScholarshipRequest />} /> 
+        <Route path="/admin/view-sponsorship-application/:applicationId" element={<ViewSponsorshipApplication />} /> 
 
 
         

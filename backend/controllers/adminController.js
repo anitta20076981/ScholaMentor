@@ -528,3 +528,103 @@ exports.toggleScholarshipSetting = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
+exports.getSponsorshipRequestById = async (req, res) => {
+  try {
+    const { applicationId } = req.params;
+ 
+    const [results] = await db.query(
+      `SELECT 
+          sa.*, 
+          u.name AS student_name,
+          u.email AS student_email,
+          sf.course,
+          sf.school_or_college
+       FROM sponsorshipapplications sa
+       JOIN users u ON sa.student_id = u.id
+       LEFT JOIN studentdetails sf 
+      ON sa.student_id = sf.student_id
+       WHERE sa.id = ?`,
+      [applicationId]
+    );
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    res.json(results[0]); // return single result
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.approveSponsorshipRequest = async (req, res) => {
+  try {
+    const { applicationId } = req.params;
+    const { admin_remarks } = req.body;
+
+    const [results] = await db.query(
+      `SELECT 
+          sa.*, 
+          u.name AS student_name,
+          u.email AS student_email,
+          sf.course,
+          sf.school_or_college
+       FROM sponsorshipapplications sa
+       JOIN users u ON sa.student_id = u.id
+       LEFT JOIN studentdetails sf 
+      ON sa.student_id = sf.student_id
+       WHERE sa.id = ?`,
+      [applicationId]
+    );
+
+    if (!results.length) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    const app = results[0];
+
+    await db.query(
+      `UPDATE sponsorshipapplications
+       SET status = 'Approved', admin_remarks = ? 
+       WHERE id = ?`,
+      [admin_remarks || "" , applicationId]
+    );
+
+    const [updated] = await db.query(
+      `SELECT * FROM sponsorshipapplications WHERE id = ?`,
+      [applicationId]
+    );
+
+    res.json(updated[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to approve application" });
+  }
+};
+
+exports.rejectSponsorshipRequest = async (req, res) => {
+  try {
+    const { applicationId } = req.params;
+    const { admin_remarks } = req.body;
+
+    await db.query(
+      `UPDATE sponsorshipapplications 
+       SET status = 'Rejected', admin_remarks = ? 
+       WHERE id = ?`,
+      [admin_remarks, applicationId]
+    );
+
+    const [updated] = await db.query(
+      `SELECT * FROM sponsorshipapplications WHERE id = ?`,
+      [applicationId]
+    );
+
+    res.json(updated[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to reject application" });
+  }
+};

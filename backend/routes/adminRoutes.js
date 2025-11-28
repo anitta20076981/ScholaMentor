@@ -21,6 +21,10 @@ router.get("/scholarship-settings", adminController.getScholarshipSettings);
 router.patch("/scholarship-settings/:id/toggle", adminController.toggleScholarshipSetting);
 
 router.get("/get-all-sponsorship-request", adminController.getAllSponsorshipRequest);
+router.get("/get-sponsorship-request/:applicationId", adminController.getSponsorshipRequestById);
+router.post("/sponsorship-application/:applicationId/approve",adminController.approveSponsorshipRequest);
+router.post("/sponsorship-application/:applicationId/reject",adminController.rejectSponsorshipRequest);
+
 
 
 module.exports = router;
