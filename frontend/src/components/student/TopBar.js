@@ -123,9 +123,11 @@ function TopBar({ studentId, successMessage, errorMessage }) {
           Apply Fee Concession
         </Link>
 
-        <a href="#" style={navLinkStyle}>
+        <Link to={`/student/apply-sponsorship/${studentId}`} style={navLinkStyle}>
           Sponsorships
-        </a>
+        </Link>
+
+       
         <a href="#" style={navLinkStyle}>
           Mentors
         </a>

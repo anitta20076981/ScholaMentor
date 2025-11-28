@@ -15,6 +15,7 @@ import AdminFeeConcessionApplication from "./pages/admin/AdminFeeConcessionAppli
 import ViewFeeConcessionApplication from "./pages/admin/ViewFeeConcessionApplication"; 
 import ScholarshipSettings from "./pages/admin/AdminScholarshipSettings"; 
 import SponsorDashboard from "./pages/sponsor/SponsorDashboard"; 
+import ApplySponsorship from "./pages/student/ApplySponsorship"; 
 
 
 
@@ -42,11 +43,10 @@ function App() {
         <Route path="/admin/view-fee-concession-application/:applicationId" element={<ViewFeeConcessionApplication />} /> 
 
         <Route path="/admin/scholarship-settings" element={<ScholarshipSettings />} /> 
-
-
-
-
         <Route path="/sponsor/dashboard/:sponsorId" element={<SponsorDashboard />} /> 
+
+        <Route path="/student/apply-sponsorship/:studentId" element={<ApplySponsorship />} /> 
+
         
         
 
