@@ -70,6 +70,9 @@ router.post(
   studentController.applySponsorship
 );
 
+router.get("/:studentId/notifications", studentController.getNotifications);
+router.put("/notifications/read/:notificationId", studentController.notificationMarkAsRead);
+
 
 
 module.exports = router;

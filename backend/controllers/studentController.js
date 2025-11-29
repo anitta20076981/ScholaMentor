@@ -716,3 +716,55 @@ exports.getSponsorship = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch sponsorship details" });
   }
 };
+
+exports.getNotifications = async (req, res) => {
+  const { studentId } = req.params;
+
+  try {
+    const query = `
+      SELECT * FROM notifications 
+      WHERE user_id = ? AND status = 'unread'
+      ORDER BY created_at DESC
+    `;
+
+    const [rows] = await db.execute(query, [studentId]);
+
+    if (rows.length === 0) {
+      return res.status(200).json([]);  
+    }
+
+    res.json(rows);  
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch notifications" });
+  }
+};
+
+
+exports.notificationMarkAsRead = async (req, res) => {
+  const { notificationId } = req.params;
+
+  try {
+    const updateQuery = `
+      UPDATE notifications 
+      SET status = 'read' 
+      WHERE id = ?
+    `;
+    const [result] = await db.execute(updateQuery, [notificationId]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Notification not found" });
+    }
+    const selectQuery = `
+      SELECT * FROM notifications WHERE id = ?
+    `;
+    const [rows] = await db.execute(selectQuery, [notificationId]);
+
+    res.json(rows[0]); 
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to mark notification as read" });
+  }
+};
+
+

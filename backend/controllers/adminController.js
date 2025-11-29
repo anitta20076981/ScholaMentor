@@ -593,6 +593,16 @@ exports.approveSponsorshipRequest = async (req, res) => {
       [admin_remarks || "" , applicationId]
     );
 
+     await db.query(
+      `INSERT INTO notifications (user_id, message, type, status, created_at, updated_at)
+       VALUES (?, ?, ?, 'unread', NOW(), NOW())`,
+      [
+        app.student_id,
+        `Your sponsorship application has been approved by admin! A sponsor will contact you soon.`,
+        "sponsorship"
+      ]
+    );
+
     const [updated] = await db.query(
       `SELECT * FROM sponsorshipapplications WHERE id = ?`,
       [applicationId]
