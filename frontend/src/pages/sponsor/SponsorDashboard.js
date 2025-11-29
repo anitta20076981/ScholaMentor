@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -10,11 +11,19 @@ import Footer from "../../components/sponsor/Footer";
 import "./SponsorDashboard.css";
 
 export default function SponsorDashboard() {
-  const recommendedStudents = [
-    { name: "Aiswarya P", course: "MSc Computer Science", score: "92%", need: "High Financial Need" },
-    { name: "Rahul N", course: "B.Tech Mechanical", score: "88%", need: "Medium Financial Need" },
-    { name: "Maria Thomas", course: "BA Economics", score: "95%", need: "High Financial Need" },
-  ];
+  const [recommendedStudents, setRecommendedStudents] = useState([]);
+  useEffect(() => {
+    const fetchRecommended = async () => {
+      try {
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/sponsor/recommended-students`);
+      console.log(res.data);
+        setRecommendedStudents(res.data); // assuming the API returns an array of students
+      } catch (err) {
+        console.error("Failed to fetch recommended students:", err);
+      }
+    };
+    fetchRecommended();
+  }, []);
 
   const settings = {
     dots: false,
@@ -71,12 +80,13 @@ export default function SponsorDashboard() {
               <div className="student-card" key={i}>
                 <div className="student-image"></div>
                 <div className="card-info">
-                  <h3>{student.name}</h3>
+                  <h3>{student.student_name}</h3>
+                  <p><strong>Email:</strong> {student.student_email}</p>
                   <p><strong>Course:</strong> {student.course}</p>
-                  <p><strong>Score:</strong> {student.score}</p>
-                  <p><strong>Need:</strong> {student.need}</p>
+                  <p><strong>Score:</strong> {student.cgpa}</p>
+                  <p><strong>Need:</strong> {student.background}</p>
                 </div>
-                <button className="sponsor-btn">Sponsor Now</button>
+                <button className="sponsor-btn">View Details</button>
               </div>
             ))}
           </div>
