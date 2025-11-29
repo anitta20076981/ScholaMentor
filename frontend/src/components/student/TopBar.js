@@ -1,43 +1,54 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { FaBell } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 function TopBar({ studentId, successMessage, errorMessage }) {
   const [applyOpen, setApplyOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
   const [avatarOpen, setAvatarOpen] = useState(false);
-  const [notifyOpen, setNotifyOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
 
-  const navigate = useNavigate();
-
-  const avatarRef = useRef();
-  const notifyRef = useRef();
-
-  // Dummy notifications (replace with API later)
-  const notifications = [
-    "Your scholarship application is under review.",
-    "A sponsor viewed your profile.",
-    "Admin has updated your document status.",
+  const scholarshipTypes = [
+    { type: "Merit", route: "merit" },
+    { type: "Need-Based", route: "Need-based" },
+    { type: "Sports", route: "sports" },
+    { type: "Special Scheme", route: "Special Scheme" },
   ];
 
-  const unreadCount = notifications.length;
-
-  // Close dropdowns when clicking outside
+  // Fetch notifications from backend
   useEffect(() => {
-    const closeMenus = (event) => {
-      if (avatarRef.current && !avatarRef.current.contains(event.target)) {
-        setAvatarOpen(false);
-      }
-      if (notifyRef.current && !notifyRef.current.contains(event.target)) {
-        setNotifyOpen(false);
+    const fetchNotifications = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/student/${studentId}/notifications`
+        );
+        const data = await res.json();
+        setNotifications(data || []);
+      } catch (err) {
+        console.error("Failed to fetch notifications", err);
       }
     };
-    document.addEventListener("mousedown", closeMenus);
-    return () => document.removeEventListener("mousedown", closeMenus);
-  }, []);
+    fetchNotifications();
+  }, [studentId]);
 
-  const handleLogout = () => {
-    alert("Logout function here");
-    navigate("/");
+  const unreadCount = notifications.filter((n) => n.status === "unread").length;
+
+  const navLinkStyle = { color: "white", textDecoration: "none", cursor: "pointer" };
+  const dropdownLinkStyle = { padding: "8px 0", textDecoration: "none", color: "black" };
+
+  const handleNotificationClick = async (notificationId) => {
+    try {
+      await fetch(`${process.env.REACT_APP_API_URL}/api/student/notifications/read/${notificationId}`, {
+        method: "PUT",
+      });
+
+      setNotifications((prevNotifications) =>
+        prevNotifications.map((n) =>
+          n.id === notificationId ? { ...n, status: "read" } : n
+        )
+      );
+    } catch (err) {
+      console.error("Failed to mark notification as read", err);
+    }
   };
 
   return (
@@ -56,7 +67,7 @@ function TopBar({ studentId, successMessage, errorMessage }) {
           boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
         }}
       >
-        {/* Success / Error toast */}
+        {/* Success / Error Message */}
         {(successMessage || errorMessage) && (
           <div
             style={{
@@ -79,46 +90,32 @@ function TopBar({ studentId, successMessage, errorMessage }) {
           </div>
         )}
 
-        {/* LOGO */}
         <Link
           to={`/student/dashboard/${studentId}`}
-          style={{
-            fontWeight: "bold",
-            fontSize: "22px",
-            color: "white",
-            textDecoration: "none",
-          }}
+          style={{ fontWeight: "bold", fontSize: "22px", color: "white", textDecoration: "none" }}
         >
           ScholaMentor
         </Link>
 
-        {/* NAVBAR */}
-        <nav style={{ display: "flex", gap: "25px", alignItems: "center" }}>
-          <a href="#" style={{ color: "white", textDecoration: "none" }}>
+        <nav style={{ display: "flex", gap: "25px", alignItems: "center", position: "relative" }}>
+          <a href="#" style={navLinkStyle}>
             How It Works
           </a>
 
-          <Link
-            to={`/student/profile/${studentId}`}
-            style={{ color: "white", textDecoration: "none" }}
-          >
+          <Link to={`/student/profile/${studentId}`} style={navLinkStyle}>
             Profile
           </Link>
 
-          {/* APPLY DROPDOWN */}
+          {/* Apply Scholarship Dropdown */}
           <div style={{ position: "relative" }}>
-            <span
-              style={{ cursor: "pointer" }}
-              onClick={() => setApplyOpen(!applyOpen)}
-            >
+            <span style={navLinkStyle} onClick={() => setApplyOpen(!applyOpen)}>
               Apply Scholarship ▾
             </span>
-
             {applyOpen && (
               <div
                 style={{
                   position: "absolute",
-                  top: "30px",
+                  top: "28px",
                   background: "white",
                   color: "black",
                   padding: "10px",
@@ -127,80 +124,56 @@ function TopBar({ studentId, successMessage, errorMessage }) {
                   display: "flex",
                   flexDirection: "column",
                   minWidth: "200px",
+                  zIndex: 200,
                 }}
               >
-                <Link
-                  to={`/student/apply_scholarship/merit/${studentId}`}
-                  style={{ padding: "8px 0", textDecoration: "none", color: "black" }}
-                >
-                  Merit Scholarship
-                </Link>
-                <Link
-                  to={`/student/apply_scholarship/Need-based/${studentId}`}
-                  style={{ padding: "8px 0", textDecoration: "none", color: "black" }}
-                >
-                  Need-Based Scholarship
-                </Link>
-                <Link
-                  to={`/student/apply_scholarship/sports/${studentId}`}
-                  style={{ padding: "8px 0", textDecoration: "none", color: "black" }}
-                >
-                  Sports Scholarship
-                </Link>
-                <Link
-                  to={`/student/apply_scholarship/Special Scheme/${studentId}`}
-                  style={{ padding: "8px 0", textDecoration: "none", color: "black" }}
-                >
-                  Special Scheme Scholarship
-                </Link>
+                {scholarshipTypes.map((scholarship) => (
+                  <Link
+                    key={scholarship.route}
+                    to={`/student/apply_scholarship/${scholarship.route}/${studentId}`}
+                    style={dropdownLinkStyle}
+                  >
+                    {scholarship.type} Scholarship
+                  </Link>
+                ))}
               </div>
             )}
           </div>
 
-          <Link
-            to={`/student/fee-concession/${studentId}`}
-            style={{ color: "white", textDecoration: "none" }}
-          >
+          <Link to={`/student/fee-concession/${studentId}`} style={navLinkStyle}>
             Apply Fee Concession
           </Link>
 
-          <Link
-            to={`/student/apply-sponsorship/${studentId}`}
-            style={{ color: "white", textDecoration: "none" }}
-          >
+          <Link to={`/student/apply-sponsorship/${studentId}`} style={navLinkStyle}>
             Sponsorships
           </Link>
 
-          {/* 🔔 NOTIFICATION ICON */}
-          <div ref={notifyRef} style={{ position: "relative" }}>
-            <div
-              onClick={() => setNotifyOpen(!notifyOpen)}
-              style={{ position: "relative", cursor: "pointer" }}
+          {/* Notification Icon */}
+          <div style={{ position: "relative" }}>
+            <span
+              style={{ cursor: "pointer", fontSize: "22px", marginRight: "10px", position: "relative" }}
+              onClick={() => setNotifOpen(!notifOpen)}
             >
-              <FaBell size={22} />
-
-              {/* Badge */}
+              🔔
               {unreadCount > 0 && (
                 <span
                   style={{
                     position: "absolute",
-                    top: "-6px",
-                    right: "-6px",
+                    top: "-5px",
+                    right: "-10px",
                     background: "red",
+                    color: "white",
                     borderRadius: "50%",
                     padding: "2px 6px",
-                    fontSize: "10px",
-                    color: "white",
-                    fontWeight: "bold",
+                    fontSize: "12px",
                   }}
                 >
                   {unreadCount}
                 </span>
               )}
-            </div>
+            </span>
 
-            {/* Notification dropdown */}
-            {notifyOpen && (
+            {notifOpen && (
               <div
                 style={{
                   position: "absolute",
@@ -208,102 +181,83 @@ function TopBar({ studentId, successMessage, errorMessage }) {
                   top: "30px",
                   background: "white",
                   color: "black",
-                  padding: "12px",
-                  width: "250px",
+                  width: "280px",
                   borderRadius: "8px",
-                  boxShadow: "0px 3px 12px rgba(0,0,0,0.2)",
-                  zIndex: 200,
+                  padding: "10px",
+                  boxShadow: "0px 3px 12px rgba(0,0,0,0.25)",
+                  zIndex: 300,
                 }}
               >
-                <h4 style={{ margin: "0 0 10px 0", fontSize: "16px" }}>
-                  Notifications
-                </h4>
-
-                {notifications.map((note, i) => (
-                  <p
-                    key={i}
-                    style={{
-                      padding: "6px 0",
-                      borderBottom: "1px solid #eee",
-                      fontSize: "13px",
-                    }}
-                  >
-                    {note}
-                  </p>
-                ))}
-
-                <p
-                  style={{
-                    textAlign: "center",
-                    marginTop: "10px",
-                    fontSize: "12px",
-                    color: "#2d6cdf",
-                    cursor: "pointer",
-                  }}
-                >
-                  View All
-                </p>
+                <h4 style={{ margin: "0 0 10px 0", fontSize: "16px" }}>Notifications</h4>
+                {notifications.length === 0 ? (
+                  <p style={{ fontSize: "14px", color: "gray" }}>No new notifications</p>
+                ) : (
+                  notifications.map((note) => (
+                    <div
+                      key={note.id}
+                      onClick={() => handleNotificationClick(note.id)}
+                      style={{
+                        padding: "8px",
+                        borderBottom: "1px solid #ddd",
+                        fontSize: "14px",
+                        fontWeight: note.status === "unread" ? "bold" : "normal",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {note.message}
+                    </div>
+                  ))
+                )}
               </div>
             )}
           </div>
 
-          {/* AVATAR */}
-          <div ref={avatarRef} style={{ position: "relative" }}>
-            <div
+          {/* Avatar */}
+          <div style={{ position: "relative" }}>
+            <span
               onClick={() => setAvatarOpen(!avatarOpen)}
               style={{
-                width: "40px",
-                height: "40px",
+                width: "35px",
+                height: "35px",
                 background: "white",
+                color: "#2d6cdf",
                 borderRadius: "50%",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontWeight: "bold",
-                color: "#2d6cdf",
                 cursor: "pointer",
+                fontWeight: "bold",
+                fontSize: "18px",
               }}
             >
               A
-            </div>
-
+            </span>
             {avatarOpen && (
               <div
                 style={{
                   position: "absolute",
                   right: 0,
-                  top: "50px",
+                  top: "40px",
                   background: "white",
-                  padding: "12px",
+                  width: "180px",
                   borderRadius: "8px",
-                  boxShadow: "0px 3px 12px rgba(0,0,0,0.2)",
-                  width: "160px",
+                  padding: "10px 0",
+                  boxShadow: "0px 3px 12px rgba(0,0,0,0.25)",
+                  zIndex: 300,
                 }}
               >
                 <Link
                   to={`/student/profile/${studentId}`}
-                  style={{
-                    display: "block",
-                    padding: "8px 0",
-                    color: "black",
-                    textDecoration: "none",
-                  }}
+                  style={{ display: "block", padding: "10px 20px", color: "black", textDecoration: "none" }}
                 >
-                  My Profile
+                  Profile
                 </Link>
-
-                <span
-                  style={{
-                    display: "block",
-                    padding: "8px 0",
-                    color: "red",
-                    cursor: "pointer",
-                    fontWeight: "bold",
-                  }}
-                  onClick={handleLogout}
+                <Link
+                  to="/logout"
+                  style={{ display: "block", padding: "10px 20px", color: "black", textDecoration: "none" }}
                 >
                   Logout
-                </span>
+                </Link>
               </div>
             )}
           </div>
