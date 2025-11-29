@@ -1,27 +1,44 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FaBell } from "react-icons/fa";
 
 function TopBar({ studentId, successMessage, errorMessage }) {
   const [applyOpen, setApplyOpen] = useState(false);
+  const [avatarOpen, setAvatarOpen] = useState(false);
+  const [notifyOpen, setNotifyOpen] = useState(false);
 
-  const navLinkStyle = {
-    color: "white",
-    textDecoration: "none",
-    cursor: "pointer",
-  };
+  const navigate = useNavigate();
 
-  const dropdownLinkStyle = {
-    padding: "8px 0",
-    textDecoration: "none",
-    color: "black",
-  };
+  const avatarRef = useRef();
+  const notifyRef = useRef();
 
-  const scholarshipTypes = [
-    { type: "Merit", route: "merit" },
-    { type: "Need-Based", route: "Need-based" },
-    { type: "Sports", route: "sports" },
-    { type: "Special Scheme", route: "Special Scheme" },
+  // Dummy notifications (replace with API later)
+  const notifications = [
+    "Your scholarship application is under review.",
+    "A sponsor viewed your profile.",
+    "Admin has updated your document status.",
   ];
+
+  const unreadCount = notifications.length;
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const closeMenus = (event) => {
+      if (avatarRef.current && !avatarRef.current.contains(event.target)) {
+        setAvatarOpen(false);
+      }
+      if (notifyRef.current && !notifyRef.current.contains(event.target)) {
+        setNotifyOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", closeMenus);
+    return () => document.removeEventListener("mousedown", closeMenus);
+  }, []);
+
+  const handleLogout = () => {
+    alert("Logout function here");
+    navigate("/");
+  };
 
   return (
     <>
@@ -39,108 +56,259 @@ function TopBar({ studentId, successMessage, errorMessage }) {
           boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
         }}
       >
-      {/* Success / Error Message */}
-      {(successMessage || errorMessage) && (
-        <div
+        {/* Success / Error toast */}
+        {(successMessage || errorMessage) && (
+          <div
+            style={{
+              position: "fixed",
+              top: "70px",
+              right: "20px",
+              zIndex: 9999,
+              padding: "10px 20px",
+              background: successMessage ? "#d4edda" : "#f8d7da",
+              color: successMessage ? "#155724" : "#721c24",
+              border: successMessage ? "1px solid #c3e6cb" : "1px solid #f5c6cb",
+              borderRadius: "6px",
+              minWidth: "200px",
+              maxWidth: "350px",
+              boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
+              textAlign: "left",
+            }}
+          >
+            {successMessage || errorMessage}
+          </div>
+        )}
+
+        {/* LOGO */}
+        <Link
+          to={`/student/dashboard/${studentId}`}
           style={{
-            position: "fixed",          // Fixed position so it stays on screen
-            top: "70px",                // Adjust depending on TopBar height
-            right: "20px",              // Distance from right edge
-            zIndex: 9999,               // Make sure it's on top
-            padding: "10px 20px",
-            background: successMessage ? "#d4edda" : "#f8d7da",
-            color: successMessage ? "#155724" : "#721c24",
-            border: successMessage ? "1px solid #c3e6cb" : "1px solid #f5c6cb",
-            borderRadius: "6px",
-            minWidth: "200px",
-            maxWidth: "350px",
-            boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
-            textAlign: "left",
+            fontWeight: "bold",
+            fontSize: "22px",
+            color: "white",
+            textDecoration: "none",
           }}
         >
-          {successMessage || errorMessage}
-        </div>
-      )}       
-
-      <Link
-        to={`/student/dashboard/${studentId}`} // link to student dashboard
-        style={{ 
-          fontWeight: "bold", 
-          fontSize: "22px", 
-          cursor: "pointer", 
-          color: "white",      // keep the color consistent
-          textDecoration: "none" // remove underline
-        }}
-      >
-      ScholaMentor
-      </Link>
-
-      <nav style={{ display: "flex", gap: "25px", position: "relative" }}>
-        <a href="#" style={navLinkStyle}>
-          How It Works
-        </a>
-
-        <Link to={`/student/profile/${studentId}`} style={navLinkStyle}>
-          Profile
+          ScholaMentor
         </Link>
 
-        {/* APPLY DROPDOWN */}
-        <div style={{ position: "relative" }}>
-          <span style={navLinkStyle} onClick={() => setApplyOpen(!applyOpen)}>
-            Apply Scholarship ▾
-          </span>
+        {/* NAVBAR */}
+        <nav style={{ display: "flex", gap: "25px", alignItems: "center" }}>
+          <a href="#" style={{ color: "white", textDecoration: "none" }}>
+            How It Works
+          </a>
 
-          {applyOpen && (
+          <Link
+            to={`/student/profile/${studentId}`}
+            style={{ color: "white", textDecoration: "none" }}
+          >
+            Profile
+          </Link>
+
+          {/* APPLY DROPDOWN */}
+          <div style={{ position: "relative" }}>
+            <span
+              style={{ cursor: "pointer" }}
+              onClick={() => setApplyOpen(!applyOpen)}
+            >
+              Apply Scholarship ▾
+            </span>
+
+            {applyOpen && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "30px",
+                  background: "white",
+                  color: "black",
+                  padding: "10px",
+                  borderRadius: "8px",
+                  boxShadow: "0px 3px 12px rgba(0,0,0,0.2)",
+                  display: "flex",
+                  flexDirection: "column",
+                  minWidth: "200px",
+                }}
+              >
+                <Link
+                  to={`/student/apply_scholarship/merit/${studentId}`}
+                  style={{ padding: "8px 0", textDecoration: "none", color: "black" }}
+                >
+                  Merit Scholarship
+                </Link>
+                <Link
+                  to={`/student/apply_scholarship/Need-based/${studentId}`}
+                  style={{ padding: "8px 0", textDecoration: "none", color: "black" }}
+                >
+                  Need-Based Scholarship
+                </Link>
+                <Link
+                  to={`/student/apply_scholarship/sports/${studentId}`}
+                  style={{ padding: "8px 0", textDecoration: "none", color: "black" }}
+                >
+                  Sports Scholarship
+                </Link>
+                <Link
+                  to={`/student/apply_scholarship/Special Scheme/${studentId}`}
+                  style={{ padding: "8px 0", textDecoration: "none", color: "black" }}
+                >
+                  Special Scheme Scholarship
+                </Link>
+              </div>
+            )}
+          </div>
+
+          <Link
+            to={`/student/fee-concession/${studentId}`}
+            style={{ color: "white", textDecoration: "none" }}
+          >
+            Apply Fee Concession
+          </Link>
+
+          <Link
+            to={`/student/apply-sponsorship/${studentId}`}
+            style={{ color: "white", textDecoration: "none" }}
+          >
+            Sponsorships
+          </Link>
+
+          {/* 🔔 NOTIFICATION ICON */}
+          <div ref={notifyRef} style={{ position: "relative" }}>
             <div
+              onClick={() => setNotifyOpen(!notifyOpen)}
+              style={{ position: "relative", cursor: "pointer" }}
+            >
+              <FaBell size={22} />
+
+              {/* Badge */}
+              {unreadCount > 0 && (
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "-6px",
+                    right: "-6px",
+                    background: "red",
+                    borderRadius: "50%",
+                    padding: "2px 6px",
+                    fontSize: "10px",
+                    color: "white",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {unreadCount}
+                </span>
+              )}
+            </div>
+
+            {/* Notification dropdown */}
+            {notifyOpen && (
+              <div
+                style={{
+                  position: "absolute",
+                  right: 0,
+                  top: "30px",
+                  background: "white",
+                  color: "black",
+                  padding: "12px",
+                  width: "250px",
+                  borderRadius: "8px",
+                  boxShadow: "0px 3px 12px rgba(0,0,0,0.2)",
+                  zIndex: 200,
+                }}
+              >
+                <h4 style={{ margin: "0 0 10px 0", fontSize: "16px" }}>
+                  Notifications
+                </h4>
+
+                {notifications.map((note, i) => (
+                  <p
+                    key={i}
+                    style={{
+                      padding: "6px 0",
+                      borderBottom: "1px solid #eee",
+                      fontSize: "13px",
+                    }}
+                  >
+                    {note}
+                  </p>
+                ))}
+
+                <p
+                  style={{
+                    textAlign: "center",
+                    marginTop: "10px",
+                    fontSize: "12px",
+                    color: "#2d6cdf",
+                    cursor: "pointer",
+                  }}
+                >
+                  View All
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* AVATAR */}
+          <div ref={avatarRef} style={{ position: "relative" }}>
+            <div
+              onClick={() => setAvatarOpen(!avatarOpen)}
               style={{
-                position: "absolute",
-                top: "28px",
+                width: "40px",
+                height: "40px",
                 background: "white",
-                color: "black",
-                padding: "10px",
-                borderRadius: "8px",
-                boxShadow: "0px 3px 12px rgba(0,0,0,0.2)",
+                borderRadius: "50%",
                 display: "flex",
-                flexDirection: "column",
-                minWidth: "200px",
-                zIndex: 200,
+                alignItems: "center",
+                justifyContent: "center",
+                fontWeight: "bold",
+                color: "#2d6cdf",
+                cursor: "pointer",
               }}
             >
-              {scholarshipTypes.map((scholarship) => (
-                <Link
-                  key={scholarship.route}
-                  to={`/student/apply_scholarship/${scholarship.route}/${studentId}`}
-                  style={dropdownLinkStyle}
-                >
-                  {scholarship.type} Scholarship
-                </Link>
-              ))}
+              A
             </div>
-          )}
-        </div>
 
-         <Link to={`/student/fee-concession/${studentId}`} style={navLinkStyle}>
-          Apply Fee Concession
-        </Link>
+            {avatarOpen && (
+              <div
+                style={{
+                  position: "absolute",
+                  right: 0,
+                  top: "50px",
+                  background: "white",
+                  padding: "12px",
+                  borderRadius: "8px",
+                  boxShadow: "0px 3px 12px rgba(0,0,0,0.2)",
+                  width: "160px",
+                }}
+              >
+                <Link
+                  to={`/student/profile/${studentId}`}
+                  style={{
+                    display: "block",
+                    padding: "8px 0",
+                    color: "black",
+                    textDecoration: "none",
+                  }}
+                >
+                  My Profile
+                </Link>
 
-        <Link to={`/student/apply-sponsorship/${studentId}`} style={navLinkStyle}>
-          Sponsorships
-        </Link>
-
-       
-        <a href="#" style={navLinkStyle}>
-          Mentors
-        </a>
-        <a href="#" style={navLinkStyle}>
-          Donor Support
-        </a>
-        <a href="#" style={navLinkStyle}>
-          Logout
-        </a>
-      </nav>
-    </header>
-
-    
+                <span
+                  style={{
+                    display: "block",
+                    padding: "8px 0",
+                    color: "red",
+                    cursor: "pointer",
+                    fontWeight: "bold",
+                  }}
+                  onClick={handleLogout}
+                >
+                  Logout
+                </span>
+              </div>
+            )}
+          </div>
+        </nav>
+      </header>
     </>
   );
 }
