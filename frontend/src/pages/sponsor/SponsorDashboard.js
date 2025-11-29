@@ -9,8 +9,11 @@ import TopBar from "../../components/sponsor/TopBar";
 import Footer from "../../components/sponsor/Footer";
 
 import "./SponsorDashboard.css";
+import { useParams, useNavigate } from "react-router-dom"; // use parameter from url
 
-export default function SponsorDashboard() {
+
+function SponsorDashboard() {
+  const { sponsorId } = useParams(); // define studentid
   const [recommendedStudents, setRecommendedStudents] = useState([]);
   useEffect(() => {
     const fetchRecommended = async () => {
@@ -39,7 +42,8 @@ export default function SponsorDashboard() {
 
   return (
     <div className="sponsor-wrapper">
-      <Sidebar />
+
+      <Sidebar sponsorId={sponsorId} /> 
 
       <div className="content">
         <TopBar />
@@ -97,3 +101,4 @@ export default function SponsorDashboard() {
     </div>
   );
 }
+export default SponsorDashboard;

@@ -10,13 +10,14 @@ import {
 
 import "./Sidebar.css";
 
-export default function Sidebar() {
+export default function Sidebar({ sponsorId }) {
   return (
     <aside className="sidebar">
       <h2 className="sidebar-title">ScholaMentor</h2>
 
       <nav className="sidebar-menu">
-        <NavLink to="/sponsor/dashboard" className="sidebar-link">
+        
+        <NavLink to={`/sponsor/dashboard/${sponsorId}`} className="sidebar-link">
           <FaHome className="icon" /> Dashboard
         </NavLink>
 
