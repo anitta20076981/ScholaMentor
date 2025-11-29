@@ -16,6 +16,8 @@ exports.getRecommendedStudents = async (req, res) => {
       JOIN users AS u ON sa.student_id = u.id
       JOIN studentdetails AS sd ON sd.student_id = u.id
       ORDER BY sd.cgpa DESC
+      LIMIT 3
+
     `;
 
     const [rows] = await db.execute(query);
