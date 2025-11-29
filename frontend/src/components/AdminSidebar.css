@@ -41,3 +41,37 @@
   padding: 30px;
   background-color: #f4f4f9;
 }
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+/* 
+.sidebar {
+  width: 220px; 
+  background-color: #1e1e2f;
+  color: white;
+  padding: 20px;
+}
+
+.admin-content {
+  flex: 1;          
+  padding: 30px;     
+  background-color: #f4f4f9;
+} */
+.sidebar {
+  position: fixed;   /* keeps sidebar in place */
+  top: 0;
+  left: 0;
+  width: 220px;      /* sidebar width */
+  height: 100vh;
+  background-color: #1e1e2f;
+  color: white;
+  padding: 20px;
+}
+
+.admin-content {
+  margin-left: 220px; /* move content to the right */
+  padding: 30px 40px;
+  background-color: #f4f4f9;
+  min-height: 100vh;   /* ensures full height */
+}
