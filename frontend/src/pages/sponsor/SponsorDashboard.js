@@ -51,12 +51,20 @@ export default function SponsorDashboard() {
           <div className="hero-text">
             <h1>Empower Students Through Sponsorship</h1>
             <p>Support talented students, contribute to education, and change lives.</p>
-            <button>Explore Students</button>
+            <button onClick={() => {
+                const element = document.getElementById("recommended-students");
+                if (element) {
+                  element.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+            >
+            Explore Students
+            </button>
           </div>
         </section>
 
         {/* RECOMMENDED STUDENTS */}
-        <section className="recommend-section">
+        <section id="recommended-students" className="recommend-section">
           <h2>Recommended Students</h2>
           <div className="card-grid">
             {recommendedStudents.map((student, i) => (
