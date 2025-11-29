@@ -1,0 +1,114 @@
+/* WRAPPER */
+.sponsor-wrapper {
+  display: flex;
+  font-family: "Poppins", sans-serif;
+}
+
+.content {
+  margin-left: 280px; /* match new sidebar width */
+  width: calc(100% - 280px);
+  position: relative;
+  z-index: 1;
+}
+
+/* HERO SLIDER */
+.hero-slider {
+  position: relative;
+  margin-top: 60px;
+}
+
+.slider-img {
+  width: 97%;
+  height: 450px;
+  object-fit: cover;
+}
+
+
+/* HERO TEXT OVERLAY */
+.hero-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+}
+
+.hero-text h1 {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.hero-text p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.hero-text button {
+  padding: 12px 28px;
+  background: #ff6a00;
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* RECOMMENDED STUDENTS */
+.recommend-section {
+  padding: 60px 30px;
+  background: #f8f8f8;
+}
+
+.recommend-section h2 {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 40px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.student-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+.student-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+.student-image {
+  height: 180px;
+  background: #dfe6ef;
+}
+
+.card-info {
+  padding: 20px;
+}
+
+.card-info h3 {
+  font-size: 20px;
+  color: #ff6a00;
+  margin-bottom: 8px;
+}
+
+.sponsor-btn {
+  width: 100%;
+  padding: 12px 0;
+  background: #ff6a00;
+  color: white;
+  border: none;
+  border-top: 1px solid #eee;
+  font-size: 16px;
+  cursor: pointer;
+}
