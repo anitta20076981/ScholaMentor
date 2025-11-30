@@ -18,7 +18,6 @@ module.exports = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
-        unique: true // optional if one-to-one
       },
       message: {
         type: Sequelize.STRING,
