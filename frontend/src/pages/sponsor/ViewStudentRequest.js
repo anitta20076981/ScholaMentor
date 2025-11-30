@@ -3,14 +3,14 @@ import axios from "axios";
 import Sidebar from "../../components/sponsor/Sidebar";
 import TopBar from "../../components/sponsor/TopBar";
 import Footer from "../../components/sponsor/Footer";
-
-import "./SponsorStudentRequest.css";
 import { useParams } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
 
+import "./ViewStudentRequest.css";
+
 function ViewStudentRequest() {
-  const { requestId, sponsorId } = useParams();  
-  const [studentRequest, setStudentRequest] = useState(null);  
+  const { requestId, sponsorId } = useParams();
+  const [studentRequest, setStudentRequest] = useState(null);
 
   useEffect(() => {
     const fetchStudentRequest = async () => {
@@ -18,14 +18,13 @@ function ViewStudentRequest() {
         const res = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/sponsor/get-student-request/${sponsorId}/${requestId}`
         );
-        console.log(res.data);
-        setStudentRequest(res.data); // set the student object
+        setStudentRequest(res.data);
       } catch (err) {
         console.error("Failed to fetch student request:", err);
       }
     };
     fetchStudentRequest();
-  }, [requestId]);
+  }, [requestId, sponsorId]);
 
   const renderDocLink = (label, filePath) => {
     if (!filePath) return null;
@@ -33,12 +32,9 @@ function ViewStudentRequest() {
     const href = `${process.env.REACT_APP_API_URL}/uploads/${filePath}`;
 
     return (
-      <p className="doc-link">
-        <strong>{label}:</strong>{" "}
-        <a href={href} target="_blank" rel="noopener noreferrer">
-            <FaEye />
-        </a>
-      </p>
+      <a href={href} target="_blank" rel="noopener noreferrer" className="doc-icon">
+        <FaEye />
+      </a>
     );
   };
 
@@ -49,51 +45,32 @@ function ViewStudentRequest() {
       <div className="content">
         <TopBar />
 
-        <section id="recommended-students" className="recommend-section">
-          <h2>Student Request</h2>
+        <section className="recommend-section view-request-section">
+          <h3>Student Request</h3>
 
           {!studentRequest && <p>Loading...</p>}
 
           {studentRequest && (
-            <div className="student-card">
-              <div className="student-image">Student Details</div>
-              <div className="card-info">
-                <h3>{studentRequest.student_name}</h3>
-                <p>
-                  <strong>Email:</strong> {studentRequest.student_email}
-                </p>
-                 <p>
-                  <strong>Phone:</strong> {studentRequest.phone}
-                </p>
-               
+            <div className="request-container">
+              {/* Student Details */}
+              <div className="request-column">
+                <h3 className="section-title">Student Details</h3>
+                <p><strong>Name:</strong> {studentRequest.student_name}</p>
+                <p><strong>Email:</strong> {studentRequest.student_email}</p>
+                <p><strong>Phone:</strong> {studentRequest.phone}</p>
               </div>
-              <div className="student-image">Application Details</div>
-              <div className="card-info">
-                <h3>{studentRequest.student_name} </h3>
-                
+
+              {/* Application Details */}
+              <div className="request-column">
+                <h3 className="section-title">Application Details</h3>
+                <p><strong>Course:</strong> {studentRequest.course}</p>
+                <p><strong>Score:</strong> {studentRequest.cgpa}</p>
+                <p><strong>Purpose:</strong> {studentRequest.purpose}</p>
+                <p><strong>Need:</strong> {studentRequest.background}</p>
+                <p><strong>Request Date:</strong> {new Date(studentRequest.created_at).toLocaleDateString("en-GB")}</p>
                 <p>
-                  <strong>Course:</strong> {studentRequest.course}
+                  <strong>Marksheet:</strong> {renderDocLink("Marksheet", studentRequest.marksheet)}
                 </p>
-                <p>
-                  <strong>Score:</strong> {studentRequest.cgpa}
-                </p>
-                <p>
-                  <strong>Purpose:</strong> {studentRequest.purpose}
-                </p>
-                <p>
-                  <strong>Need:</strong> {studentRequest.background}
-                </p>
-                 <p>
-                    <strong>Request Date:</strong> {new Date(studentRequest.created_at).toLocaleDateString("en-GB")}
-                </p>
-                <p>
-            <>
-              {renderDocLink(
-                "Marksheet",
-                studentRequest.marksheet
-              )}
-            </>
-          </p>
               </div>
             </div>
           )}
