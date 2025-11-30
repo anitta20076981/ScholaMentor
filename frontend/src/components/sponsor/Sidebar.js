@@ -21,8 +21,8 @@ export default function Sidebar({ sponsorId }) {
           <FaHome className="icon" /> Dashboard
         </NavLink>
 
-        <NavLink to="/sponsor/students" className="sidebar-link">
-          <FaUserGraduate className="icon" /> Students
+        <NavLink to={`/sponsor/student-request/${sponsorId}`} className="sidebar-link">
+          <FaUserGraduate className="icon" /> Students Request
         </NavLink>
 
         <NavLink to="/sponsor/my-sponsorships" className="sidebar-link">

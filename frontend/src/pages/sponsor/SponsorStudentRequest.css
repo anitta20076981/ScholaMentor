@@ -1,0 +1,148 @@
+/* WRAPPER */
+.sponsor-wrapper {
+  display: flex;
+  font-family: "Poppins", sans-serif;
+  min-height: 100vh; /* full viewport height */
+  flex-direction: row; /* sidebar + content horizontally */
+}
+
+/* CONTENT */
+.content {
+  margin-left: 280px; /* match sidebar width */
+  width: calc(100% - 280px);
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* take remaining space to push footer down */
+}
+
+/* RECOMMENDED STUDENTS SECTION */
+.recommend-section {
+  padding: 40px 30px;
+  background: #f8f8f8;
+  flex: 1; /* allow section to grow */
+}
+
+.recommend-section h2 {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 30px;
+}
+
+/* CARD GRID */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* show 3 cards per row */
+  gap: 20px;
+}
+
+.student-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  height: auto;
+}
+
+.student-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+.student-image {
+  height: 50px; /* smaller image */
+  background: #dfe6ef;
+}
+
+.card-info {
+  padding: 15px;
+}
+
+.card-info h3 {
+  font-size: 18px;
+  color: #ff6a00;
+  margin-bottom: 6px;
+}
+
+.card-info p {
+  font-size: 14px;
+  margin: 2px 0;
+}
+
+.sponsor-btn {
+  width: 100%;
+  padding: 10px 0;
+  background: #ff6a00;
+  color: white;
+  border: none;
+  border-top: 1px solid #eee;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 0 0 12px 12px;
+}
+
+/* FOOTER */
+.content footer {
+  margin-top: auto; /* push footer to bottom if content is short */
+}
+
+/* OPTIONAL: HERO SLIDER STYLES */
+.hero-slider {
+  position: relative;
+  margin-top: 60px;
+}
+
+.slider-img {
+  width: 97%;
+  height: 300px; /* smaller slider height */
+  object-fit: cover;
+}
+
+.hero-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+}
+
+.hero-text h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.hero-text p {
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.hero-text button {
+  padding: 10px 25px;
+  background: #ff6a00;
+  border: none;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* RESPONSIVE */
+@media screen and (max-width: 1200px) {
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .content {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+}
