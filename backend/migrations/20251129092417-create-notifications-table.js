@@ -27,6 +27,10 @@ module.exports = {
         type: Sequelize.STRING, // "approval", "rejection", etc.
         allowNull: false,
       },
+      data: {
+        type: Sequelize.JSON, 
+        allowNull: true
+      },
       status: {
         type: Sequelize.ENUM("unread", "read"),
         allowNull: false,

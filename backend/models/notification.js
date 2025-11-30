@@ -25,6 +25,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING, // e.g. 'approval', 'rejection'
       allowNull: false,
     },
+     data: {
+      type: DataTypes.JSON, 
+      allowNull: true,
+    },
     status: {
       type: DataTypes.ENUM("unread", "read"),
       defaultValue: "unread",
