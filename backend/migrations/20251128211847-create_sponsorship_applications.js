@@ -41,7 +41,7 @@ module.exports = {
         allowNull: true
       },
       status: {
-        type: Sequelize.ENUM('Pending', 'Approved', 'Rejected'),
+        type: Sequelize.ENUM('Pending','Approved','Rejected','MoreInfo','InfoSubmitted','ApprovedBySponsor','RejectedBySponsor'),
         defaultValue: 'Pending'
       },
       admin_remarks: {
