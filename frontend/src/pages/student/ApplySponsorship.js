@@ -68,7 +68,7 @@ function ApplySponsorship() {
         const res = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/student/fetch_info_request_notifications/${studentId}`
         );
-         console.log(res.data);
+      
         if (res.data) setInforequests(res.data);
       } catch (err) {
         console.error("Error fetching data:", err);

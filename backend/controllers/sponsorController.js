@@ -36,7 +36,6 @@ exports.getRecommendedStudents = async (req, res) => {
  
 
 exports.getStudentRequest = async (req, res) => {
-  console.log(req.params);
   const { requestId } = req.params;
 
   try {
