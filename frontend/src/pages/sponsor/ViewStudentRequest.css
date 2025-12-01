@@ -29,6 +29,7 @@
   justify-content: space-between;
 }
 
+
 .request-column {
   background: #fff;
   padding: 20px 25px;
@@ -203,6 +204,81 @@
 
 .modal-actions button:last-child:hover {
   background-color: #b3b3b3;
+}
+.submitted-docs {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.submitted-docs h4 {
+  margin-bottom: 15px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.doc-box {
+  border: 1px solid #e3e3e3;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  background: #fafafa;
+  transition: all 0.2s ease-in-out;
+}
+
+.doc-box:hover {
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.doc-box p {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  color: #222;
+}
+
+.doc-link {
+  display: inline-block;
+  padding: 8px 14px;
+  margin-top: 5px;
+  background: #4a90e2;
+  color: #fff !important;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: background 0.2s ease-in-out;
+}
+
+.doc-link:hover {
+  background: #357ac9;
+}
+
+.doc-date {
+  display: block;
+  margin-top: 10px;
+  font-size: 13px;
+  color: #777;
+  font-style: italic;
+}
+.doc-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;  
+  margin-bottom: 10px;
+}
+
+.doc-eye a {
+  font-weight: bold;
+  color: #ff6a00;  
+  text-decoration: none;
+}
+
+.doc-eye a:hover {
+  text-decoration: underline;
 }
 
 

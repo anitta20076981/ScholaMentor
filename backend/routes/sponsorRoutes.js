@@ -10,6 +10,7 @@ router.get("/:sponsorId/notifications", sponsorController.getNotifications);
 router.put("/notifications/read/:notificationId", sponsorController.notificationMarkAsRead);
 
 router.get("/get-info-request/:sponsorId/:requestId", sponsorController.getInfoRequest);
+router.get("/get-submitted-docs/:sponsorId/:requestId", sponsorController.getSubmittedDocs);
 
  
 module.exports = router;

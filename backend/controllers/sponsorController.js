@@ -201,6 +201,24 @@ exports.getInfoRequest = async (req, res) => {
   }
 };
 
+exports.getSubmittedDocs = async (req, res) => {
+  const { requestId, sponsorId } = req.params;
+  try {
+    const query = `
+    SELECT * 
+    FROM inforequests
+    WHERE application_id = ? AND sponsor_id = ? AND status = 'Submitted' ORDER BY created_at DESC`;
+
+  const [rows] = await db.execute(query, [requestId, sponsorId]);
+  res.json(rows); 
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch data" });
+  }
+};
+
+
+
 
 
 

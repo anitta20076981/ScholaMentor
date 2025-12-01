@@ -15,8 +15,8 @@ function ViewStudentRequest() {
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [infoMessage, setInfoMessage] = useState("");
   const [requiredDoc, setRequiredDoc] = useState("");
-  const [requestSubmitted, setRequestSubmitted] = useState(false);
   const [infoRequest, setInfoRequest] = useState(null);
+  const [submittedDocs, setSubmittedDocs] = useState([]);
 
 
   useEffect(() => {
@@ -42,8 +42,19 @@ function ViewStudentRequest() {
       }
     };
 
-    
+    const fetchSubmittedDocuments = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/sponsor/get-submitted-docs/${sponsorId}/${requestId}`
+        );
+        setSubmittedDocs(res.data);
+      } catch (err) {
+        console.error("Failed to fetch student request:", err);
+      }
+    };
 
+    
+    fetchSubmittedDocuments();
     fetchStudentRequest();
     fetchInfoRequest();
 
@@ -76,13 +87,12 @@ function ViewStudentRequest() {
       icon: "success",
       confirmButtonText: "OK"
      }).then(() => {
-      setRequestSubmitted(true); // hide the button after clicking OK
-    });
+          window.location.reload();
+    }); 
     setShowInfoModal(false);
     setInfoMessage("");
     setRequiredDoc("");
-    setRequestSubmitted(true);
-
+ 
   } catch (err) {
     console.error(err);
     Swal.fire({
@@ -107,47 +117,56 @@ function ViewStudentRequest() {
         <section className="recommend-section view-request-section">
           <h3>Student Request</h3>
      
- 
-      {infoRequest == 0 && (
-        <div className="info-btn-wrapper">
-          <button className="info-btn" onClick={() => setShowInfoModal(true)}>
-            Request More Info
-          </button>
-        </div>
-      )}
-   
-
-    {showInfoModal && (
-      <div className="modal-overlay">
-        <div className="modal-content">
-          <h4>Request More Information</h4>
-          <textarea
-            placeholder="Message to student"
-            value={infoMessage}
-            onChange={(e) => setInfoMessage(e.target.value)}
-          />
-          <select
-            value={requiredDoc}
-            onChange={(e) => setRequiredDoc(e.target.value)}
-          >
-            <option value="">No specific document</option>
-            <option value="marksheet">Marksheet</option>
-            <option value="income_certificate">Income Certificate</option>
-          </select>
-          <div className="modal-actions">
-            <button onClick={sendInfoRequest}>Send Request</button>
-            <button onClick={() => setShowInfoModal(false)}>Cancel</button>
-          </div>
-        </div>
-      </div>
-    )}
-  
- 
-
-          {!studentRequest && <p>Loading...</p>}
-
+          {infoRequest == 0 && (
+            <div className="info-btn-wrapper">
+              <button className="info-btn" onClick={() => setShowInfoModal(true)}>
+                Request More Info
+              </button>
+            </div>
+          )}
+      
+          {showInfoModal && (
+            <div className="modal-overlay">
+              <div className="modal-content">
+                <h4>Request More Information</h4>
+                <textarea
+                  placeholder="Message to student"
+                  value={infoMessage}
+                  onChange={(e) => setInfoMessage(e.target.value)}
+                />
+                <select
+                  value={requiredDoc}
+                  onChange={(e) => setRequiredDoc(e.target.value)}
+                >
+                  <option value="">No specific document</option>
+                  <option value="marksheet">Marksheet</option>
+                  <option value="income_certificate">Income Certificate</option>
+                </select>
+                <div className="modal-actions">
+                  <button onClick={sendInfoRequest}>Send Request</button>
+                  <button onClick={() => setShowInfoModal(false)}>Cancel</button>
+                </div>
+              </div>
+            </div>
+          )}
+       
           {studentRequest && (
             <div className="request-container">
+              {submittedDocs.length > 0 && (
+                <div className="request-column">
+                  <h3 className="section-title">Submitted Details</h3>
+
+                  {submittedDocs.map((doc) => (
+                    <div key={doc.id} className="doc-row">
+                      <strong>{doc.message}:</strong>
+                      <span className="doc-eye">
+                        {renderDocLink("Marksheet", doc.response_document)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )} 
+
               {/* Student Details */}
               <div className="request-column">
                 <h3 className="section-title">Student Details</h3>
