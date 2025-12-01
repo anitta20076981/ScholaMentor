@@ -83,7 +83,7 @@ function ViewStudentRequest() {
       <Sidebar sponsorId={sponsorId} />
 
       <div className="content">
-        <TopBar />
+        <TopBar  sponsorId={sponsorId} />
 
         <section className="recommend-section view-request-section">
           <h3>Student Request</h3>

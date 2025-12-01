@@ -46,7 +46,7 @@ function SponsorDashboard() {
       <Sidebar sponsorId={sponsorId} /> 
 
       <div className="content">
-        <TopBar />
+        <TopBar sponsorId={sponsorId} />
 
         {/* HERO SLIDER */}
         <section className="hero-slider">

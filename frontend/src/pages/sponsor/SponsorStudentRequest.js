@@ -33,7 +33,8 @@ function SponsorStudentRequest() {
       <Sidebar sponsorId={sponsorId} />
 
       <div className="content">
-        <TopBar />
+     
+    <TopBar sponsorId={sponsorId}   />
 
         {/* RECOMMENDED STUDENTS */}
         <section id="recommended-students" className="recommend-section">
