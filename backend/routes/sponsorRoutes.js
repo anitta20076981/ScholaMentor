@@ -9,5 +9,7 @@ router.post("/request-more-info/:sponsorId/:requestId", sponsorController.reques
 router.get("/:sponsorId/notifications", sponsorController.getNotifications);
 router.put("/notifications/read/:notificationId", sponsorController.notificationMarkAsRead);
 
+router.get("/get-info-request/:sponsorId/:requestId", sponsorController.getInfoRequest);
+
  
 module.exports = router;

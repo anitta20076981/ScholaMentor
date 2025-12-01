@@ -184,6 +184,23 @@ exports.notificationMarkAsRead = async (req, res) => {
   }
 };
 
+exports.getInfoRequest = async (req, res) => {
+  const { requestId, sponsorId } = req.params;
+  try {
+     const query = `
+  SELECT COUNT(*) AS count 
+  FROM inforequests
+  WHERE application_id = ? AND sponsor_id = ? AND status = 'Pending'
+`;
+  const [rows] = await db.execute(query, [requestId, sponsorId]);
+  const count = rows?.[0]?.count ?? 0;
+  res.json(count); 
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch data" });
+  }
+};
+
 
 
 

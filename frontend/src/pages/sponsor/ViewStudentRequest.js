@@ -16,6 +16,7 @@ function ViewStudentRequest() {
   const [infoMessage, setInfoMessage] = useState("");
   const [requiredDoc, setRequiredDoc] = useState("");
   const [requestSubmitted, setRequestSubmitted] = useState(false);
+  const [infoRequest, setInfoRequest] = useState(null);
 
 
   useEffect(() => {
@@ -29,7 +30,23 @@ function ViewStudentRequest() {
         console.error("Failed to fetch student request:", err);
       }
     };
+
+    const fetchInfoRequest = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/sponsor/get-info-request/${sponsorId}/${requestId}`
+        );
+        setInfoRequest(res.data);
+      } catch (err) {
+        console.error("Failed to fetch student request:", err);
+      }
+    };
+
+    
+
     fetchStudentRequest();
+    fetchInfoRequest();
+
   }, [requestId, sponsorId]);
 
   const renderDocLink = (label, filePath) => {
@@ -58,7 +75,9 @@ function ViewStudentRequest() {
       text: "Request sent successfully!",
       icon: "success",
       confirmButtonText: "OK"
-    }) 
+     }).then(() => {
+      setRequestSubmitted(true); // hide the button after clicking OK
+    });
     setShowInfoModal(false);
     setInfoMessage("");
     setRequiredDoc("");
@@ -88,11 +107,13 @@ function ViewStudentRequest() {
         <section className="recommend-section view-request-section">
           <h3>Student Request</h3>
      
-    {!requestSubmitted && (
-      <button className="info-btn" onClick={() => setShowInfoModal(true)}>
-        Request More Info
-      </button>
-    )}
+ 
+      {infoRequest == 0 && (
+  <button className="info-btn" onClick={() => setShowInfoModal(true)}>
+    Request More Info
+  </button>
+)}
+   
 
     {showInfoModal && (
       <div className="modal-overlay">
