@@ -17,7 +17,12 @@ function ViewStudentRequest() {
   const [requiredDoc, setRequiredDoc] = useState("");
   const [infoRequest, setInfoRequest] = useState(null);
   const [submittedDocs, setSubmittedDocs] = useState([]);
+  const [showApproveModal, setShowApproveModal] = useState(false);
 
+  const [approvalType, setApprovalType] = useState('Full'); // default selection
+  const [approvedAmount, setApprovedAmount] = useState('');
+  const [error, setError] = useState('');
+  const [sponsorRemarks, setSponsorRemarks] = useState("");
 
   useEffect(() => {
     const fetchStudentRequest = async () => {
@@ -25,7 +30,11 @@ function ViewStudentRequest() {
         const res = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/sponsor/get-student-request/${sponsorId}/${requestId}`
         );
+        console.log(res.data);
         setStudentRequest(res.data);
+        if (res.data) {
+        setApprovedAmount(res.data.required_amount);
+      }
       } catch (err) {
         console.error("Failed to fetch student request:", err);
       }
@@ -73,38 +82,93 @@ function ViewStudentRequest() {
   };
 
   const sendInfoRequest = async () => {
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/sponsor/request-more-info/${sponsorId}/${requestId}`,
+        {
+          message: infoMessage,
+          required_document: requiredDoc
+        }
+      );
+      Swal.fire({
+        title: "Success!",
+        text: "Request sent successfully!",
+        icon: "success",
+        confirmButtonText: "OK"
+      }).then(() => {
+            window.location.reload();
+      }); 
+      setShowInfoModal(false);
+      setInfoMessage("");
+      setRequiredDoc("");
+  
+    } catch (err) {
+      console.error(err);
+      Swal.fire({
+            title: "Failed!",
+            text: "Failed to send request.",
+            icon: "error",
+            confirmButtonText: "OK"
+          }).then(() => {
+            window.location.reload();
+      });
+    }
+  };
+
+  const sendApproveRequest = async () => {
   try {
+    // Validate partial approval amount
+    if (approvalType === 'Partial') {
+      if (!approvedAmount || approvedAmount < 1 || approvedAmount > studentRequest?.required_amount) {
+        Swal.fire({
+          title: "Invalid Amount",
+          text: `Please enter a valid amount (1 - ${studentRequest?.required_amount})`,
+          icon: "warning",
+          confirmButtonText: "OK"
+        });
+        return;
+      }
+    }
+
+    // Send approval request to backend
     await axios.post(
-      `${process.env.REACT_APP_API_URL}/api/sponsor/request-more-info/${sponsorId}/${requestId}`,
+      `${process.env.REACT_APP_API_URL}/api/sponsor/approve-sponsorship/${sponsorId}/${requestId}`,
       {
-        message: infoMessage,
-        required_document: requiredDoc
+        approval_type: approvalType,           
+        approved_amount: approvedAmount,       
+        remarks_from_sponsor: sponsorRemarks || ''         
       }
     );
-    Swal.fire({
+
+    // Success alert
+    await Swal.fire({
       title: "Success!",
       text: "Request sent successfully!",
       icon: "success",
       confirmButtonText: "OK"
-     }).then(() => {
-          window.location.reload();
-    }); 
-    setShowInfoModal(false);
-    setInfoMessage("");
+    });
+
+    // Reset modal and form state
+    setShowApproveModal(false);
+    setSponsorRemarks("");
     setRequiredDoc("");
- 
+    setApprovedAmount('');
+    setApprovalType('Full');
+    setError('');
+
+
   } catch (err) {
-    console.error(err);
-    Swal.fire({
-          title: "Failed!",
-          text: "Failed to send request.",
-          icon: "error",
-          confirmButtonText: "OK"
-        }).then(() => {
-          window.location.reload();
+    console.error('Error sending approval:', err);
+    await Swal.fire({
+      title: "Failed!",
+      text: "Failed to send request.",
+      icon: "error",
+      confirmButtonText: "OK"
     });
   }
 };
+
+
 
 
   return (
@@ -116,14 +180,109 @@ function ViewStudentRequest() {
 
         <section className="recommend-section view-request-section">
           <h3>Student Request</h3>
-     
-          {infoRequest == 0 && (
+
+          <div className="info-btn-row">
+             
+          {studentRequest?.status !== 'ApprovedBySponsor' && (
             <div className="info-btn-wrapper">
-              <button className="info-btn" onClick={() => setShowInfoModal(true)}>
-                Request More Info
+              <button className="info-btn" onClick={() => setShowApproveModal(true)}>
+                Approve
               </button>
             </div>
           )}
+
+            {infoRequest === 0 &&  studentRequest?.status !== 'ApprovedBySponsor' &&(
+              <div className="info-btn-wrapper">
+                <button className="info-btn" onClick={() => setShowInfoModal(true)}>
+                  Request More Info
+                </button>
+              </div>
+            )}
+          </div>
+           
+           {/*Approve modal*/}
+          {showApproveModal && (
+            <div className="modal-overlay">
+              <div className="modal-content">
+                <h4>Request More Information / Approval</h4>
+
+                <select
+                  value={approvalType}
+                  onChange={(e) => {
+                    setApprovalType(e.target.value);
+                    if (e.target.value === 'Full') {
+                      setApprovedAmount(studentRequest?.required_amount || 0);
+                      setError('');
+                    } else {
+                      setApprovedAmount('');
+                      setError('');
+                    }
+                  }}
+                >
+                  <option value="Full">Full Approval</option>
+                  <option value="Partial">Partial Approval</option>
+                </select>
+
+                <textarea
+                  placeholder="Message to student"
+                  value={sponsorRemarks}
+                  onChange={(e) => setSponsorRemarks(e.target.value)}
+                />
+
+                {approvalType === 'Full' && (
+                  <div>
+                    <label>Approved Amount:</label>
+                    <input
+                      type="number"
+                      value={approvedAmount}
+                      readOnly
+                    />
+                  </div>
+                )}
+
+                {approvalType === 'Partial' && (
+                  <div>
+                    <label>Enter Approved Amount:</label>
+                    <input
+                      type="number"
+                      value={approvedAmount}
+                      min="1" required
+                      onChange={(e) => {
+                        const value = Number(e.target.value);
+
+                        if (value < 1) {
+                          setError('Amount must be at least 1');
+                        } else if (value > studentRequest?.required_amount) {
+                          setError(`Amount cannot exceed ${studentRequest.required_amount}`);
+                        } else {
+                          setError('');
+                          setApprovedAmount(value);
+                        }
+                      }}
+                      placeholder="Enter amount"
+                    />
+
+                     
+
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                  </div>
+                )}
+
+                <div className="modal-actions">
+                  <button
+                    onClick={sendApproveRequest}
+                    disabled={approvalType === 'Partial' && (approvedAmount === '' || error)}
+                  >
+                    Send Request
+                  </button>
+                  <button onClick={() => setShowApproveModal(false)}>Cancel</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+
+
       
           {showInfoModal && (
             <div className="modal-overlay">

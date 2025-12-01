@@ -216,6 +216,32 @@ exports.getSubmittedDocs = async (req, res) => {
   }
 };
 
+exports.approveSponsorship = async (req, res) => {
+  try {
+    const { sponsorId, requestId } = req.params;
+    const { approval_type, approved_amount, remarks_from_sponsor } = req.body;
+     
+   await db.execute(
+  `UPDATE sponsorshipapplications
+    SET approved_amount = ?, 
+        approval_type = ?, 
+        sponsor_id = ?, 
+        remarks_from_sponsor = ?, 
+        status = ?
+    WHERE id = ?`,
+    [approved_amount, approval_type, sponsorId, remarks_from_sponsor || '', 'ApprovedBySponsor', requestId]
+  );
+    res.status(200).json({ message: "Sponsorship approved successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+
+
+
 
 
 

@@ -280,5 +280,39 @@
 .doc-eye a:hover {
   text-decoration: underline;
 }
+.info-btn-row {
+  display: flex;
+  gap: 10px; 
+  justify-content: flex-end; 
+  align-items: center;  
+}
+/* Label for Approved Amount */
+.modal-content label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+}
+
+/* Input for Approved Amount */
+.modal-content input[type="number"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+/* Focus effect */
+.modal-content input[type="number"]:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
 
 
