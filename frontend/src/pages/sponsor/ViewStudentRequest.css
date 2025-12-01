@@ -91,5 +91,118 @@
   justify-content: flex-end;
   gap: 10px;
 }
+.info-btn-wrapper {
+  display: flex;
+  justify-content: flex-end; /* moves button to the right */
+  margin: 10px 0; /* optional spacing */
+}
+
+.info-btn {
+  background-color: #ff6a00; /* button color */
+  color: white; /* text color */
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px; /* rounded corners */
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.info-btn:hover {
+  background-color: #e65c00; /* slightly darker on hover */
+}
+/* Modal overlay covers the screen */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal box */
+.modal-content {
+  background-color: #fff;
+  padding: 25px 30px;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Modal heading */
+.modal-content h4 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Textarea styling */
+.modal-content textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+/* Select styling */
+.modal-content select {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+/* Modal actions buttons */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Buttons inside modal */
+.modal-actions button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+/* Send Request button */
+.modal-actions button:first-child {
+  background-color: #ff6a00;
+  color: white;
+}
+
+.modal-actions button:first-child:hover {
+  background-color: #e65c00;
+}
+
+/* Cancel button */
+.modal-actions button:last-child {
+  background-color: #ccc;
+  color: #333;
+}
+
+.modal-actions button:last-child:hover {
+  background-color: #b3b3b3;
+}
 
 

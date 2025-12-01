@@ -109,10 +109,12 @@ function ViewStudentRequest() {
      
  
       {infoRequest == 0 && (
-  <button className="info-btn" onClick={() => setShowInfoModal(true)}>
-    Request More Info
-  </button>
-)}
+        <div className="info-btn-wrapper">
+          <button className="info-btn" onClick={() => setShowInfoModal(true)}>
+            Request More Info
+          </button>
+        </div>
+      )}
    
 
     {showInfoModal && (
