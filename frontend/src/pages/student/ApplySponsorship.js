@@ -4,6 +4,7 @@ import TopBar from "../../components/student/TopBar";
 import Footer from "../../components/student/Footer";
 import axios from "axios";
 import { FaEye, FaDownload } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 function ApplySponsorship() {
   const { studentId } = useParams();
@@ -21,7 +22,8 @@ function ApplySponsorship() {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [latestApplication, setLatestApplication] = useState(null);
-
+  const [inforequests, setInforequests] = useState(null);
+  
   const handleDownloadCertificate = async (applicationId) => {
     try {
       const response = await axios.get(
@@ -60,8 +62,67 @@ function ApplySponsorship() {
         console.error("Error fetching data:", err);
       }
     }
+
+     async function fetchNotifications() {
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/student/fetch_info_request_notifications/${studentId}`
+        );
+         console.log(res.data);
+        if (res.data) setInforequests(res.data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    }
+
+    
+
+    fetchNotifications();
     fetchSponsorshipApplication();
   }, [studentId]);
+
+  const handleUploadDocument = async (e, requestId) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("document", file);
+
+  try {
+    await axios.post(
+      `${process.env.REACT_APP_API_URL}/api/student/upload_info_request_document/${requestId}`,
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+
+    Swal.fire({
+      title: "Success!",
+      text: "Document uploaded successfully!",
+      icon: "success",
+      confirmButtonText: "OK"
+    }).then(() => {
+      window.location.reload();
+    });
+
+    // Refetch info requests
+    const res = await axios.get(
+      `${process.env.REACT_APP_API_URL}/api/student/fetch_info_request_notifications/${studentId}`
+    );
+    console.log(res.data);
+    setInforequests(res.data);
+
+  } catch (err) {
+    Swal.fire({
+      title: "Failed!",
+      text: "Failed to upload document. Please try again.",
+      icon: "error",
+      confirmButtonText: "OK"
+    }).then(() => {
+      window.location.reload();
+    });
+  }
+};
+
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -117,6 +178,7 @@ function ApplySponsorship() {
   return (
     <div style={{ fontFamily: "Arial, sans-serif", background: "#f8f9ff" }}>
       <TopBar studentId={studentId} successMessage={successMessage} errorMessage={errorMessage} />
+
 
       {/* Hero Section */}
       <section
@@ -389,7 +451,49 @@ function ApplySponsorship() {
       Thank you for submitting your application! It is currently under verification. We will update you once the process is complete. Please check back in 1 day for the latest status.  </p>
     </div>
      )}
-     {latestApplication && latestApplication.status === "Approved" && (
+
+    {inforequests && inforequests.length > 0 && (
+  <div
+    style={{
+      background: "#fff",
+      padding: "20px",
+      borderRadius: "12px",
+      boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+      marginBottom: "30px",
+    }}
+  >
+    <h3>Requests from Sponsors</h3>
+    {inforequests.map((req) => (
+      <div
+        key={req.id}
+        style={{
+          borderBottom: "1px solid #eee",
+          padding: "10px 0",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <div>
+          <p><strong>Message:</strong> {req.message}</p>
+          <p><strong>Required Document:</strong> {req.required_document || "Not specified"}</p>
+          <p><strong>Status:</strong> {req.status}</p>
+        </div>
+
+        {/* Upload Button if pending */}
+        {req.status === "Pending" && (
+          <input
+            type="file"
+            name="upload_doc"
+            onChange={(e) => handleUploadDocument(e, req.id)}
+          />
+        )}
+      </div>
+    ))}
+  </div>
+)}
+
+     {latestApplication && latestApplication.status === "Approved" &&  inforequests.length == 0 && (
     <div
       style={{
         background: "#ffffff",
@@ -427,8 +531,46 @@ function ApplySponsorship() {
       A sponsor will contact you shortly. Thank you for your patience.   </p>
     </div>
      )} 
+    {latestApplication && latestApplication.status === "InfoSubmitted" && (inforequests?.length === 0) && (
 
+     <div
+      style={{
+        background: "#ffffff",
+        color: "#d9534f",
+        padding: "30px",
+        borderRadius: "12px",
+        boxShadow: "0 6px 20px rgba(0,0,0,0.08)",
+        flex: "1",
+        minWidth: "280px",
+        maxWidth: "400px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "20px",
+        textAlign: "center",
+      }}
+    >
+      {/* Add the style tag here */}
+      <style>
+        {`
+          .blink-message {
+            animation: blinker 1s linear infinite;
+          }
+          @keyframes blinker {
+            50% { opacity: 0; }
+          }
+        `}
+      </style>
 
+      <h3 style={{ marginBottom: "10px" }}>Information Submitted</h3>
+      <p
+        className="blink-message"
+        style={{ fontSize: "16px", color: "#12ad65ff", fontWeight: "bold" }}
+      >
+        ✔️ You have successfully uploaded the requested document.  
+      Your submission is under review by the sponsor.  
+      Please wait while the sponsor verifies your details.</p>
+    </div>
+     )} 
     </section>
 
     <Footer />

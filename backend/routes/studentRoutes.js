@@ -72,7 +72,15 @@ router.post(
 
 router.get("/:studentId/notifications", studentController.getNotifications);
 router.put("/notifications/read/:notificationId", studentController.notificationMarkAsRead);
+router.get("/fetch_info_request_notifications/:studentId", studentController.getInfoRequestNotification);
 
+ 
+
+router.post(
+  "/upload_info_request_document/:infoRequestId",
+  upload.single("document"),
+  studentController.uploadInfoRequestDocument
+);
 
 
 module.exports = router;

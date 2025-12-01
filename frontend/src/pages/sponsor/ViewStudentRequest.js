@@ -5,12 +5,18 @@ import TopBar from "../../components/sponsor/TopBar";
 import Footer from "../../components/sponsor/Footer";
 import { useParams } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 import "./ViewStudentRequest.css";
 
 function ViewStudentRequest() {
   const { requestId, sponsorId } = useParams();
   const [studentRequest, setStudentRequest] = useState(null);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [infoMessage, setInfoMessage] = useState("");
+  const [requiredDoc, setRequiredDoc] = useState("");
+  const [requestSubmitted, setRequestSubmitted] = useState(false);
+
 
   useEffect(() => {
     const fetchStudentRequest = async () => {
@@ -38,6 +44,40 @@ function ViewStudentRequest() {
     );
   };
 
+  const sendInfoRequest = async () => {
+  try {
+    await axios.post(
+      `${process.env.REACT_APP_API_URL}/api/sponsor/request-more-info/${sponsorId}/${requestId}`,
+      {
+        message: infoMessage,
+        required_document: requiredDoc
+      }
+    );
+    Swal.fire({
+      title: "Success!",
+      text: "Request sent successfully!",
+      icon: "success",
+      confirmButtonText: "OK"
+    }) 
+    setShowInfoModal(false);
+    setInfoMessage("");
+    setRequiredDoc("");
+    setRequestSubmitted(true);
+
+  } catch (err) {
+    console.error(err);
+    Swal.fire({
+          title: "Failed!",
+          text: "Failed to send request.",
+          icon: "error",
+          confirmButtonText: "OK"
+        }).then(() => {
+          window.location.reload();
+    });
+  }
+};
+
+
   return (
     <div className="sponsor-wrapper">
       <Sidebar sponsorId={sponsorId} />
@@ -47,6 +87,39 @@ function ViewStudentRequest() {
 
         <section className="recommend-section view-request-section">
           <h3>Student Request</h3>
+     
+    {!requestSubmitted && (
+      <button className="info-btn" onClick={() => setShowInfoModal(true)}>
+        Request More Info
+      </button>
+    )}
+
+    {showInfoModal && (
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <h4>Request More Information</h4>
+          <textarea
+            placeholder="Message to student"
+            value={infoMessage}
+            onChange={(e) => setInfoMessage(e.target.value)}
+          />
+          <select
+            value={requiredDoc}
+            onChange={(e) => setRequiredDoc(e.target.value)}
+          >
+            <option value="">No specific document</option>
+            <option value="marksheet">Marksheet</option>
+            <option value="income_certificate">Income Certificate</option>
+          </select>
+          <div className="modal-actions">
+            <button onClick={sendInfoRequest}>Send Request</button>
+            <button onClick={() => setShowInfoModal(false)}>Cancel</button>
+          </div>
+        </div>
+      </div>
+    )}
+  
+ 
 
           {!studentRequest && <p>Loading...</p>}
 

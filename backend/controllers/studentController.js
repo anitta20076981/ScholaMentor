@@ -767,4 +767,101 @@ exports.notificationMarkAsRead = async (req, res) => {
   }
 };
 
+exports.getInfoRequestNotification = async (req, res) => {
+  const { studentId } = req.params;
+
+  try {
+    const selectQuery = `
+      SELECT * 
+      FROM inforequests 
+      WHERE student_id = ? AND status = ?
+    `;
+
+    const [rows] = await db.execute(selectQuery, [
+      studentId,
+      'Pending'
+    ]);
+ 
+    res.json(rows);  
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch notifications" });
+  }
+};
+
+exports.uploadInfoRequestDocument = async (req, res) => {
+  const { infoRequestId } = req.params;
+
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "Please upload a document" });
+    }
+
+    const documentPath = req.file.filename;
+
+    // Update inforequests table
+    await db.execute(
+      `UPDATE inforequests
+       SET response_document = ?, status = 'submitted'
+       WHERE id = ?`,
+      [documentPath, infoRequestId]
+    );
+
+    // Get application_id, sponsor_id, student_id
+    const [reqRows] = await db.execute(
+      `SELECT application_id, sponsor_id, student_id 
+       FROM inforequests 
+       WHERE id = ?`,
+      [infoRequestId]
+    );
+
+    if (reqRows.length === 0) {
+      return res.status(404).json({ error: "Info request not found" });
+    }
+
+    const applicationId = reqRows[0].application_id;
+    const sponsorId = reqRows[0].sponsor_id;
+    const studentId = reqRows[0].student_id;
+
+    // Update sponsorshipapplications status
+    await db.execute(
+      `UPDATE sponsorshipapplications
+       SET status = 'InfoSubmitted'
+       WHERE id = ?`,
+      [applicationId]
+    );
+
+    // Get student name
+    const [userRows] = await db.execute(
+      `SELECT name FROM users WHERE id = ?`,
+      [studentId]
+    );
+
+    const studentName = userRows[0].name;
+
+    // Insert notification
+    await db.execute(
+      `INSERT INTO notifications 
+       (user_id, message, type, data, status, created_at, updated_at)
+       VALUES (?, ?, ?, ?, 'unread', NOW(), NOW())`,
+      [
+        sponsorId,
+        `${studentName} submitted the requested document`,
+        "sponsor_notify",
+        JSON.stringify({ infoRequestId })
+      ]
+    );
+
+    // Finally send ONE response
+    return res.json({ success: true });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Failed to upload document" });
+  }
+};
+
+
+
+
 
