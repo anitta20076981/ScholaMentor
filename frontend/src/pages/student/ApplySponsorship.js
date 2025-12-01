@@ -561,7 +561,7 @@ function ApplySponsorship() {
         `}
       </style>
 
-      <h3 style={{ marginBottom: "10px" }}>Information Submitted</h3>
+      <h3 style={{ marginBottom: "10px" }}>Document Submitted</h3>
       <p
         className="blink-message"
         style={{ fontSize: "16px", color: "#12ad65ff", fontWeight: "bold" }}
