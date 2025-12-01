@@ -48,7 +48,35 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true
       },
-     created_at: {
+      approved_amount: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
+      },
+      sponsor_id: {
+        type: DataTypes.BIGINT,
+        allowNull: true,
+      },
+      approval_type: {
+        type: DataTypes.ENUM('Full', 'Partial'),
+        allowNull: true,
+      },
+      rejection_reason: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
+      remarks_from_sponsor: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
+      remaining_amount: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
+      },
+      previous_request_id: {
+        type: DataTypes.BIGINT,
+        allowNull: true,
+      },
+      created_at: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),

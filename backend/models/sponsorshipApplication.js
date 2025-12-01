@@ -40,6 +40,34 @@ module.exports = (sequelize, DataTypes) => {
       admin_remarks: {
         type: DataTypes.TEXT,
         allowNull: true
+      },
+       approved_amount: {
+        type: DataTypes.FLOAT,
+        allowNull: true
+      },
+      sponsor_id: {
+        type: DataTypes.BIGINT,
+        allowNull: true
+      },
+      approval_type: {
+        type: DataTypes.ENUM('Full','Partial'),
+        allowNull: true
+      },
+      rejection_reason: {
+        type: DataTypes.TEXT,
+        allowNull: true
+      },
+      remarks_from_sponsor: {
+        type: DataTypes.TEXT,
+        allowNull: true
+      },
+      remaining_amount: {
+        type: DataTypes.FLOAT,
+        allowNull: true
+      },
+      previous_request_id: {
+        type: DataTypes.BIGINT,
+        allowNull: true
       }
     },
     {
