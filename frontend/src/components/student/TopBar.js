@@ -147,6 +147,9 @@ function TopBar({ studentId, successMessage, errorMessage }) {
           <Link to={`/student/apply-sponsorship/${studentId}`} style={navLinkStyle}>
             Sponsorships
           </Link>
+           <Link to={`/student/sponsorship-history/${studentId}`} style={navLinkStyle}>
+            My Sponsorships
+          </Link>
 
           {/* Notification Icon */}
           <div style={{ position: "relative" }}>

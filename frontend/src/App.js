@@ -20,6 +20,7 @@ import ScholarshipRequest from "./pages/admin/ScholarshipRequest";
 import ViewSponsorshipApplication from "./pages/admin/ViewSponsorshipApplication"; 
 import SponsorStudentRequest from "./pages/sponsor/SponsorStudentRequest"; 
 import ViewStudentRequest from "./pages/sponsor/ViewStudentRequest"; 
+import SponsorshipHistory from "./pages/student/SponsorshipHistory"; 
 
 
 
@@ -56,7 +57,8 @@ function App() {
 
         <Route path="/sponsor/student-request/:sponsorId" element={<SponsorStudentRequest />} /> 
         <Route path="/sponsor/get-student-request/:sponsorId/:requestId" element={<ViewStudentRequest />} /> 
- 
+         <Route path="/student/sponsorship-history/:studentId" element={<SponsorshipHistory />} /> 
+
         
         
 

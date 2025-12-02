@@ -73,6 +73,7 @@ router.post(
 router.get("/:studentId/notifications", studentController.getNotifications);
 router.put("/notifications/read/:notificationId", studentController.notificationMarkAsRead);
 router.get("/fetch_info_request_notifications/:studentId", studentController.getInfoRequestNotification);
+router.get("/get-all-approved-or-rejected-sponsorship/:studentId", studentController.getAllSponsorship);
 
  
 

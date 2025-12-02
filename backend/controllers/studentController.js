@@ -852,7 +852,6 @@ exports.uploadInfoRequestDocument = async (req, res) => {
       ]
     );
 
-    // Finally send ONE response
     return res.json({ success: true });
 
   } catch (err) {
@@ -863,5 +862,26 @@ exports.uploadInfoRequestDocument = async (req, res) => {
 
 
 
+exports.getAllSponsorship = async (req, res) => {
+  const { studentId } = req.params;
 
+  try {
+    const selectQuery = `
+    SELECT * 
+    FROM sponsorshipapplications 
+    WHERE student_id = ? 
+      AND status IN (?, ?)
+  `;
 
+  const [rows] = await db.execute(selectQuery, [
+    studentId,
+    'ApprovedBySponsor',
+    'RejectedBySponsor'
+  ]);
+ 
+    res.json(rows);  
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch notifications" });
+  }
+};
