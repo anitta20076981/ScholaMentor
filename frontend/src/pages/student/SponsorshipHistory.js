@@ -73,11 +73,17 @@ function SponsorshipHistory() {
                     Full Sponsorship ({student.approved_amount})
                     </button>
                 )}
-                {student?.status === "ApprovedBySponsor" && student?.approval_type === "Partial" && (
-                    <button className="sponsorship-approve-btn">
+               {student?.status === "ApprovedBySponsor" && student?.approval_type === "Partial" && (
+                <>
+                  <button className="sponsorship-approve-btn">
                     Partial Sponsorship ({student.approved_amount})
-                    </button>
-                )}
+                  </button>
+                  <button className="sponsorship-approve-btn">
+                    Another Action ({student.approved_amount})
+                  </button>
+                </>
+              )}
+
                 </div>
             ))}
 

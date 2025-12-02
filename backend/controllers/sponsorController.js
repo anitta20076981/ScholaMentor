@@ -250,17 +250,30 @@ exports.approveSponsorship = async (req, res) => {
   try {
     const { sponsorId, requestId } = req.params;
     const { approval_type, approved_amount, remarks_from_sponsor } = req.body;
+
+    const [rows] = await db.execute(
+      `
+        SELECT required_amount 
+        FROM sponsorshipapplications
+        WHERE id = ?
+      `,
+      [requestId]
+    );
+
+    const requiredAmount = rows[0]?.required_amount; 
      
-   await db.execute(
-  `UPDATE sponsorshipapplications
-    SET approved_amount = ?, 
-        approval_type = ?, 
-        sponsor_id = ?, 
-        remarks_from_sponsor = ?, 
-        status = ?
-    WHERE id = ?`,
-    [approved_amount, approval_type, sponsorId, remarks_from_sponsor || '', 'ApprovedBySponsor', requestId]
-  );
+    await db.execute(
+    `UPDATE sponsorshipapplications
+      SET approved_amount = ?, 
+          approval_type = ?, 
+          sponsor_id = ?, 
+          remarks_from_sponsor = ?, 
+          remaining_amount = ?,
+          status = ?
+      WHERE id = ?`,
+      [approved_amount, approval_type, sponsorId, remarks_from_sponsor || '',requiredAmount-approved_amount, 'ApprovedBySponsor', requestId]
+    );
+    
     res.status(200).json({ message: "Sponsorship approved successfully" });
   } catch (err) {
     console.error(err);
