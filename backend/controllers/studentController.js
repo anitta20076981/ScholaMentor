@@ -611,6 +611,18 @@ exports.applySponsorship = async (req, res) => {
       [studentId]
     );
 
+    const [alreadyApplied] = await db.execute(
+      `SELECT * FROM sponsorshipapplications WHERE student_id = ? AND purpose = ?`,
+      [studentId, purpose]
+    );
+    if (alreadyApplied.length > 0) {
+      return res.status(500).json({
+          success: false,
+          error: "You cannot apply twice for the same purpose."
+        });
+    }
+   
+
     const [existingScholarship] = await db.execute(
       `SELECT * FROM scholarship_applications WHERE student_id = ?`,
       [studentId]

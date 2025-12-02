@@ -49,7 +49,11 @@ function ApplySponsorship() {
         const res = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/student/getSponsorship/${studentId}`
         );
-         setFormData({
+         if (
+        res.data?.status !== "ApprovedBySponsor" &&
+        res.data?.status !== "RejectedBySponsor"
+      ) {
+        setFormData({
           sponsor_type: res.data.sponsor_type || "",
           purpose: res.data.purpose || "",
           required_amount: res.data.required_amount || "",
@@ -57,6 +61,7 @@ function ApplySponsorship() {
           marksheet: res.data.marksheet || "25",
           cgpa: res.data.cgpa || "25",
         });
+      }
         if (res.data) setLatestApplication(res.data);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -138,6 +143,23 @@ function ApplySponsorship() {
     setSuccessMessage("");
     setErrorMessage("");
 
+  //   if (latestApplication) {
+  //   setErrorMessage("You have already applied for sponsorship!");
+  //   setTimeout(() => setErrorMessage(""), 4000);
+  //   return;
+  // }
+
+  const alreadyAppliedSamePurpose = inforequests?.some(app =>
+    app.purpose === formData.purpose &&
+    ["Pending", "ApprovedBySponsor", "RejectedBySponsor","Approved"].includes(app.status)
+  );
+
+  if (alreadyAppliedSamePurpose) {
+    setErrorMessage(`You already applied for ${formData.purpose}.`);
+    setTimeout(() => setErrorMessage(""), 4000);
+    return;
+  }
+
     try {
       const data = new FormData();
       Object.keys(formData).forEach((key) => {
@@ -173,7 +195,14 @@ function ApplySponsorship() {
     }
   };
 
-  const isReadOnly = latestApplication && latestApplication.status !== "Pending";
+  // const isReadOnly = latestApplication && latestApplication.status !== "Pending" ;
+  const isReadOnly =
+    latestApplication &&
+    !(
+      latestApplication.status === "ApprovedBySponsor" ||
+      latestApplication.status === "RejectedBySponsor" ||
+      latestApplication.status === "Pending"
+    );
 
   return (
     <div style={{ fontFamily: "Arial, sans-serif", background: "#f8f9ff" }}>
