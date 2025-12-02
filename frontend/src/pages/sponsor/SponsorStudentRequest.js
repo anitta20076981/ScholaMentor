@@ -18,7 +18,7 @@ function SponsorStudentRequest() {
     const fetchRecommended = async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/sponsor/recommended-students`
+          `${process.env.REACT_APP_API_URL}/api/sponsor/get-all-student-requests`
         );
         setRecommendedStudents(res.data); // assuming the API returns an array of students
       } catch (err) {
@@ -55,6 +55,18 @@ function SponsorStudentRequest() {
                 </div>
                 <button className="sponsor-btn" onClick={() => navigate(`/sponsor/get-student-request/${sponsorId}/${student.id}`)}
                 >View Details</button>
+                {student?.status === "ApprovedBySponsor" &&
+                  student?.approval_type === "Full" && (
+                    <button className="sponsorship-approve-btn">
+                      Full Sponsorship ({student.approved_amount})
+                    </button>
+                )}
+                {student?.status === "ApprovedBySponsor" &&
+                  student?.approval_type === "Partial" && (
+                    <button className="sponsorship-approve-btn">
+                      Partial Sponsorship ({student.approved_amount})
+                    </button>
+                )}
                  
               </div>
             ))}
