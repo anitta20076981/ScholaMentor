@@ -607,8 +607,8 @@ exports.applySponsorship = async (req, res) => {
 
   try {
     const [existingApplication] = await db.execute(
-      `SELECT * FROM sponsorshipapplications WHERE student_id = ?`,
-      [studentId]
+      `SELECT * FROM sponsorshipapplications WHERE student_id = ? AND purpose = ?`,
+      [studentId, purpose]
     );
 
     const [alreadyApplied] = await db.execute(
@@ -711,13 +711,20 @@ exports.getSponsorship = async (req, res) => {
   const { studentId } = req.params;
 
   try {
+    // const query = `
+    //   SELECT * FROM sponsorshipapplications 
+    //   WHERE student_id = ?  
+    // `;
+
     const query = `
-      SELECT * FROM sponsorshipapplications 
-      WHERE student_id = ?  
+      SELECT * FROM sponsorshipapplications
+      WHERE student_id = ?
+      ORDER BY id DESC
+      LIMIT 1
     `;
 
     const [rows] = await db.execute(query, [studentId]);
-
+ 
     if (rows.length === 0) {
       return res.status(404).json({ error: "Sponsorship request not found" });
     }

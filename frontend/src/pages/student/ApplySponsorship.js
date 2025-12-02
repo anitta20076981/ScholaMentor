@@ -172,9 +172,21 @@ function ApplySponsorship() {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      setSuccessMessage(res.data.message || "Application submitted successfully!");
-      setLatestApplication(res.data);
-      setTimeout(() => setSuccessMessage(""), 3000);
+      // setSuccessMessage(res.data.message || "Application submitted successfully!");
+      // setLatestApplication(res.data);
+      // setTimeout(() => setSuccessMessage(""), 3000);
+      await Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: res.data.message || "Application submitted successfully!",
+        confirmButtonText: "OK"
+      });
+
+      // Refresh the page after clicking OK
+      window.location.reload();
+
+
+
     } catch (err) {
       console.error(err);
       // Show backend error message if available
@@ -202,6 +214,8 @@ function ApplySponsorship() {
       latestApplication.status === "ApprovedBySponsor" ||
       latestApplication.status === "RejectedBySponsor" ||
       latestApplication.status === "Pending"
+      // ||
+      // latestApplication.status === "Approved"
     );
 
   return (

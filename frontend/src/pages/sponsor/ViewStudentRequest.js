@@ -143,9 +143,11 @@ function ViewStudentRequest() {
     // Success alert
     await Swal.fire({
       title: "Success!",
-      text: "Request sent successfully!",
+      text: "Sponsorship Approved successfully!",
       icon: "success",
       confirmButtonText: "OK"
+    }).then(() => {
+      window.location.reload();
     });
 
     // Reset modal and form state

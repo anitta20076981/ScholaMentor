@@ -18,7 +18,7 @@ module.exports = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
-        unique: true // optional if one-to-one
+        // unique: true // optional if one-to-one
       },
       purpose: {
         type: Sequelize.ENUM('Studies', 'Laptop', 'Books', 'Hostel'),
