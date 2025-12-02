@@ -83,7 +83,7 @@ function SponsorshipHistory() {
                   to={`/student/apply-sponsorship/${studentId}?applicationId=${application.id}`} 
                   style={{ textDecoration: "none" }}
                 >
-                  <button className="sponsorship-approve-btn">
+                  <button className="request-remaining-btn">
                     Request Remaining Amount ({application.approved_amount})
                   </button>
                 </Link>

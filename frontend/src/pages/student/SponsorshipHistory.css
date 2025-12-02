@@ -92,3 +92,36 @@
     justify-content: center;
   }
 }
+.request-remaining-btn {
+  background-color: #f39c12; /* orange */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.request-remaining-btn:hover {
+  background-color: #e67e22; /* darker orange on hover */
+}
+
+.card-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.student-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Pushes buttons to the bottom */
+  width: 250px; /* fixed width */
+  min-height: 300px; /* ensures all cards have same height */
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  padding: 20px;
+}
+
