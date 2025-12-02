@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams,useSearchParams } from "react-router-dom";
 import TopBar from "../../components/student/TopBar";
 import Footer from "../../components/student/Footer";
 import axios from "axios";
@@ -8,6 +8,8 @@ import Swal from "sweetalert2";
 
 function ApplySponsorship() {
   const { studentId } = useParams();
+  const [searchParams] = useSearchParams(); 
+  const applicationId = searchParams.get("applicationId");  
 
   const [formData, setFormData] = useState({
     sponsor_type: "",
@@ -43,13 +45,42 @@ function ApplySponsorship() {
     }
   };
 
-  useEffect(() => {
-    async function fetchSponsorshipApplication() {
-      try {
-        const res = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/student/getSponsorship/${studentId}`
-        );
-         if (
+    useEffect(() => {
+    if (applicationId) {
+      fetchApplication(applicationId); 
+    } else {
+      fetchLatestApplication();  
+    }
+    fetchInfoRequests();
+  }, [applicationId, studentId]);
+
+  const fetchApplication = async (id) => {
+    
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/student/get-application/${id}`
+      );
+      if (res.data) {
+        setFormData((prev) => ({
+          ...prev,
+          purpose: res.data.purpose,
+          required_amount: res.data.required_amount - res.data.approved_amount, amount
+        }));
+        
+        setLatestApplication(res.data);
+      }
+    } catch (err) {
+      console.error("Failed to fetch application:", err);
+    }
+  };
+
+  const fetchLatestApplication = async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/student/getSponsorship/${studentId}`
+      );
+      if (res.data) setLatestApplication(res.data);
+      if (
         res.data?.status !== "ApprovedBySponsor" &&
         res.data?.status !== "RejectedBySponsor"
       ) {
@@ -58,75 +89,57 @@ function ApplySponsorship() {
           purpose: res.data.purpose || "",
           required_amount: res.data.required_amount || "",
           background: res.data.background || "",
-          marksheet: res.data.marksheet || "25",
-          cgpa: res.data.cgpa || "25",
+          marksheet: res.data.marksheet || null,
+          cgpa: res.data.cgpa || "",
         });
       }
-        if (res.data) setLatestApplication(res.data);
-      } catch (err) {
-        console.error("Error fetching data:", err);
-      }
+    } catch (err) {
+      console.error("Error fetching latest application:", err);
     }
+  };
 
-     async function fetchNotifications() {
-      try {
-        const res = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/student/fetch_info_request_notifications/${studentId}`
-        );
-      
-        if (res.data) setInforequests(res.data);
-      } catch (err) {
-        console.error("Error fetching data:", err);
-      }
+  const fetchInfoRequests = async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/student/fetch_info_request_notifications/${studentId}`
+      );
+      if (res.data) setInforequests(res.data);
+    } catch (err) {
+      console.error("Error fetching info requests:", err);
     }
+  };
 
-    
+   const handleUploadDocument = async (e, requestId) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-    fetchNotifications();
-    fetchSponsorshipApplication();
-  }, [studentId]);
+    const data = new FormData();
+    data.append("document", file);
 
-  const handleUploadDocument = async (e, requestId) => {
-  const file = e.target.files[0];
-  if (!file) return;
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/student/upload_info_request_document/${requestId}`,
+        data,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
 
-  const formData = new FormData();
-  formData.append("document", file);
+      Swal.fire({
+        title: "Success!",
+        text: "Document uploaded successfully!",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
 
-  try {
-    await axios.post(
-      `${process.env.REACT_APP_API_URL}/api/student/upload_info_request_document/${requestId}`,
-      formData,
-      { headers: { "Content-Type": "multipart/form-data" } }
-    );
-
-    Swal.fire({
-      title: "Success!",
-      text: "Document uploaded successfully!",
-      icon: "success",
-      confirmButtonText: "OK"
-    }).then(() => {
-      window.location.reload();
-    });
-
-    // Refetch info requests
-    const res = await axios.get(
-      `${process.env.REACT_APP_API_URL}/api/student/fetch_info_request_notifications/${studentId}`
-    );
-    console.log(res.data);
-    setInforequests(res.data);
-
-  } catch (err) {
-    Swal.fire({
-      title: "Failed!",
-      text: "Failed to upload document. Please try again.",
-      icon: "error",
-      confirmButtonText: "OK"
-    }).then(() => {
-      window.location.reload();
-    });
-  }
-};
+      fetchInfoRequests(); // Refresh info requests
+    } catch (err) {
+      Swal.fire({
+        title: "Failed!",
+        text: "Failed to upload document. Please try again.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
 
 
   const handleChange = (e) => {
@@ -143,27 +156,25 @@ function ApplySponsorship() {
     setSuccessMessage("");
     setErrorMessage("");
 
-  //   if (latestApplication) {
-  //   setErrorMessage("You have already applied for sponsorship!");
-  //   setTimeout(() => setErrorMessage(""), 4000);
-  //   return;
-  // }
+    const alreadyAppliedSamePurpose = inforequests?.some(
+      (app) =>
+        app.purpose === formData.purpose &&
+        ["Pending", "ApprovedBySponsor", "RejectedBySponsor", "Approved"].includes(
+          app.status
+        )
+    );
 
-  const alreadyAppliedSamePurpose = inforequests?.some(app =>
-    app.purpose === formData.purpose &&
-    ["Pending", "ApprovedBySponsor", "RejectedBySponsor","Approved"].includes(app.status)
-  );
-
-  if (alreadyAppliedSamePurpose) {
-    setErrorMessage(`You already applied for ${formData.purpose}.`);
-    setTimeout(() => setErrorMessage(""), 4000);
-    return;
-  }
+    if (alreadyAppliedSamePurpose) {
+      setErrorMessage(`You already applied for ${formData.purpose}.`);
+      setTimeout(() => setErrorMessage(""), 4000);
+      return;
+    }
 
     try {
       const data = new FormData();
       Object.keys(formData).forEach((key) => {
-        if (formData[key] !== null && formData[key] !== "") data.append(key, formData[key]);
+        if (formData[key] !== null && formData[key] !== "")
+          data.append(key, formData[key]);
       });
 
       const res = await axios.post(
@@ -172,30 +183,25 @@ function ApplySponsorship() {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      // setSuccessMessage(res.data.message || "Application submitted successfully!");
-      // setLatestApplication(res.data);
-      // setTimeout(() => setSuccessMessage(""), 3000);
       await Swal.fire({
         icon: "success",
         title: "Success!",
         text: res.data.message || "Application submitted successfully!",
-        confirmButtonText: "OK"
+        confirmButtonText: "OK",
       });
 
-      // Refresh the page after clicking OK
-      window.location.reload();
-
-
-
+      fetchLatestApplication(); // Refresh after submission
     } catch (err) {
       console.error(err);
-      // Show backend error message if available
       const errorMsg =
-        err.response?.data?.error || "Failed to submit application. Please try again.";
+        err.response?.data?.error ||
+        "Failed to submit application. Please try again.";
       setErrorMessage(errorMsg);
       setTimeout(() => setErrorMessage(""), 5000);
     }
   };
+
+  
 
 
   const getStatusColor = (status) => {

@@ -904,3 +904,31 @@ exports.getAllSponsorship = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch notifications" });
   }
 };
+
+
+exports.getApplicationById = async (req, res) => {
+  try {
+    const applicationId = req.params.id;
+
+    const query = `SELECT * FROM sponsorshipapplications WHERE id = ?`;
+
+    db.query(query, [applicationId], (err, results) => {
+      if (err) {
+        console.error("DB Error:", err);
+        return res.status(500).json({ message: "Database error" });
+      }
+
+      if (results.length === 0) {
+        return res.status(404).json({ message: "Application not found" });
+      }
+
+      res.json({
+        success: true,
+        application: results[0],
+      });
+    });
+  } catch (error) {
+    console.error("Server Error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

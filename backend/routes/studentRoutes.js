@@ -83,5 +83,7 @@ router.post(
   studentController.uploadInfoRequestDocument
 );
 
+router.get("/get-application/:id", studentController.getApplicationById);
+
 
 module.exports = router;
