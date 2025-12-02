@@ -393,69 +393,6 @@ function ApplySponsorship() {
     </form>
 
     {/* Status Card */}
-    {/* {latestApplication && (
-        <div
-        style={{
-            background: "#ffffff",
-            color: "#2d6cdf",
-            padding: "30px",
-            borderRadius: "12px",
-            boxShadow: "0 6px 20px rgba(0,0,0,0.08)",
-            flex: "1",
-            minWidth: "280px",
-            maxWidth: "400px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "20px",
-        }}
-        >
-        <h3 style={{ marginBottom: "10px" }}>Latest Application Status</h3>
-        <p><strong>Sponsor Type:</strong> {latestApplication.sponsor_type}</p>
-        <p><strong>Purpose:</strong> {latestApplication.purpose}</p>
-        <p><strong>Amount:</strong> €{latestApplication.required_amount}</p>
-
-        <p style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <strong>Status:</strong>{" "}
-            <span
-            style={{
-                color: "white",
-                background: getStatusColor(latestApplication.status),
-                padding: "5px 12px",
-                borderRadius: "50px",
-                fontWeight: "bold",
-            }}
-            >
-            {latestApplication.status}
-            </span>
-        </p>
-
-        {latestApplication.status === "Approved" && (
-            <button
-            onClick={() => handleDownloadCertificate(latestApplication.id)}
-            style={{
-                padding: "10px",
-                background: "#5cb85c",
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-                fontWeight: "bold",
-                cursor: "pointer",
-            }}
-            >
-            <FaDownload style={{ marginRight: "8px" }} /> Download Certificate
-            </button>
-        )}
-
-        {latestApplication.admin_remarks && (
-            <p><strong>Admin Remarks:</strong> {latestApplication.admin_remarks}</p>
-        )}
-
-        <p><strong>Applied On:</strong> {new Date(latestApplication.created_at).toLocaleDateString()}</p>
-        </div>
-    )} */}
-
-    {/* Status Card */}
-    {/* Status Card */}
 
      {latestApplication && latestApplication.status === "Pending" && (
     <div
