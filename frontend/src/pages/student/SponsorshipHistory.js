@@ -4,24 +4,25 @@ import TopBar from "../../components/student/TopBar";
 import Footer from "../../components/student/Footer";
 import axios from "axios";
 import "./SponsorshipHistory.css";
+import { Link } from "react-router-dom";
 
 function SponsorshipHistory() {
   const { studentId } = useParams();
-  const [recommendedStudents, setRecommendedStudents] = useState([]);
+  const [approvedOrRejectApplications, setApprovedOrRejectApplications] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchRecommended = async () => {
+    const fetchApproedOrRejectedApplications = async () => {
       try {
         const res = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/student/get-all-approved-or-rejected-sponsorship/${studentId}`
         );
-        setRecommendedStudents(res.data);
+        setApprovedOrRejectApplications(res.data);
       } catch (err) {
         console.error("Failed to fetch recommended students:", err);
       }
     };
-    fetchRecommended();
+    fetchApproedOrRejectedApplications();
   }, [studentId]);
 
   return (
@@ -58,29 +59,34 @@ function SponsorshipHistory() {
 
             {/* Cards container */}
             <div className="card-grid">
-            {recommendedStudents.map((student, i) => (
+            {approvedOrRejectApplications.map((application, i) => (
                 <div className="student-card" key={i}>
                 <div className="student-image"></div>
                 <div className="card-info">
-                    <h3>{student.student_name}</h3>
-                    <p><strong>Purpose:</strong> {student.purpose}</p>
-                    <p><strong>Request Amount:</strong> {student.required_amount}</p>
-                    <p><strong>Approved Amount:</strong> {student.approved_amount}</p>
+                    <h3>{application.student_name}</h3>
+                    <p><strong>Purpose:</strong> {application.purpose}</p>
+                    <p><strong>Request Amount:</strong> {application.required_amount}</p>
+                    <p><strong>Approved Amount:</strong> {application.approved_amount}</p>
                 </div>
                 
-                {student?.status === "ApprovedBySponsor" && student?.approval_type === "Full" && (
+                {application?.status === "ApprovedBySponsor" && application?.approval_type === "Full" && (
                     <button className="sponsorship-approve-btn">
-                    Full Sponsorship ({student.approved_amount})
+                    Full Sponsorship ({application.approved_amount})
                     </button>
                 )}
-               {student?.status === "ApprovedBySponsor" && student?.approval_type === "Partial" && (
+               {application?.status === "ApprovedBySponsor" && application?.approval_type === "Partial" && (
                 <>
                   <button className="sponsorship-approve-btn">
-                    Partial Sponsorship ({student.approved_amount})
+                    Partial Sponsorship ({application.approved_amount})
                   </button>
+                <Link 
+                  to={`/student/apply-sponsorship/${studentId}?applicationId=${application.id}`} 
+                  style={{ textDecoration: "none" }}
+                >
                   <button className="sponsorship-approve-btn">
-                    Another Action ({student.approved_amount})
+                    Request Remaining Amount ({application.approved_amount})
                   </button>
+                </Link>
                 </>
               )}
 
