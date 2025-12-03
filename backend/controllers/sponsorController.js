@@ -15,6 +15,7 @@ exports.getRecommendedStudents = async (req, res) => {
       FROM sponsorshipapplications AS sa
       JOIN users AS u ON sa.student_id = u.id
       JOIN studentdetails AS sd ON sd.student_id = u.id
+      WHERE status ='Approved'
       ORDER BY sd.cgpa DESC
       LIMIT 3
 
@@ -35,22 +36,34 @@ exports.getRecommendedStudents = async (req, res) => {
 
 exports.getAllStudentRequest = async (req, res) => {
   try {
+    const { sponsorId } = req.params;
+
+    if (!sponsorId) {
+      return res.status(400).json({ error: "Sponsor ID is required" });
+    }
+
+    //it takes only approved application as well as current sponsors approved list also: reference from stack overflow
     const query = `
       SELECT 
-      sa.*,
-      u.name AS student_name,
-      u.email AS student_email,
-      u.type AS user_type,
-      sd.course,
-      sd.cgpa AS student_cgpa
+        sa.*,
+        u.name AS student_name,
+        u.email AS student_email,
+        u.type AS user_type,
+        sd.course,
+        sd.cgpa AS student_cgpa,
+        CASE 
+          WHEN sa.sponsor_id = ? THEN 1
+          ELSE 0
+        END AS approved_by_current_sponsor
       FROM sponsorshipapplications AS sa
       JOIN users AS u ON sa.student_id = u.id
       JOIN studentdetails AS sd ON sd.student_id = u.id
-      ORDER BY sd.cgpa DESC
-
+      WHERE sa.status LIKE 'Approved%'  
+        AND (sa.sponsor_id = ? OR sa.sponsor_id IS NULL)
+      ORDER BY approved_by_current_sponsor DESC, sd.cgpa DESC
     `;
 
-    const [rows] = await db.execute(query);
+    const [rows] = await db.execute(query, [sponsorId, sponsorId]);
 
     if (rows.length === 0) {
       return res.status(404).json({ error: "No sponsorship requests found" });
@@ -59,9 +72,10 @@ exports.getAllStudentRequest = async (req, res) => {
     res.json(rows);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Failed to fetch recommended students" });
+    res.status(500).json({ error: "Failed to fetch sponsorship applications" });
   }
 };
+
 
  
 
