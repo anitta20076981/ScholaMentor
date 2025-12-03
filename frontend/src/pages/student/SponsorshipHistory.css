@@ -46,7 +46,8 @@
 }
 
 .sponsor-btn,
-.sponsorship-approve-btn {
+.sponsorship-approve-btn,
+.rejected-btn {
   margin-top: 10px;
   padding: 8px 12px;
   width: 100%;
@@ -125,3 +126,7 @@
   padding: 20px;
 }
 
+.rejected-btn {
+  background-color: #ef240d;
+  color: white;
+}

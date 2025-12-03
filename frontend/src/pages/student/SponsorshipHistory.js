@@ -137,12 +137,17 @@ function SponsorshipHistory() {
                 <h3>{application.student_name}</h3>
                 <p><strong>Purpose:</strong> {application.purpose}</p>
                 <p><strong>Request Amount:</strong> {application.required_amount}</p>
-                <p><strong>Approved Amount:</strong> {application.approved_amount}</p>
+                <p><strong>Approved Amount:</strong> {application.status === "Rejected" ? 0 : application.approved_amount}</p>
               </div>
 
               {application?.status === "ApprovedBySponsor" && application?.approval_type === "Full" && (
                 <button className="sponsorship-approve-btn">
                   Full Sponsorship ({application.approved_amount})
+                </button>
+              )}
+              {application?.status === "Rejected" && (
+                <button className="rejected-btn" title={application.admin_remarks || "No reason provided"}>
+                  Rejected By Admin
                 </button>
               )}
 

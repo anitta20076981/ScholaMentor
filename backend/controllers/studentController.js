@@ -898,13 +898,14 @@ exports.getAllSponsorship = async (req, res) => {
     SELECT * 
     FROM sponsorshipapplications 
     WHERE student_id = ? 
-      AND status IN (?, ?)
+      AND status IN (?, ?, ?)
   `;
 
   const [rows] = await db.execute(selectQuery, [
     studentId,
     'ApprovedBySponsor',
-    'RejectedBySponsor'
+    'RejectedBySponsor',
+    'Rejected',
   ]);
  
     res.json(rows);  
