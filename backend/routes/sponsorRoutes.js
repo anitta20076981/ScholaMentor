@@ -13,6 +13,8 @@ router.put("/notifications/read/:notificationId", sponsorController.notification
 router.get("/get-info-request/:sponsorId/:requestId", sponsorController.getInfoRequest);
 router.get("/get-submitted-docs/:sponsorId/:requestId", sponsorController.getSubmittedDocs);
 router.post("/approve-sponsorship/:sponsorId/:requestId", sponsorController.approveSponsorship);
+router.get("/get-approved-requested/:sponsorId", sponsorController.getApprovedSponsorship);
+
 
  
 module.exports = router;

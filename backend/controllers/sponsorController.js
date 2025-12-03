@@ -74,10 +74,7 @@ exports.getAllStudentRequest = async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch sponsorship applications" });
   }
-};
-
-
- 
+}; 
 
 exports.getStudentRequest = async (req, res) => {
   const { requestId } = req.params;
@@ -297,7 +294,43 @@ exports.approveSponsorship = async (req, res) => {
   }
 };
 
+exports.getApprovedSponsorship = async (req, res) => {
+  try {
+    const { sponsorId } = req.params;
 
+    if (!sponsorId) {
+      return res.status(400).json({ error: "Sponsor ID is required" });
+    }
+
+    const query = `
+      SELECT 
+        sa.*,
+        u.name AS student_name,
+        u.email AS student_email,
+        u.type AS user_type,
+        sd.course,
+        sd.cgpa AS student_cgpa
+      FROM sponsorshipapplications AS sa
+      JOIN users AS u ON sa.student_id = u.id
+      JOIN studentdetails AS sd ON sd.student_id = u.id
+      WHERE sa.sponsor_id = ? 
+        AND sa.status = 'ApprovedBySponsor'
+      ORDER BY sd.cgpa DESC
+    `;
+
+
+    const [rows] = await db.execute(query, [sponsorId]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: "No sponsorship requests found" });
+    }
+
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch sponsorship applications" });
+  }
+};
 
 
 

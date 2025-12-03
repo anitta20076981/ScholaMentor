@@ -25,7 +25,7 @@ export default function Sidebar({ sponsorId }) {
           <FaUserGraduate className="icon" /> Students Request
         </NavLink>
 
-        <NavLink to="/sponsor/my-sponsorships" className="sidebar-link">
+        <NavLink to={`/sponsor/approved-sponsorships/${sponsorId}`} className="sidebar-link">
           <FaHandHoldingUsd className="icon" /> My Sponsorships
         </NavLink>
 
