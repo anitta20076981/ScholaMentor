@@ -328,6 +328,15 @@ function ViewStudentRequest() {
                 </div>
               )} 
 
+              {/* Approved Status */}
+              {studentRequest.status === 'ApprovedBySponsor' && (
+                <div className="request-column">
+                  <h3 className="section-title">Approved Details</h3>
+                  <p><strong>Approved Dated:</strong> {studentRequest.approved_date ? studentRequest.approved_date.split("T")[0] : "—"}</p>
+                  <p><strong>Request Date:</strong> {new Date(studentRequest.created_at).toLocaleDateString("en-GB")}</p>
+                </div>
+              )} 
+
               {/* Student Details */}
               <div className="request-column">
                 <h3 className="section-title">Student Details</h3>
@@ -347,7 +356,7 @@ function ViewStudentRequest() {
                 <p>
                   <strong>Marksheet:</strong> {renderDocLink("Marksheet", studentRequest.marksheet)}
                 </p>
-              </div>
+              </div>              
             </div>
           )}
         </section>

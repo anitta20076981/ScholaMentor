@@ -275,7 +275,8 @@ exports.approveSponsorship = async (req, res) => {
     );
 
     const requiredAmount = rows[0]?.required_amount; 
-     
+    const approvedDate = new Date();
+
     await db.execute(
     `UPDATE sponsorshipapplications
       SET approved_amount = ?, 
@@ -283,9 +284,10 @@ exports.approveSponsorship = async (req, res) => {
           sponsor_id = ?, 
           remarks_from_sponsor = ?, 
           remaining_amount = ?,
-          status = ?
+          status = ?,
+          approved_date = ?
       WHERE id = ?`,
-      [approved_amount, approval_type, sponsorId, remarks_from_sponsor || '',requiredAmount-approved_amount, 'ApprovedBySponsor', requestId]
+      [approved_amount, approval_type, sponsorId, remarks_from_sponsor || '',requiredAmount-approved_amount, 'ApprovedBySponsor',approvedDate,requestId]
     );
     
     res.status(200).json({ message: "Sponsorship approved successfully" });
