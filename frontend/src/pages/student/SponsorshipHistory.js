@@ -13,6 +13,7 @@ function SponsorshipHistory() {
   const [showModal, setShowModal] = useState(false);
   const [remainingAmount, setRemainingAmount] = useState("");
   const [currentApplicationId, setCurrentApplicationId] = useState(null);
+  
 
   useEffect(() => {
     const fetchApprovedOrRejectedApplications = async () => {
@@ -117,12 +118,12 @@ function SponsorshipHistory() {
                   <button className="sponsorship-approve-btn">
                     Partial Sponsorship ({application.approved_amount})
                   </button>
-                  <button
-                    className="request-remaining-btn"
-                    onClick={() => openModal(application)}
-                  >
-                    Request Remaining Amount ({application.required_amount - application.approved_amount})
-                  </button>
+                  {application?.remaining_requested === "No" && (
+                    <button className="request-remaining-btn" onClick={() => openModal(application)}>
+                      Request Remaining Amount ({application.required_amount - application.approved_amount})
+                    </button>
+                  )}                
+                  
                 </>
               )}
             </div>
