@@ -932,3 +932,43 @@ exports.getApplicationById = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+exports.requestRemainingAmount = async (req, res) => {
+  try {
+    const { studentId } = req.params;
+    const { applicationId, remainingAmount } = req.body;
+
+    const [rows] = await db.query(
+      "SELECT * FROM sponsorshipapplications WHERE id = ?",
+      [applicationId]
+    );
+
+    if (!rows || rows.length === 0) {
+      return res.status(404).json({ error: "Application not found." });
+    }
+
+    const previousEntry = rows[0];
+
+    const insertQuery = `
+      INSERT INTO sponsorshipapplications (
+        student_id, purpose, required_amount, cgpa, background, marksheet, previous_request_id
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    await db.execute(insertQuery, [
+      previousEntry.student_id, 
+      previousEntry.purpose || null,
+      remainingAmount || null,
+      previousEntry.cgpa || null,
+      previousEntry.background || null,
+      previousEntry.marksheet || null,
+      previousEntry.id || null,
+
+    ]);
+
+    return res.status(200).json({ message: "Remaining amount requested successfully." });
+  } catch (err) {
+    console.error("Error requesting remaining amount:", err);
+    return res.status(500).json({ error: "Something went wrong. Please try again." });
+  }
+};

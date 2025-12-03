@@ -84,6 +84,8 @@ router.post(
 );
 
 router.get("/get-application/:id", studentController.getApplicationById);
+router.post("/request_remaining_amount/:studentId", studentController.requestRemainingAmount);
+
 
 
 module.exports = router;
