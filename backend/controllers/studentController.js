@@ -966,6 +966,14 @@ exports.requestRemainingAmount = async (req, res) => {
 
     ]);
 
+    const updateQuery = `
+      UPDATE sponsorshipapplications
+      SET remaining_requested = 'Yes'
+      WHERE id = ?
+    `;
+
+    await db.execute(updateQuery, [applicationId]);
+
     return res.status(200).json({ message: "Remaining amount requested successfully." });
   } catch (err) {
     console.error("Error requesting remaining amount:", err);
