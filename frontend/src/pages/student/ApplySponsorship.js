@@ -46,11 +46,11 @@ function ApplySponsorship() {
   };
 
     useEffect(() => {
-    if (applicationId) {
-      fetchApplication(applicationId); 
-    } else {
+    // if (applicationId) {
+    //   fetchApplication(applicationId); 
+    // } else {
       fetchLatestApplication();  
-    }
+    // }
     fetchInfoRequests();
   }, [applicationId, studentId]);
 
@@ -64,7 +64,7 @@ function ApplySponsorship() {
         setFormData((prev) => ({
           ...prev,
           purpose: res.data.purpose,
-          required_amount: res.data.required_amount - res.data.approved_amount, amount
+          // required_amount: res.data.required_amount - res.data.approved_amount, amount
         }));
         
         setLatestApplication(res.data);
