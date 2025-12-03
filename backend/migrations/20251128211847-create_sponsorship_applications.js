@@ -44,6 +44,10 @@ module.exports = {
         type: Sequelize.ENUM('Pending','Approved','Rejected','MoreInfo','InfoSubmitted','ApprovedBySponsor','RejectedBySponsor'),
         defaultValue: 'Pending'
       },
+      approved_date: {
+        type: Sequelize.DATE,
+        allowNull: true
+      },
       admin_remarks: {
         type: Sequelize.TEXT,
         allowNull: true
