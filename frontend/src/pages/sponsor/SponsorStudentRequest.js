@@ -18,8 +18,9 @@ function SponsorStudentRequest() {
     const fetchRecommended = async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/sponsor/get-all-student-requests`
+          `${process.env.REACT_APP_API_URL}/api/sponsor/get-all-student-requests/${sponsorId}`
         );
+
         setRecommendedStudents(res.data); // assuming the API returns an array of students
       } catch (err) {
         console.error("Failed to fetch recommended students:", err);
