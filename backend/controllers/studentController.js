@@ -616,10 +616,17 @@ exports.applySponsorship = async (req, res) => {
       [studentId, purpose]
     );
     if (alreadyApplied.length > 0) {
-      return res.status(500).json({
+      if (alreadyApplied[0].status === 'Rejected') {
+        return res.status(400).json({
+          success: false,
+          error: "You already applied, and your application was rejected by admin, so you cannot apply again."
+        });
+      } else {
+        return res.status(400).json({
           success: false,
           error: "You cannot apply twice for the same purpose."
         });
+      }
     }
    
 
@@ -719,6 +726,7 @@ exports.getSponsorship = async (req, res) => {
     const query = `
       SELECT * FROM sponsorshipapplications
       WHERE student_id = ?
+      AND status != 'Rejected'
       ORDER BY id DESC
       LIMIT 1
     `;

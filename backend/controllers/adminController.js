@@ -632,6 +632,18 @@ exports.rejectSponsorshipRequest = async (req, res) => {
       [applicationId]
     );
 
+    const app = updated[0];
+
+     await db.query(
+      `INSERT INTO notifications (user_id, message, type, status, created_at, updated_at)
+       VALUES (?, ?, ?, 'unread', NOW(), NOW())`,
+      [
+        app.student_id,
+        `Your sponsorship application has been rejected by admin!.`,
+        "sponsorship"
+      ]
+    );
+
     res.json(updated[0]);
   } catch (error) {
     console.error(error);
