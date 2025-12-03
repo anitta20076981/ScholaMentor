@@ -744,6 +744,7 @@ exports.getNotifications = async (req, res) => {
       SELECT * FROM notifications 
       WHERE user_id = ? AND status = 'unread'
       ORDER BY created_at DESC
+      LIMIT 5
     `;
 
     const [rows] = await db.execute(query, [studentId]);
