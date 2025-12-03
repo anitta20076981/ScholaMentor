@@ -10,10 +10,18 @@ function SponsorshipHistory() {
   const { studentId } = useParams();
   const navigate = useNavigate();
   const [approvedOrRejectApplications, setApprovedOrRejectApplications] = useState([]);
+  const [allApplications, setAllApplications] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [remainingAmount, setRemainingAmount] = useState("");
   const [currentApplicationId, setCurrentApplicationId] = useState(null);
-  
+  const [activeSponsorshipExists, setActiveSponsorshipExists] = useState(false);
+
+   const checkActiveSponsorship = (applications) => {
+    const active = applications.some(app =>
+      ["Pending", "Approved", "MoreInfo", "InfoSubmitted", "ApprovedBySponsor"].includes(app.status)
+    );
+    setActiveSponsorshipExists(active);
+  };
 
   useEffect(() => {
     const fetchApprovedOrRejectedApplications = async () => {
@@ -26,10 +34,35 @@ function SponsorshipHistory() {
         console.error("Failed to fetch applications:", err);
       }
     };
+    const fetchAllApplications = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/student/get-all-sponsorship-applications/${studentId}`
+        );
+        setAllApplications(res.data);
+          const active = res.data.some(app =>
+        ["Pending", "Approved", "MoreInfo", "InfoSubmitted"].includes(app.status)
+        );
+        setActiveSponsorshipExists(active);
+      } catch (err) {
+        console.error("Failed to fetch applications:", err);
+      }
+    };
+    fetchAllApplications();
     fetchApprovedOrRejectedApplications();
   }, [studentId]);
 
   const openModal = (application) => {
+
+    if (activeSponsorshipExists) {
+      Swal.fire({
+        icon: "warning",
+        title: "Action Not Allowed",
+        text: "You already have an active sponsorship application. You cannot request the remaining amount now.",
+        confirmButtonText: "OK",
+      });
+    return; 
+  }
     setCurrentApplicationId(application.id);
     setRemainingAmount(application.required_amount - application.approved_amount);
     setShowModal(true);

@@ -980,3 +980,24 @@ exports.requestRemainingAmount = async (req, res) => {
     return res.status(500).json({ error: "Something went wrong. Please try again." });
   }
 };
+
+exports.getAllStudentSponsorship = async (req, res) => {
+  const { studentId } = req.params;
+
+  try {
+    const selectQuery = `
+    SELECT * 
+    FROM sponsorshipapplications 
+    WHERE student_id = ?
+  `;
+
+  const [rows] = await db.execute(selectQuery, [
+    studentId
+  ]);
+ 
+    res.json(rows);  
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch notifications" });
+  }
+};
