@@ -10,11 +10,13 @@ import Footer from "../../components/sponsor/Footer";
 
 import "./SponsorDashboard.css";
 import { useParams, useNavigate } from "react-router-dom"; // use parameter from url
-
+ 
 
 function SponsorDashboard() {
   const { sponsorId } = useParams(); // define studentid
   const [recommendedStudents, setRecommendedStudents] = useState([]);
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchRecommended = async () => {
       try {
@@ -92,7 +94,7 @@ function SponsorDashboard() {
                     <p><strong>Score:</strong> {student.cgpa}</p>
                     <p><strong>Need:</strong> {student.background}</p>
                   </div>
-                  <button className="sponsor-btn">View Details</button>
+                  <button className="sponsor-btn" onClick={() =>navigate(`/sponsor/get-student-request/${sponsorId}/${student.id}`)}>View Details</button>
                 </div>
               ))}
             </div>
