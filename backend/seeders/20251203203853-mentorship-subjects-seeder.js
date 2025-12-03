@@ -3,7 +3,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     return queryInterface.bulkInsert(
-      "mentorship_subjects",
+      "mentorshipsubjects",
       [
         {
           name: "Mathematics",

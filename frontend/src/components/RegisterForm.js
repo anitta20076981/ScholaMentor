@@ -33,13 +33,11 @@ function RegisterForm() {
         const sponsorId = res.data.user.id;
         navigate(`/sponsor/dashboard/${sponsorId}`);
       }
-      // else if (res.data.user.type === "mentor") {
-      //   navigate("/mentor-dashboard");
-      // } else if (res.data.user.type === "sponsor") {
-      //   navigate("/sponsor-dashboard");
-      // } else if (res.data.user.type === "donor") {
-      //   navigate("/donor-dashboard");
-      // }
+      else if (res.data.user.type === "mentor") {
+        const mentorId = res.data.user.id;
+        navigate(`/mentor/dashboard/${mentorId}`);
+      } 
+       
     } catch (err) {
       console.error(err);
       setMessage("Registration failed!");

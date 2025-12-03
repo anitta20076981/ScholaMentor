@@ -25,11 +25,11 @@ function LoginForm() {
       } else if (res.data.role === "student") {// redirect student
         navigate(`/student/dashboard/${res.data.id}`);
       }
-      else if (res.data.role === "sponsor") {// redirect student
+      else if (res.data.role === "sponsor") {// redirect sponsor
         navigate(`/sponsor/dashboard/${res.data.id}`);
+      } else if (res.data.role === "mentor") {// redirect mentor
+        navigate(`/mentor/dashboard/${res.data.id}`);
 
-      } else {
-        
       }
 
     } catch (err) {
