@@ -24,7 +24,7 @@ function ApplySponsorship() {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [latestApplication, setLatestApplication] = useState(null);
-  const [inforequests, setInforequests] = useState(null);
+  const [inforequests, setInforequests] = useState([]);
   
   const handleDownloadCertificate = async (applicationId) => {
     try {
