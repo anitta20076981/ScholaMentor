@@ -68,6 +68,11 @@ module.exports = (sequelize, DataTypes) => {
       previous_request_id: {
         type: DataTypes.BIGINT,
         allowNull: true
+      },
+      remaining_requested: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'No',
       }
     },
     {

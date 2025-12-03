@@ -76,6 +76,11 @@ module.exports = {
         type: DataTypes.BIGINT,
         allowNull: true,
       },
+      remaining_requested: {      
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: 'No'
+      },
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
