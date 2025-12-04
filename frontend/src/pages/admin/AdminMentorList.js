@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; 
 import AdminSidebar from "../../components/AdminSidebar";
 import axios from "axios";
 import { FaEye, FaEdit ,FaTrash} from "react-icons/fa";
@@ -6,7 +7,7 @@ import { FaEye, FaEdit ,FaTrash} from "react-icons/fa";
 function AdminMentorList() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate();
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const studentsPerPage = 10;
@@ -30,8 +31,8 @@ function AdminMentorList() {
   // Calculate pagination
   const totalPages = Math.ceil(students.length / studentsPerPage);
   const indexOfLastStudent = currentPage * studentsPerPage;
-  const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
-  const currentStudents = students.slice(indexOfFirstStudent, indexOfLastStudent);
+  const indexOfFirstMentor = indexOfLastStudent - studentsPerPage;
+  const currentMentor = students.slice(indexOfFirstMentor, indexOfLastStudent);
 
   // Pagination handler
   const goToPage = (page) => {
@@ -118,18 +119,18 @@ function AdminMentorList() {
                 </tr>
               </thead>
               <tbody>
-                {currentStudents.length > 0 ? (
-                  currentStudents.map((student, index) => (
+                {currentMentor.length > 0 ? (
+                  currentMentor.map((mentor, index) => (
                     <tr
-                      key={indexOfFirstStudent + index}
+                      key={indexOfFirstMentor + index}
                       style={{
                         backgroundColor:
                           index % 2 === 0 ? "#f2f2f2" : "white",
                       }}
                     >
-                      <td style={tdStyle}>{indexOfFirstStudent + index + 1}</td>
-                      <td style={tdStyle}>{student.name}</td>
-                      <td style={tdStyle}>{student.email}</td>
+                      <td style={tdStyle}>{indexOfFirstMentor + index + 1}</td>
+                      <td style={tdStyle}>{mentor.name}</td>
+                      <td style={tdStyle}>{mentor.email}</td>
                      <td style={tdStyle}>
                     <button
                         style={{
@@ -139,7 +140,7 @@ function AdminMentorList() {
                         color: "#1e1e2f",
                         marginRight: "10px",
                         }}
-                        onClick={() => console.log("View student", student.id)}
+                        onClick={() => navigate(`/admin/view-mentor/${mentor.id}`)}
                     >
                         <FaEye />
                     </button>
@@ -151,7 +152,7 @@ function AdminMentorList() {
                         cursor: "pointer",
                         color: "red",
                     }}
-                    onClick={() => console.log("Delete student", student.id)}
+                    onClick={() => console.log("Delete student", mentor.id)}
                     >
                     <FaTrash />
                     </button>
