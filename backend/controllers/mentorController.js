@@ -20,7 +20,6 @@ exports.updateMentorDetails = async (req, res) => {
     days_available,
     time_slots
   } = req.body;
-  console.log("mentorId:", mentorId);
 
   // Files
   const resume = req.files?.resume ? req.files.resume[0].filename : null;
@@ -28,13 +27,6 @@ exports.updateMentorDetails = async (req, res) => {
   const id_proof = req.files?.id_proof ? req.files.id_proof[0].filename : null;
  
   try {
-    // Update users table (name and email only)
-    // await db.execute(
-    //   `UPDATE users SET name = ?, email = ? WHERE id = ?`,
-    //   [fullName, email, studentId]
-    // );
-
-    //  Update student_details table
     const query = `
     UPDATE mentordetails
     SET 
@@ -117,7 +109,7 @@ exports.getAllSubjects = async (req, res) => {
       return res.status(404).json({ error: "Student not found" });
     }
 
-    res.json(rows[0]); 
+    res.json(rows); 
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch student details" });
