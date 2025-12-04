@@ -15,7 +15,7 @@ exports.getRecommendedStudents = async (req, res) => {
       FROM sponsorshipapplications AS sa
       JOIN users AS u ON sa.student_id = u.id
       JOIN studentdetails AS sd ON sd.student_id = u.id
-      WHERE status ='Approved'
+      WHERE sa.status ='Approved'
       ORDER BY sd.cgpa DESC
       LIMIT 3
 

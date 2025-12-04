@@ -89,9 +89,10 @@ exports.getMentorDetails = async (req, res) => {
 
   try {
      const query = `
-    SELECT * FROM mentordetails
-      WHERE mentor_id = ?
-  `;
+      SELECT m.*, u.name,u.email,u.type,u.status   
+      FROM mentordetails AS m JOIN users AS u ON m.mentor_id = u.id
+      WHERE m.mentor_id = ?
+    `;
      const [rows] = await db.execute(query, [mentorId]); 
     if (rows.length === 0) {
       return res.status(404).json({ error: "Student not found" });
