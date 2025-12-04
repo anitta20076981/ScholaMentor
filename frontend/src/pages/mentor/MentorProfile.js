@@ -9,20 +9,29 @@ import { FaEye } from "react-icons/fa";
 
 function MentorProfile() {
   const { mentorId } = useParams();
-
   const [activeTab, setActiveTab] = useState("personal");
 
   const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
+    // fullName: "",
+    // email: "",
+    phone_number: "",
+    address: "",
     gender: "",
     dob: "",
     address: "",
-    expertise: "",
-    qualification: "",
-    experience: "",
+    current_job_title: "",
+    company: "",
+    years_of_experience: "",
+    industry: "",
+    short_bio: "",
+    linkedin_profile: "",
+    subjects: "",
+    skills: "",
+    days_available: "",
+    time_slots: "",
     profile_photo: null,
+    resume: null,
+    certificates: null,
     id_proof: null,
   });
 
@@ -35,26 +44,35 @@ function MentorProfile() {
         const res = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/mentor/get-details/${mentorId}`
         );
+        const data = res.data;
 
         setFormData((prev) => ({
           ...prev,
-          fullName: res.data.name || "",
-          email: res.data.email || "",
-          phone: res.data.phone || "",
-          gender: res.data.gender || "",
-          dob: res.data.dob || "",
-          address: res.data.address || "",
-          expertise: res.data.expertise || "",
-          qualification: res.data.qualification || "",
-          experience: res.data.experience || "",
-          id_proof: res.data.id_proof || "",
-          profile_photo: res.data.profile_photo || "",
+        //   fullName: data.name || "",
+        //   email: data.email || "",
+          phone_number: data.phone_number || "",
+          gender: data.gender || "",
+          address: data.address || "",
+          address: data.address || "",
+          current_job_title: data.current_job_title || "",
+          company: data.company || "",
+          years_of_experience: data.years_of_experience || "",
+          industry: data.industry || "",
+          short_bio: data.short_bio || "",
+          linkedin_profile: data.linkedin_profile || "",
+          subjects: data.subjects || "",
+          skills: data.skills || "",
+          days_available: data.days_available || "",
+          time_slots: data.time_slots || "",
+          profile_photo: data.profile_photo || null,
+          resume: data.resume || null,
+          certificates: data.certificates || null,
+          id_proof: data.id_proof || null,
         }));
       } catch (e) {
-        console.error("Error:", e);
+        console.error("Error fetching mentor details:", e);
       }
     }
-
     fetchMentor();
   }, [mentorId]);
 
@@ -88,10 +106,12 @@ function MentorProfile() {
         setTimeout(() => setSuccessMessage(""), 3000);
       } else {
         setErrorMessage("Failed to update profile.");
+        setTimeout(() => setErrorMessage(""), 3000);
       }
     } catch (error) {
       console.error(error);
       setErrorMessage("Something went wrong.");
+      setTimeout(() => setErrorMessage(""), 3000);
     }
   };
 
@@ -99,8 +119,19 @@ function MentorProfile() {
     <div className="mentor-wrapper">
       <Sidebar mentorId={mentorId} />
       <div className="content">
-        <TopBar mentorId={mentorId} />
+        <TopBar
+          mentorId={mentorId}
+          successMessage={successMessage}
+          errorMessage={errorMessage}
+        />
 
+        {/* HERO / INTRO TEXT */}
+        <section className="mentor-hero">
+          <h1>Empower Students Through Mentorship</h1>
+          <p>Share your knowledge, guide students, and make a lasting impact on their future.</p>
+        </section>
+
+        {/* PROFILE FORM */}
         <div className="profile-main">
           {/* LEFT SIDE PROFILE CARD */}
           <div className="profile-sidebar">
@@ -137,8 +168,8 @@ function MentorProfile() {
                 />
               </div>
 
-              <h2 className="profile-name">{formData.fullName}</h2>
-              <p className="profile-email">{formData.email}</p>
+              {/* <h2 className="profile-name">{formData.fullName}</h2> */}
+              {/* <p className="profile-email">{formData.email}</p> */}
             </div>
           </div>
 
@@ -167,12 +198,11 @@ function MentorProfile() {
               </div>
 
               <form onSubmit={handleSubmit}>
-
                 {/* PERSONAL TAB */}
                 {activeTab === "personal" && (
                   <div className="tab-content">
                     <div className="form-row">
-                      <div className="form-field">
+                      {/* <div className="form-field">
                         <label>Full Name</label>
                         <input
                           type="text"
@@ -190,30 +220,20 @@ function MentorProfile() {
                           value={formData.email}
                           onChange={handleChange}
                         />
-                      </div>
+                      </div> */}
 
                       <div className="form-field">
-                        <label>Phone</label>
+                        <label>Phone Number</label>
                         <input
                           type="text"
-                          name="phone"
-                          value={formData.phone}
+                          name="phone_number"
+                          value={formData.phone_number}
                           onChange={handleChange}
                         />
                       </div>
                     </div>
 
                     <div className="form-row">
-                      <div className="form-field">
-                        <label>DOB</label>
-                        <input
-                          type="date"
-                          name="dob"
-                          value={formData.dob?.split("T")[0] || ""}
-                          onChange={handleChange}
-                        />
-                      </div>
-
                       <div className="form-field">
                         <label>Gender</label>
                         <select
@@ -246,32 +266,107 @@ function MentorProfile() {
                   <div className="tab-content">
                     <div className="form-row">
                       <div className="form-field">
-                        <label>Expertise</label>
+                        <label>Current Job Title</label>
                         <input
                           type="text"
-                          name="expertise"
-                          value={formData.expertise}
-                          onChange={handleChange}
-                          placeholder="Ex: AI, Math, Web Development"
-                        />
-                      </div>
-
-                      <div className="form-field">
-                        <label>Qualification</label>
-                        <input
-                          type="text"
-                          name="qualification"
-                          value={formData.qualification}
+                          name="current_job_title"
+                          value={formData.current_job_title}
                           onChange={handleChange}
                         />
                       </div>
 
                       <div className="form-field">
-                        <label>Experience (Years)</label>
+                        <label>Company / Organization</label>
+                        <input
+                          type="text"
+                          name="company"
+                          value={formData.company}
+                          onChange={handleChange}
+                        />
+                      </div>
+
+                      <div className="form-field">
+                        <label>Years of Experience</label>
                         <input
                           type="number"
-                          name="experience"
-                          value={formData.experience}
+                          name="years_of_experience"
+                          value={formData.years_of_experience}
+                          onChange={handleChange}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-row">
+                      <div className="form-field">
+                        <label>Industry</label>
+                        <input
+                          type="text"
+                          name="industry"
+                          value={formData.industry}
+                          onChange={handleChange}
+                        />
+                      </div>
+
+                      <div className="form-field">
+                        <label>Short Bio / About Me</label>
+                        <textarea
+                          name="short_bio"
+                          value={formData.short_bio}
+                          rows={3}
+                          onChange={handleChange}
+                        />
+                      </div>
+
+                      <div className="form-field">
+                        <label>LinkedIn Profile</label>
+                        <input
+                          type="text"
+                          name="linkedin_profile"
+                          value={formData.linkedin_profile}
+                          onChange={handleChange}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-row">
+                      <div className="form-field">
+                        <label>Subjects They Can Teach</label>
+                        <input
+                          type="text"
+                          name="subjects"
+                          value={formData.subjects}
+                          onChange={handleChange}
+                        />
+                      </div>
+
+                      <div className="form-field">
+                        <label>Skills They Can Mentor In</label>
+                        <input
+                          type="text"
+                          name="skills"
+                          value={formData.skills}
+                          onChange={handleChange}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-row">
+                      <div className="form-field">
+                        <label>Days Available (Mon–Sun)</label>
+                        <input
+                          type="text"
+                          name="days_available"
+                          value={formData.days_available}
+                          onChange={handleChange}
+                        />
+                      </div>
+
+                      <div className="form-field">
+                        <label>Time Slots (e.g., 5 PM – 9 PM)</label>
+                        <input
+                          type="text"
+                          name="time_slots"
+                          value={formData.time_slots}
                           onChange={handleChange}
                         />
                       </div>
@@ -283,6 +378,36 @@ function MentorProfile() {
                 {activeTab === "documents" && (
                   <div className="tab-content">
                     <div className="form-row">
+                      <div className="form-field" style={{ position: "relative" }}>
+                        <label>Resume</label>
+                        <input type="file" name="resume" onChange={handleChange} />
+                        {formData.resume && (
+                          <a
+                            href={`${process.env.REACT_APP_API_URL}/uploads/${formData.resume}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="icon-eye"
+                          >
+                            <FaEye size={20} />
+                          </a>
+                        )}
+                      </div>
+
+                      <div className="form-field" style={{ position: "relative" }}>
+                        <label>Certificates</label>
+                        <input type="file" name="certificates" onChange={handleChange} />
+                        {formData.certificates && (
+                          <a
+                            href={`${process.env.REACT_APP_API_URL}/uploads/${formData.certificates}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="icon-eye"
+                          >
+                            <FaEye size={20} />
+                          </a>
+                        )}
+                      </div>
+
                       <div className="form-field" style={{ position: "relative" }}>
                         <label>ID Proof</label>
                         <input type="file" name="id_proof" onChange={handleChange} />
@@ -305,7 +430,6 @@ function MentorProfile() {
                   <button type="submit">Save Changes</button>
                 </div>
               </form>
-
             </div>
           </div>
         </div>
