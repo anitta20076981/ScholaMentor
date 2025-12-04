@@ -24,6 +24,7 @@ import SponsorshipHistory from "./pages/student/SponsorshipHistory";
 import ApprovedSponsorship from "./pages/sponsor/ApprovedSponsorship"; 
 import MentorDashboard from "./pages/mentor/MentorDashboard"; 
 import MentorProfile from "./pages/mentor/MentorProfile"; 
+import AdminMentorList from "./pages/admin/AdminMentorList"; 
 
 
 
@@ -62,6 +63,7 @@ function App() {
         <Route path="/sponsor/approved-sponsorships/:sponsorId" element={<ApprovedSponsorship />} /> 
         <Route path="/mentor/dashboard/:mentorId" element={<MentorDashboard />} /> 
         <Route path="/mentor/mentor-profile/:mentorId" element={<MentorProfile />} /> 
+        <Route path="/admin/mentor_list" element={<AdminMentorList />} /> 
 
         
         

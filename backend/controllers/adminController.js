@@ -650,3 +650,13 @@ exports.rejectSponsorshipRequest = async (req, res) => {
     res.status(500).json({ message: "Failed to reject application" });
   }
 };
+
+exports.getAllMentor = async (req, res) => {
+  try {
+    const [results] = await db.query("SELECT * FROM users WHERE type = 'mentor'");
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
