@@ -4,16 +4,16 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-import Sidebar from "../../components/sponsor/Sidebar";
-import TopBar from "../../components/sponsor/TopBar";
-import Footer from "../../components/sponsor/Footer";
+import Sidebar from "../../components/mentor/Sidebar";
+import TopBar from "../../components/mentor/TopBar";
+import Footer from "../../components/mentor/Footer";
 
 import "./MentorDashboard.css";
 import { useParams, useNavigate } from "react-router-dom"; // use parameter from url
  
 
-function SponsorDashboard() {
-  const { sponsorId } = useParams(); // define studentid
+function MentorDashboard() {
+  const { mentorId } = useParams(); // define studentid
   const [recommendedStudents, setRecommendedStudents] = useState([]);
   const navigate = useNavigate();
 
@@ -45,27 +45,30 @@ function SponsorDashboard() {
   return (
     <div className="sponsor-wrapper">
 
-      <Sidebar sponsorId={sponsorId} /> 
+      <Sidebar mentorId={mentorId} /> 
 
       <div className="content">
-        <TopBar sponsorId={sponsorId} />
+        <TopBar mentorId={mentorId} />
 
         {/* HERO SLIDER */}
         <section className="hero-slider">
           <Slider {...settings}>
             <div>
-              <img src="/sponsorship_banner1.jpg" className="slider-img" alt="slide1" />
+              <img src="/mentorship1.jpg" className="slider-img" alt="slide1" />
             </div>
             <div>
-              <img src="/sponsorship_banner2.jpg" className="slider-img" alt="slide2" />
+              <img src="/mentorship2.jpg" className="slider-img" alt="slide2" />
             </div>
             <div>
-              <img src="/sponsorship_banner3.jpg" className="slider-img" alt="slide3" />
+              <img src="/mentorship3.jpg" className="slider-img" alt="slide3" />
+            </div>
+            <div>
+              <img src="/mentorship4.jpg" className="slider-img" alt="slide4" />
             </div>
           </Slider>
           <div className="hero-text">
-            <h1>Empower Students Through Sponsorship</h1>
-            <p>Support talented students, contribute to education, and change lives.</p>
+            <h1>Inspire Students Through Mentorship</h1>
+            <p>Guide young minds, share your expertise, and help shape successful futures.</p>
             <button onClick={() => {
                 const element = document.getElementById("recommended-students");
                 if (element) {
@@ -94,7 +97,7 @@ function SponsorDashboard() {
                     <p><strong>Score:</strong> {student.cgpa}</p>
                     <p><strong>Need:</strong> {student.background}</p>
                   </div>
-                  <button className="sponsor-btn" onClick={() =>navigate(`/sponsor/get-student-request/${sponsorId}/${student.id}`)}>View Details</button>
+                  <button className="sponsor-btn" onClick={() =>navigate(`/sponsor/get-student-request/${mentorId}/${student.id}`)}>View Details</button>
                 </div>
               ))}
             </div>
@@ -111,4 +114,4 @@ function SponsorDashboard() {
     </div>
   );
 }
-export default SponsorDashboard;
+export default MentorDashboard;
