@@ -58,9 +58,16 @@ exports.register = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        let status = 'active';
+        if (type === 'mentor') {
+            status = 'inactive'; // by default mentor is inactive 
+        }else{
+            status = 'active';
+        }
+
         const [result] = await db.query(
-            "INSERT INTO users (name, email, password, type) VALUES (?, ?, ?, ?)",
-            [name, email, hashedPassword, type]
+            "INSERT INTO users (name, email, password, type ,status) VALUES (?, ?, ?, ?, ?)",
+            [name, email, hashedPassword, type, status]
         );
 
         const userId = result.insertId;
