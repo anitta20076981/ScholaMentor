@@ -75,6 +75,12 @@ exports.register = async (req, res) => {
                 [userId]
             );
         }
+        if (type === "mentor") {
+            await db.query(
+                `INSERT INTO mentordetails (mentor_id) VALUES (?)`,
+                [userId]
+            );
+        }
 
         return res.status(201).json({
             message: "User registered successfully",
