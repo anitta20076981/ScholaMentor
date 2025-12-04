@@ -25,6 +25,11 @@ module.exports = {
         type: Sequelize.ENUM('admin', 'student', 'sponsor', 'mentor', 'donor'),
         allowNull: false,
       },
+      status: {
+        type: Sequelize.ENUM('active', 'inactive'),
+        allowNull: false,
+        defaultValue: 'active',  // default status
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
