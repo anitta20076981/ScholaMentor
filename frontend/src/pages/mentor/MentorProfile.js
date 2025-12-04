@@ -37,6 +37,7 @@ function MentorProfile() {
 
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [allSubjects, setAllSubjects] = useState([]);
 
   useEffect(() => {
     async function fetchMentor() {
@@ -69,6 +70,12 @@ function MentorProfile() {
           certificates: data.certificates || null,
           id_proof: data.id_proof || null,
         }));
+
+      const resSubjects = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/mentor/get-subjects`
+      );
+      setAllSubjects(resSubjects.data)
+
       } catch (e) {
         console.error("Error fetching mentor details:", e);
       }
@@ -330,7 +337,7 @@ function MentorProfile() {
 
                     <div className="form-row">
                       <div className="form-field">
-                        <label>Subjects They Can Teach</label>
+                        <label>Subjects You Can Teach</label>
                         <input
                           type="text"
                           name="subjects"

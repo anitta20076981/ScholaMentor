@@ -105,4 +105,23 @@ exports.getMentorDetails = async (req, res) => {
   }
 };
 
+exports.getAllSubjects = async (req, res) => {
+  const { mentorId } = req.params;
+
+  try {
+     const query = `
+      SELECT * FROM mentorshipsubjects 
+    `;
+    const [rows] = await db.execute(query);
+    if (rows.length === 0) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+
+    res.json(rows[0]); 
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch student details" });
+  }
+};
+
 

@@ -26,6 +26,7 @@ router.put(
   mentorController.updateMentorDetails
 );
 router.get("/get-details/:mentorId", mentorController.getMentorDetails);
+router.get("/get-subjects", mentorController.getAllSubjects);
 
 // router.get("/get-all-student-requests/:sponsorId", sponsorController.getAllStudentRequest);
 // router.get("/get-student-request/:sponsorId/:requestId", sponsorController.getStudentRequest);
