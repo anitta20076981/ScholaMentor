@@ -25,7 +25,8 @@ function MentorProfile() {
     industry: "",
     short_bio: "",
     linkedin_profile: "",
-    subjects: "",
+    // subjects: "",
+    subjects: [],
     skills: "",
     days_available: "",
     time_slots: "",
@@ -38,6 +39,7 @@ function MentorProfile() {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [allSubjects, setAllSubjects] = useState([]);
+  const [subjectsList, setSubjectsList] = useState([]);
 
   useEffect(() => {
     async function fetchMentor() {
@@ -61,7 +63,7 @@ function MentorProfile() {
           industry: data.industry || "",
           short_bio: data.short_bio || "",
           linkedin_profile: data.linkedin_profile || "",
-          subjects: data.subjects || "",
+          subjects: data.subjects ? data.subjects.split(",") : [], //convert string to array : reference from chatgpt
           skills: data.skills || "",
           days_available: data.days_available || "",
           time_slots: data.time_slots || "",
@@ -74,7 +76,8 @@ function MentorProfile() {
       const resSubjects = await axios.get(
         `${process.env.REACT_APP_API_URL}/api/mentor/get-subjects`
       );
-      setAllSubjects(resSubjects.data)
+      console.log(resSubjects.data);
+      setSubjectsList(resSubjects.data)
 
       } catch (e) {
         console.error("Error fetching mentor details:", e);
@@ -83,13 +86,27 @@ function MentorProfile() {
     fetchMentor();
   }, [mentorId]);
 
-  const handleChange = (e) => {
-    const { name, files, value } = e.target;
-    setFormData((prev) => ({
+const handleChange = (e) => {
+  const { name, files, value, options, type } = e.target;
+
+  if (type === "select-multiple") {// select all items in multi select dropdown and store value as an arry : refrene from chatgpt
+    const selectedValues = Array.from(options)
+      .filter(option => option.selected)
+      .map(option => option.value);
+
+    setFormData(prev => ({
       ...prev,
-      [name]: files ? files[0] : value,
+      [name]: selectedValues
     }));
-  };
+  } else {
+    setFormData(prev => ({
+      ...prev,
+      [name]: files ? files[0] : value
+    }));
+  }
+};
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -338,14 +355,19 @@ function MentorProfile() {
                     <div className="form-row">
                       <div className="form-field">
                         <label>Subjects You Can Teach</label>
-                        <input
-                          type="text"
+                        <select
                           name="subjects"
-                          value={formData.subjects}
+                          multiple
+                          value={formData.subjects} // must be an array
                           onChange={handleChange}
-                        />
+                        >
+                          {subjectsList.map(subject => (
+                            <option key={subject.id} value={subject.name}>
+                              {subject.name}
+                            </option>
+                          ))}
+                        </select>
                       </div>
-
                       <div className="form-field">
                         <label>Skills They Can Mentor In</label>
                         <input
