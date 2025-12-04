@@ -114,6 +114,7 @@ function AdminMentorList() {
                   <th style={thStyle}>S.No</th>
                   <th style={thStyle}>Name</th>
                   <th style={thStyle}>Email</th>
+                  <th style={thStyle}>Status</th>
                   <th style={thStyle}></th>
                   <th style={thStyle}></th>
                 </tr>
@@ -131,6 +132,7 @@ function AdminMentorList() {
                       <td style={tdStyle}>{indexOfFirstMentor + index + 1}</td>
                       <td style={tdStyle}>{mentor.name}</td>
                       <td style={tdStyle}>{mentor.email}</td>
+                      <td style={tdStyle}>{mentor.status}</td>
                      <td style={tdStyle}>
                     <button
                         style={{

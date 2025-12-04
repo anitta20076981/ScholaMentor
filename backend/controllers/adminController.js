@@ -665,7 +665,7 @@ exports.getMentorById = async (req, res) => {
   const { mentorId } = req.params;
   try {
    const query = `
-      SELECT u.id, u.name, u.email, u.type, md.*
+      SELECT u.id, u.name, u.email, u.type, u.status, md.*
       FROM users u
       LEFT JOIN mentordetails md ON md.mentor_id = u.id
       WHERE u.id = ? AND u.type = 'mentor'

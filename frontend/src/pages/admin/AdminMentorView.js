@@ -152,9 +152,11 @@ const handleApprove = async () => {
         <>
         <section className="recommend-section view-request-section">
             <div className="action-buttons">
-                <button className="approve-btn" onClick={handleApprove}>
-                    Approve
-                </button>
+                {students.status === "inactive" && (
+                    <button className="approve-btn" onClick={handleApprove}>
+                        Approve
+                    </button>
+                )}
 
                 {/* <button className="reject-btn" onClick={handleReject}>
                     Reject
