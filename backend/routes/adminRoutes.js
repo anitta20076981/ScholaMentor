@@ -26,6 +26,7 @@ router.post("/sponsorship-application/:applicationId/approve",adminController.ap
 router.post("/sponsorship-application/:applicationId/reject",adminController.rejectSponsorshipRequest);
 
 router.get("/mentor_list", adminController.getAllMentor);
+router.get("/view-mentor/:mentorId", adminController.getMentorById);
 
 
 module.exports = router;

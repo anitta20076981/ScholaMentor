@@ -1,369 +1,162 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import Sidebar from "../../components/sponsor/Sidebar";
-import TopBar from "../../components/sponsor/TopBar";
-import Footer from "../../components/sponsor/Footer";
-import { useParams } from "react-router-dom";
-import { FaEye } from "react-icons/fa";
-import Swal from "sweetalert2";
+import { useEffect, useState } from "react";
+import { useParams,useNavigate } from "react-router-dom"; 
+import AdminSidebar from "../../components/AdminSidebar";
+import AdminTopbar from "../../components/AdminTopbar";
 
-import "./AdminMentorView.css";
+import axios from "axios";
+import { FaEye, FaEdit ,FaTrash} from "react-icons/fa";
+import "./AdminMentorView.css"; 
 
 function AdminMentorView() {
-  const { requestId, sponsorId } = useParams();
-  const [studentRequest, setStudentRequest] = useState(null);
-  const [showInfoModal, setShowInfoModal] = useState(false);
-  const [infoMessage, setInfoMessage] = useState("");
-  const [requiredDoc, setRequiredDoc] = useState("");
-  const [infoRequest, setInfoRequest] = useState(null);
-  const [submittedDocs, setSubmittedDocs] = useState([]);
-  const [showApproveModal, setShowApproveModal] = useState(false);
-
-  const [approvalType, setApprovalType] = useState('Full'); // default selection
-  const [approvedAmount, setApprovedAmount] = useState('');
-  const [error, setError] = useState('');
-  const [sponsorRemarks, setSponsorRemarks] = useState("");
+  const { mentorId } = useParams();
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const studentsPerPage = 10;
 
   useEffect(() => {
-    const fetchStudentRequest = async () => {
+    const fetchStudents = async () => {
       try {
-        const res = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/sponsor/get-student-request/${sponsorId}/${requestId}`
-        );
-        console.log(res.data);
-        setStudentRequest(res.data);
-        if (res.data) {
-        setApprovedAmount(res.data.required_amount);
-      }
+        
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/view-mentor/${mentorId}`);
+        setStudents(res.data);
+        setLoading(false);
       } catch (err) {
-        console.error("Failed to fetch student request:", err);
+        console.error(err);
+        setLoading(false);
       }
     };
+    fetchStudents();
+  }, []);
 
-    const fetchInfoRequest = async () => {
-      try {
-        const res = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/sponsor/get-info-request/${sponsorId}/${requestId}`
-        );
-        setInfoRequest(res.data);
-      } catch (err) {
-        console.error("Failed to fetch student request:", err);
-      }
-    };
-
-    const fetchSubmittedDocuments = async () => {
-      try {
-        const res = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/sponsor/get-submitted-docs/${sponsorId}/${requestId}`
-        );
-        setSubmittedDocs(res.data);
-      } catch (err) {
-        console.error("Failed to fetch student request:", err);
-      }
-    };
-
-    
-    fetchSubmittedDocuments();
-    fetchStudentRequest();
-    fetchInfoRequest();
-
-  }, [requestId, sponsorId]);
-
-  const renderDocLink = (label, filePath) => {
+    const renderDocLink = (label, filePath) => {
     if (!filePath) return null;
-
     const href = `${process.env.REACT_APP_API_URL}/uploads/${filePath}`;
-
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className="doc-icon">
-        <FaEye />
-      </a>
-    );
+      <p className="doc-link">
+        {" "}
+        <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: "#1e1e2f" }}>
+            <FaEye style={{ cursor: "pointer", fontSize: "18px" }} />
+        </a>
+            </p>
+        );
   };
 
-  const sendInfoRequest = async () => {
-    try {
-      await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/sponsor/request-more-info/${sponsorId}/${requestId}`,
-        {
-          message: infoMessage,
-          required_document: requiredDoc
-        }
-      );
-      Swal.fire({
-        title: "Success!",
-        text: "Request sent successfully!",
-        icon: "success",
-        confirmButtonText: "OK"
-      }).then(() => {
-            window.location.reload();
-      }); 
-      setShowInfoModal(false);
-      setInfoMessage("");
-      setRequiredDoc("");
+
+
+
+  // Inline styles
   
-    } catch (err) {
-      console.error(err);
-      Swal.fire({
-            title: "Failed!",
-            text: "Failed to send request.",
-            icon: "error",
-            confirmButtonText: "OK"
-          }).then(() => {
-            window.location.reload();
-      });
-    }
+  const tableContainerStyle = {
+    width: "100%",
+    overflowX: "auto",
+    marginTop: "20px",
+    borderRadius: "8px",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
   };
 
-  const sendApproveRequest = async () => {
-  try {
-    // Validate partial approval amount
-    if (approvalType === 'Partial') {
-      if (!approvedAmount || approvedAmount < 1 || approvedAmount > studentRequest?.required_amount) {
-        Swal.fire({
-          title: "Invalid Amount",
-          text: `Please enter a valid amount (1 - ${studentRequest?.required_amount})`,
-          icon: "warning",
-          confirmButtonText: "OK"
-        });
-        return;
-      }
-    }
+  const tableStyle = {
+    width: "100%",
+    borderCollapse: "collapse",
+    fontFamily: "Arial, sans-serif",
+  };
 
-    // Send approval request to backend
-    await axios.post(
-      `${process.env.REACT_APP_API_URL}/api/sponsor/approve-sponsorship/${sponsorId}/${requestId}`,
-      {
-        approval_type: approvalType,           
-        approved_amount: approvedAmount,       
-        remarks_from_sponsor: sponsorRemarks || ''         
-      }
-    );
+  const thStyle = {
+    padding: "12px 15px",
+    textAlign: "left",
+    backgroundColor: "#1e1e2f",
+    color: "white",
+  };
 
-    // Success alert
-    await Swal.fire({
-      title: "Success!",
-      text: "Sponsorship Approved successfully!",
-      icon: "success",
-      confirmButtonText: "OK"
-    }).then(() => {
-      window.location.reload();
-    });
+  const tdStyle = {
+    padding: "12px 15px",
+    textAlign: "left",
+  };
 
-    // Reset modal and form state
-    setShowApproveModal(false);
-    setSponsorRemarks("");
-    setRequiredDoc("");
-    setApprovedAmount('');
-    setApprovalType('Full');
-    setError('');
+  const headingStyle = {
+  fontFamily: "Arial, sans-serif",
+  marginBottom: "10px",
+  color: "#333",
+  marginLeft: "20px"   // adjust value as needed
+ };
 
+  const loadingStyle = {
+    fontSize: "18px",
+    fontWeight: "bold",
+    color: "#555",
+  };
 
-  } catch (err) {
-    console.error('Error sending approval:', err);
-    await Swal.fire({
-      title: "Failed!",
-      text: "Failed to send request.",
-      icon: "error",
-      confirmButtonText: "OK"
-    });
-  }
-};
+  const paginationStyle = {
+    marginTop: "15px",
+    display: "flex",
+    justifyContent: "center",
+    gap: "8px",
+  };
 
+  const pageButtonStyle = {
+    padding: "6px 12px",
+    border: "1px solid #1e1e2f",
+    borderRadius: "4px",
+    backgroundColor: "#fff",
+    cursor: "pointer",
+  };
 
-
+  const activePageButtonStyle = {
+    ...pageButtonStyle,
+    backgroundColor: "#1e1e2f",
+    color: "#fff",
+  };
 
   return (
-    <div className="sponsor-wrapper">
-      <Sidebar sponsorId={sponsorId} />
-
-      <div className="content">
-        <TopBar  sponsorId={sponsorId} />
-
-        <section className="recommend-section view-request-section">
-          <h3>Student Request</h3>
-
-          <div className="info-btn-row">
-             
-          {studentRequest?.status !== 'ApprovedBySponsor' && (
-            <div className="info-btn-wrapper">
-              <button className="info-btn" onClick={() => setShowApproveModal(true)}>
-                Approve
-              </button>
-            </div>
-          )}
-
-            {infoRequest === 0 &&  studentRequest?.status !== 'ApprovedBySponsor' &&(
-              <div className="info-btn-wrapper">
-                <button className="info-btn" onClick={() => setShowInfoModal(true)}>
-                  Request More Info
-                </button>
-              </div>
-            )}
-          </div>
-           
-           {/*Approve modal*/}
-          {showApproveModal && (
-            <div className="modal-overlay">
-              <div className="modal-content">
-                <h4>Request More Information / Approval</h4>
-
-                <select
-                  value={approvalType}
-                  onChange={(e) => {
-                    setApprovalType(e.target.value);
-                    if (e.target.value === 'Full') {
-                      setApprovedAmount(studentRequest?.required_amount || 0);
-                      setError('');
-                    } else {
-                      setApprovedAmount('');
-                      setError('');
-                    }
-                  }}
-                >
-                  <option value="Full">Full Approval</option>
-                  <option value="Partial">Partial Approval</option>
-                </select>
-
-                <textarea
-                  placeholder="Message to student"
-                  value={sponsorRemarks}
-                  onChange={(e) => setSponsorRemarks(e.target.value)}
-                />
-
-                {approvalType === 'Full' && (
-                  <div>
-                    <label>Approved Amount:</label>
-                    <input
-                      type="number"
-                      value={approvedAmount}
-                      readOnly
-                    />
-                  </div>
-                )}
-
-                {approvalType === 'Partial' && (
-                  <div>
-                    <label>Enter Approved Amount:</label>
-                    <input
-                      type="number"
-                      value={approvedAmount}
-                      min="1" required
-                      onChange={(e) => {
-                        const value = Number(e.target.value);
-
-                        if (value < 1) {
-                          setError('Amount must be at least 1');
-                        } else if (value > studentRequest?.required_amount) {
-                          setError(`Amount cannot exceed ${studentRequest.required_amount}`);
-                        } else {
-                          setError('');
-                          setApprovedAmount(value);
-                        }
-                      }}
-                      placeholder="Enter amount"
-                    />
-
-                     
-
-                    {error && <p style={{ color: 'red' }}>{error}</p>}
-                  </div>
-                )}
-
-                <div className="modal-actions">
-                  <button
-                    onClick={sendApproveRequest}
-                    disabled={approvalType === 'Partial' && (approvedAmount === '' || error)}
-                  >
-                    Send Request
-                  </button>
-                  <button onClick={() => setShowApproveModal(false)}>Cancel</button>
-                </div>
-              </div>
-            </div>
-          )}
-
-
-
-      
-          {showInfoModal && (
-            <div className="modal-overlay">
-              <div className="modal-content">
-                <h4>Request More Information</h4>
-                <textarea
-                  placeholder="Message to student"
-                  value={infoMessage}
-                  onChange={(e) => setInfoMessage(e.target.value)}
-                />
-                <select
-                  value={requiredDoc}
-                  onChange={(e) => setRequiredDoc(e.target.value)}
-                >
-                  <option value="">No specific document</option>
-                  <option value="marksheet">Marksheet</option>
-                  <option value="income_certificate">Income Certificate</option>
-                </select>
-                <div className="modal-actions">
-                  <button onClick={sendInfoRequest}>Send Request</button>
-                  <button onClick={() => setShowInfoModal(false)}>Cancel</button>
-                </div>
-              </div>
-            </div>
-          )}
-       
-          {studentRequest && (
-            <div className="request-container">
-              {submittedDocs.length > 0 && (
-                <div className="request-column">
-                  <h3 className="section-title">Submitted Details</h3>
-
-                  {submittedDocs.map((doc) => (
-                    <div key={doc.id} className="doc-row">
-                      <strong>{doc.message}:</strong>
-                      <span className="doc-eye">
-                        {renderDocLink("Marksheet", doc.response_document)}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )} 
-
-              {/* Approved Status */}
-              {studentRequest.status === 'ApprovedBySponsor' && (
-                <div className="request-column">
-                  <h3 className="section-title">Approved Details</h3>
-                  <p><strong>Approved Dated:</strong> {studentRequest.approved_date ? studentRequest.approved_date.split("T")[0] : "—"}</p>
-                  <p><strong>Request Date:</strong> {new Date(studentRequest.created_at).toLocaleDateString("en-GB")}</p>
-                </div>
-              )} 
-
+    <AdminSidebar>
+         <AdminTopbar />
+      <h1 style={headingStyle}>Mentor List</h1>
+      {loading ? (
+        <p style={loadingStyle}>Loading...</p>
+      ) : (
+        <>
+            <section className="recommend-section view-request-section">
+             <div className="request-container">
               {/* Student Details */}
               <div className="request-column">
-                <h3 className="section-title">Student Details</h3>
-                <p><strong>Name:</strong> {studentRequest.student_name}</p>
-                <p><strong>Email:</strong> {studentRequest.student_email}</p>
-                <p><strong>Phone:</strong> {studentRequest.phone}</p>
+                <h3 className="section-title">Mentor Details</h3>
+                <p><strong>Name:</strong> {students.name}</p>
+                <p><strong>Email:</strong> {students.email}</p>
+                <p><strong>Phone:</strong> {students.phone_number}</p>
+                <p><strong>Address:</strong> {students.address}</p>
+                <p><strong>Gender:</strong> {students.gender}</p>
               </div>
-
+ 
               {/* Application Details */}
               <div className="request-column">
-                <h3 className="section-title">Application Details</h3>
-                <p><strong>Course:</strong> {studentRequest.course}</p>
-                <p><strong>Score:</strong> {studentRequest.cgpa}</p>
-                <p><strong>Purpose:</strong> {studentRequest.purpose}</p>
-                <p><strong>Need:</strong> {studentRequest.background}</p>
-                <p><strong>Request Date:</strong> {new Date(studentRequest.created_at).toLocaleDateString("en-GB")}</p>
+                <h3 className="section-title">Professional Details</h3>
+                <p><strong>Current Job Title:</strong> {students.current_job_title}</p>
+                <p><strong>Company / Organization:</strong> {students.company}</p>
+                <p><strong>Years of Experience:</strong> {students.years_of_experience}</p>
+                <p><strong>Industry:</strong> {students.industry}</p>
+                <p><strong>Short Bio / About Me:</strong> {students.short_bio}</p>
+                <p><strong>Short Bio / About Me:</strong> {students.short_bio}</p>
+                <p><strong>Linkedin Profile:</strong> {students.linkedin_profile}</p>
+                <p><strong>Subject:</strong> {students.subjects}</p>
+                <p><strong>Subject:</strong> {students.skills}</p>
+                <p><strong>Subject:</strong> {students.days_available}</p>
+                <p><strong>Skills:</strong> {students.time_slots}</p>
                 <p>
-                  <strong>Marksheet:</strong> {renderDocLink("Marksheet", studentRequest.marksheet)}
+                  <strong>Marksheet:</strong> {renderDocLink(":", students.resume)}
+                </p><p>
+                  <strong>Certificates:</strong> {renderDocLink(":", students.certificates)}
+                </p><p>
+                  <strong>Id Proof:</strong> {renderDocLink(":", students.id_proof)}
                 </p>
               </div>              
             </div>
-          )}
+         
         </section>
-
-        <Footer />
-      </div>
-    </div>
+        </>
+      )}
+    </AdminSidebar>
   );
 }
 

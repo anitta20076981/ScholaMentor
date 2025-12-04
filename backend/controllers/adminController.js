@@ -660,3 +660,26 @@ exports.getAllMentor = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+exports.getMentorById = async (req, res) => {
+  const { mentorId } = req.params;
+  try {
+   const query = `
+      SELECT u.id, u.name, u.email, u.type, md.*
+      FROM users u
+      LEFT JOIN mentordetails md ON md.mentor_id = u.id
+      WHERE u.id = ? AND u.type = 'mentor'
+    `;
+
+    const [results] = await db.execute(query, [mentorId]);
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: "Mentor not found" });
+    }
+
+    res.json(results[0]); 
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};

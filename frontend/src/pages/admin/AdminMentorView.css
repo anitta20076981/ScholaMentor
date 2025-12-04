@@ -245,7 +245,7 @@
   display: inline-block;
   padding: 8px 14px;
   margin-top: 5px;
-  background: #4a90e2;
+  background: #fff;
   color: #fff !important;
   text-decoration: none;
   border-radius: 6px;
@@ -254,7 +254,7 @@
 }
 
 .doc-link:hover {
-  background: #357ac9;
+  background: #fff;
 }
 
 .doc-date {
