@@ -44,6 +44,39 @@ function AdminMentorView() {
         );
   };
 
+const handleApprove = async () => {
+    try {
+        await axios.put(`${process.env.REACT_APP_API_URL}/api/admin/approve-mentor/${mentorId}`);
+        alert("Mentor approved successfully!");
+        navigate("/admin/mentor_list");
+    } catch (error) {
+        console.error(error);
+        alert("Approval failed!");
+    }
+};
+
+// const handleReject = async () => {
+//   const reason = prompt("Enter the rejection reason:");
+//   if (!reason || reason.trim() === "") {
+//     alert("Rejection reason is required!");
+//     return;
+//   }
+
+//   try {
+//     await axios.put(
+//       `${process.env.REACT_APP_API_URL}/api/admin/reject-mentor/${mentorId}`,
+//       { reason }
+//     );
+
+//     alert("Mentor rejected successfully!");
+//     navigate("/admin/mentor_list");
+//   } catch (error) {
+//     console.error(error);
+//     alert("Rejection failed!");
+//   }
+// };
+
+
 
 
 
@@ -117,42 +150,51 @@ function AdminMentorView() {
         <p style={loadingStyle}>Loading...</p>
       ) : (
         <>
-            <section className="recommend-section view-request-section">
-             <div className="request-container">
-              {/* Student Details */}
-              <div className="request-column">
-                <h3 className="section-title">Mentor Details</h3>
-                <p><strong>Name:</strong> {students.name}</p>
-                <p><strong>Email:</strong> {students.email}</p>
-                <p><strong>Phone:</strong> {students.phone_number}</p>
-                <p><strong>Address:</strong> {students.address}</p>
-                <p><strong>Gender:</strong> {students.gender}</p>
-              </div>
- 
-              {/* Application Details */}
-              <div className="request-column">
-                <h3 className="section-title">Professional Details</h3>
-                <p><strong>Current Job Title:</strong> {students.current_job_title}</p>
-                <p><strong>Company / Organization:</strong> {students.company}</p>
-                <p><strong>Years of Experience:</strong> {students.years_of_experience}</p>
-                <p><strong>Industry:</strong> {students.industry}</p>
-                <p><strong>Short Bio / About Me:</strong> {students.short_bio}</p>
-                <p><strong>Short Bio / About Me:</strong> {students.short_bio}</p>
-                <p><strong>Linkedin Profile:</strong> {students.linkedin_profile}</p>
-                <p><strong>Subject:</strong> {students.subjects}</p>
-                <p><strong>Subject:</strong> {students.skills}</p>
-                <p><strong>Subject:</strong> {students.days_available}</p>
-                <p><strong>Skills:</strong> {students.time_slots}</p>
-                <p>
-                  <strong>Marksheet:</strong> {renderDocLink(":", students.resume)}
-                </p><p>
-                  <strong>Certificates:</strong> {renderDocLink(":", students.certificates)}
-                </p><p>
-                  <strong>Id Proof:</strong> {renderDocLink(":", students.id_proof)}
-                </p>
-              </div>              
+        <section className="recommend-section view-request-section">
+            <div className="action-buttons">
+                <button className="approve-btn" onClick={handleApprove}>
+                    Approve
+                </button>
+
+                {/* <button className="reject-btn" onClick={handleReject}>
+                    Reject
+                </button> */}
             </div>
-         
+            <div className="request-container">
+            {/* Student Details */}
+            <div className="request-column">
+            <h3 className="section-title">Mentor Details</h3>
+            <p><strong>Name:</strong> {students.name}</p>
+            <p><strong>Email:</strong> {students.email}</p>
+            <p><strong>Phone:</strong> {students.phone_number}</p>
+            <p><strong>Address:</strong> {students.address}</p>
+            <p><strong>Gender:</strong> {students.gender}</p>
+            </div>
+
+            {/* Application Details */}
+            <div className="request-column">
+            <h3 className="section-title">Professional Details</h3>
+            <p><strong>Current Job Title:</strong> {students.current_job_title}</p>
+            <p><strong>Company / Organization:</strong> {students.company}</p>
+            <p><strong>Years of Experience:</strong> {students.years_of_experience}</p>
+            <p><strong>Industry:</strong> {students.industry}</p>
+            <p><strong>Short Bio / About Me:</strong> {students.short_bio}</p>
+            <p><strong>Short Bio / About Me:</strong> {students.short_bio}</p>
+            <p><strong>Linkedin Profile:</strong> {students.linkedin_profile}</p>
+            <p><strong>Subject:</strong> {students.subjects}</p>
+            <p><strong>Subject:</strong> {students.skills}</p>
+            <p><strong>Subject:</strong> {students.days_available}</p>
+            <p><strong>Skills:</strong> {students.time_slots}</p>
+            <p>
+                <strong>Marksheet:</strong> {renderDocLink(":", students.resume)}
+            </p><p>
+                <strong>Certificates:</strong> {renderDocLink(":", students.certificates)}
+            </p><p>
+                <strong>Id Proof:</strong> {renderDocLink(":", students.id_proof)}
+            </p>
+            </div>              
+        </div>
+
         </section>
         </>
       )}
