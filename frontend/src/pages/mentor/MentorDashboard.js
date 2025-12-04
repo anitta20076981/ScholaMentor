@@ -16,19 +16,26 @@ function MentorDashboard() {
   const { mentorId } = useParams(); // define studentid
   const [recommendedStudents, setRecommendedStudents] = useState([]);
   const navigate = useNavigate();
+  const [mentorStatus, setMentorStatus] = useState("");
 
-  useEffect(() => {
-    const fetchRecommended = async () => {
-      try {
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/sponsor/recommended-students`);
-      console.log(res.data);
-        setRecommendedStudents(res.data); // assuming the API returns an array of students
-      } catch (err) {
-        console.error("Failed to fetch recommended students:", err);
-      }
-    };
-    fetchRecommended();
-  }, []);
+ useEffect(() => {
+  const fetchMentorAndRecommended = async () => {
+    try {
+      // Get recommended students
+      // const resStudents = await axios.get(`${process.env.REACT_APP_API_URL}/api/sponsor/recommended-students`);
+      // setRecommendedStudents(resStudents.data);
+
+      // Get mentor details
+      const resMentor = await axios.get(`${process.env.REACT_APP_API_URL}/api/mentor/get-details/${mentorId}`);
+      setMentorStatus(resMentor.data.status);  
+
+    } catch (err) {
+      console.error("Failed to fetch data:", err);
+    }
+  };
+  fetchMentorAndRecommended();
+}, [mentorId]);
+
 
   const settings = {
     dots: false,
@@ -48,7 +55,8 @@ function MentorDashboard() {
       <Sidebar mentorId={mentorId} /> 
 
       <div className="content">
-        <TopBar mentorId={mentorId} />
+        <TopBar mentorId={mentorId} mentorStatus={mentorStatus} />
+
 
         {/* HERO SLIDER */}
         <section className="hero-slider">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-const TopBar = ({ mentorId, studentId }) => {
+const TopBar = ({ mentorId, studentId, mentorStatus }) => {
   const [notifOpen, setNotifOpen] = useState(false);
   const [avatarOpen, setAvatarOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
@@ -44,6 +44,11 @@ const TopBar = ({ mentorId, studentId }) => {
     <header style={styles.header}>
       <div style={{ fontWeight: "600" }}>Welcome, mentor</div>
 
+{mentorStatus == "inactive" && (
+  <div className="inactive-warning">
+    You are currently inactive. Please update your profile and wait for admin approval.
+  </div>
+)}
       {/* Right side: Notification + Avatar */}
       <div style={{ display: "flex", alignItems: "center", gap: "20px", marginLeft: "auto" }}>
         {/* Notification Icon */}

@@ -118,3 +118,27 @@
   color: #555;                 
   padding: 20px 0;           
 }
+.inactive-warning {
+  background-color: #ffcccb;
+  color: #a00;
+  padding: 15px;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+.topbar-container {  /* parent container of the warning */
+  display: flex;
+  justify-content: flex-end; /* pushes children to the right */
+  align-items: center;       /* vertically centers */
+  padding: 0 20px;           /* optional spacing */
+}
+
+.topbar-warning {
+  color: #a00;
+  background-color: #ffcccb;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
