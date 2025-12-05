@@ -1011,3 +1011,37 @@ exports.getAllStudentSponsorship = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch notifications" });
   }
 };
+
+exports.getAllMentors = async (req, res) => {
+  try {
+    const query = `
+      SELECT 
+        m.mentor_id, 
+        u.name, 
+        u.email, 
+        m.phone_number, 
+        m.current_job_title, 
+        m.company,
+        GROUP_CONCAT(s.subject_name) AS subjects
+      FROM mentordetails AS m
+      JOIN users AS u ON m.mentor_id = u.id
+      LEFT JOIN mentor_subjects AS ms ON m.mentor_id = ms.mentor_id
+      LEFT JOIN subjects AS s ON ms.subject_id = s.id
+      WHERE u.type = 'mentor'
+      GROUP BY m.mentor_id
+    `;
+
+    const [rows] = await db.execute(query);
+
+    // Convert subjects string into an array
+    const mentors = rows.map(mentor => ({
+      ...mentor,
+      subjects: mentor.subjects ? mentor.subjects.split(",") : []
+    }));
+
+    res.json(mentors);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch mentors" });
+  }
+};
