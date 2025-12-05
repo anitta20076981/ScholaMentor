@@ -1032,7 +1032,6 @@ exports.getAllMentors = async (req, res) => {
     `;
 
     const [rows] = await db.execute(query);
-    console.log(rows);
     // Group subjects per mentor // refrence from chatgpt
     const mentorsMap = {};
     rows.forEach(row => {
@@ -1063,5 +1062,26 @@ exports.getAllMentors = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch mentors" });
   }
 };
+
+exports.requestMentorship = async (req, res) => {
+  const { studentId, mentorId } = req.params;
+  const { subjectIds } = req.body;
+
+
+  try {
+    for (const subjectId of subjectIds) {
+      await db.execute(
+        `INSERT INTO mentorship_requests (student_id, mentor_id, subject_id, status) VALUES (?, ?, ?, ?)`,
+        [studentId, mentorId, subjectId, "Pending"]
+      );
+    }
+
+    res.json({ success: true, message: "Mentorship request sent successfully!" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Failed to send request" });
+  }
+};
+
 
 

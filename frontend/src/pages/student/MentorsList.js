@@ -20,12 +20,12 @@ function MentorList() {
         }
 
         try {
-            await axios.post(`${process.env.REACT_APP_API_URL}/api/student/request-mentorship`, {
-            studentId,
-            mentorId: selectedMentor.mentor_id,
-            subjectIds: selectedSubjects,
-            });
-
+            await axios.post(
+            `${process.env.REACT_APP_API_URL}/api/student/request-mentorship/${studentId}/${selectedMentor.mentor_id}`,
+                {
+                    subjectIds: selectedSubjects, // array of selected subject IDs
+                }
+            );
             Swal.fire("Success", "Mentorship request sent!", "success");
             setShowModal(false);
         } catch (err) {
