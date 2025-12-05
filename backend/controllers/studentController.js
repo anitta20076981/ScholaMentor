@@ -1028,7 +1028,7 @@ exports.getAllMentors = async (req, res) => {
       JOIN users AS u ON m.mentor_id = u.id
       LEFT JOIN mentor_subjects AS ms ON m.mentor_id = ms.mentor_id
       LEFT JOIN mentorshipsubjects AS s ON ms.subject_id = s.id
-      WHERE u.type = 'mentor';
+      WHERE u.type = 'mentor'  AND u.status = 'active';
     `;
 
     const [rows] = await db.execute(query);
