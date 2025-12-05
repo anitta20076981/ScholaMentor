@@ -1083,5 +1083,25 @@ exports.requestMentorship = async (req, res) => {
   }
 };
 
+exports.getMentorshipRequest = async (req, res) => {
+  const { studentId } = req.params;
+
+  try {
+    const query = `
+      SELECT mr.id, mr.mentor_id, mr.status
+      FROM mentorship_requests AS mr
+      WHERE mr.student_id = ?
+    `;
+
+    const [rows] = await db.execute(query, [studentId]);
+
+    res.json(rows);  
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch mentorship requests" });
+  }
+};
+
+
 
 

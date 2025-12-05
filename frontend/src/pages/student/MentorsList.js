@@ -12,7 +12,8 @@ function MentorList() {
     const [mentors, setMentors] = useState([]);
     const [selectedMentor, setSelectedMentor] = useState(null);
     const [selectedSubjects, setSelectedSubjects] = useState([]);
- 
+    const [mentorshipRequests, setMentorshipRequests] = useState([]);
+
     const submitMentorshipRequest = async () => {
         if (selectedSubjects.length === 0) {
             Swal.fire("Error", "Please select at least one subject.", "error");
@@ -34,17 +35,30 @@ function MentorList() {
     };
     useEffect(() => {
         const fetchAllMentors = async () => {
-        try {
-            const res = await axios.get(
-            `${process.env.REACT_APP_API_URL}/api/student/get-all-mentors`
-            );
-            console.log(res.data);
-            setMentors(res.data);
-        } catch (err) {
-            console.error("Failed to fetch applications:", err);
-        }
+            try {
+                const res = await axios.get(
+                `${process.env.REACT_APP_API_URL}/api/student/get-all-mentors`
+                );
+                setMentors(res.data);           
+
+            } catch (err) {
+                console.error("Failed to fetch applications:", err);
+            }
         };
-        fetchAllMentors();
+        const fetchMentorshipRequests = async () => {
+            try {
+                const res = await axios.get(
+                    `${process.env.REACT_APP_API_URL}/api/student/get-mentorship-requests/${studentId}`
+                );
+                console.log(res.data);
+                setMentorshipRequests(res.data);
+            } catch (err) {
+               console.error("Failed to fetch mentorship requests:", err);
+            }
+        };
+
+    fetchMentorshipRequests();
+    fetchAllMentors();
     }, [studentId]);
 
     const openRequestModal = (mentor) => {
@@ -116,22 +130,28 @@ function MentorList() {
                 {m.subjects && m.subjects.length > 0
                     ? m.subjects.map(sub => sub.name).join(", ")
                     : "No subjects"}
-                </p>
+                            </p>
 
-                <button
-                    style={{
-                    marginTop: "10px",
-                    padding: "8px 16px",
-                    borderRadius: "6px",
-                    background: "#2d6cdf",
-                    color: "white",
-                    border: "none",
-                    cursor: "pointer",
-                    width: "100%",
-                    }} onClick={() => openRequestModal(m)}
-                >
-                    Make Request
-                </button>
+            <button
+            disabled={mentorshipRequests.some(req => req.mentor_id === m.mentor_id)}
+            style={{
+                marginTop: "10px",
+                padding: "8px 16px",
+                borderRadius: "6px",
+                background: mentorshipRequests.some(req => req.mentor_id === m.mentor_id) ? "#ccc" : "#2d6cdf",
+                color: "white",
+                border: "none",
+                cursor: mentorshipRequests.some(req => req.mentor_id === m.mentor_id) ? "not-allowed" : "pointer",
+                width: "100%",
+            }}
+            onClick={() => openRequestModal(m)}
+            >
+            {mentorshipRequests.some(req => req.mentor_id === m.mentor_id)
+                ? "Request Submitted – Wait for Approval"
+                : "Make Request"}
+            </button>
+
+
                 </div>
             ))}
             </div>
