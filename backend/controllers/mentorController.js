@@ -86,8 +86,7 @@ exports.getMentorDetails = async (req, res) => {
   const { mentorId } = req.params;
 
   try {
-    // Fetch mentor main details
-    const queryMentor = `
+     const queryMentor = `
       SELECT m.*, u.name, u.email, u.type, u.status
       FROM mentordetails AS m
       JOIN users AS u ON m.mentor_id = u.id
@@ -99,17 +98,15 @@ exports.getMentorDetails = async (req, res) => {
     }
     const mentor = mentorRows[0];
 
-    // Fetch mentor subjects
-    const querySubjects = `
+     const querySubjects = `
       SELECT s.id, s.name
       FROM mentor_subjects AS ms
-      JOIN subjects AS s ON ms.subject_id = s.id
+      JOIN mentorshipsubjects AS s ON ms.subject_id = s.id
       WHERE ms.mentor_id = ?
     `;
     const [subjectRows] = await db.execute(querySubjects, [mentorId]);
 
-    // Convert subjects to array of IDs
-    mentor.subjects = subjectRows.map(s => s.id.toString());
+     mentor.subjects = subjectRows.map(s => s.id.toString());
 
     res.json(mentor);
   } catch (err) {
