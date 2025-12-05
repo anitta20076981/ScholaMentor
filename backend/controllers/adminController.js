@@ -718,3 +718,22 @@ exports.approveMentor = async (req, res) => {
   }
 };
 
+
+exports.getAllMentorshipRequest = async (req, res) => {
+  try {
+    const query = `
+      SELECT mr.id, mr.student_id, mr.mentor_id, mr.status, mr.created_at,
+             s.name AS student_name, u.name AS mentor_name
+      FROM mentorship_requests AS mr
+      JOIN users AS s ON mr.student_id = s.id
+      JOIN users AS u ON mr.mentor_id = u.id
+    `;
+
+    const [rows] = await db.execute(query);
+    console.log(rows);
+    res.json(rows);
+  } catch (err) {
+    console.error("Failed to fetch all mentorship requests:", err);
+    res.status(500).json({ error: "Failed to fetch mentorship requests" });
+  }
+};

@@ -27,6 +27,7 @@ import MentorProfile from "./pages/mentor/MentorProfile";
 import AdminMentorList from "./pages/admin/AdminMentorList"; 
 import AdminMentorView from "./pages/admin/AdminMentorView"; 
 import MentorsList from "./pages/student/MentorsList"; 
+import AdminMentorShipRequest from "./pages/admin/AdminMentorShipRequest"; 
 
 
 
@@ -68,6 +69,7 @@ function App() {
         <Route path="/admin/mentor_list" element={<AdminMentorList />} /> 
         <Route path="/admin/view-mentor/:mentorId" element={<AdminMentorView />} /> 
         <Route path="/student/mentors_list/:studentId" element={<MentorsList />} /> 
+        <Route path="/admin/mentorship_request" element={<AdminMentorShipRequest />} /> 
 
         
         
