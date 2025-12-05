@@ -112,8 +112,8 @@ function AdminMentorShipRequest() {
               <thead>
                 <tr>
                   <th style={thStyle}>S.No</th>
-                  <th style={thStyle}>Name</th>
-                  <th style={thStyle}>Email</th>
+                  <th style={thStyle}>Student Name</th>
+                  <th style={thStyle}>Request Mentor Name</th>
                   <th style={thStyle}>Status</th>
                   <th style={thStyle}></th>
                   <th style={thStyle}></th>
@@ -130,8 +130,8 @@ function AdminMentorShipRequest() {
                       }}
                     >
                       <td style={tdStyle}>{indexOfFirstMentor + index + 1}</td>
-                      <td style={tdStyle}>{mentor.name}</td>
-                      <td style={tdStyle}>{mentor.email}</td>
+                      <td style={tdStyle}>{mentor.student_name}</td>
+                      <td style={tdStyle}>{mentor.mentor_name}</td>
                       <td style={tdStyle}>{mentor.status}</td>
                      <td style={tdStyle}>
                     <button
@@ -142,7 +142,7 @@ function AdminMentorShipRequest() {
                         color: "#1e1e2f",
                         marginRight: "10px",
                         }}
-                        onClick={() => navigate(`/admin/view-mentor/${mentor.id}`)}
+                        onClick={() => navigate(`/admin/view-mentorshiprequest/${mentor.student_id}/${mentor.mentor_id}`)}
                     >
                         <FaEye />
                     </button>
