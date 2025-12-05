@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-const TopBar = ({ mentorId, studentId, mentorStatus }) => {
+const TopBar = ({ mentorId, studentId, mentorStatus ,successMessage, errorMessage}) => {
   const [notifOpen, setNotifOpen] = useState(false);
   const [avatarOpen, setAvatarOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
@@ -43,6 +43,28 @@ const TopBar = ({ mentorId, studentId, mentorStatus }) => {
   return (
     <header style={styles.header}>
       <div style={{ fontWeight: "600" }}>Welcome, mentor</div>
+
+      {(successMessage || errorMessage) && (
+        <div
+          style={{
+            position: "fixed",
+            top: "70px",
+            right: "20px",
+            zIndex: 9999,
+            padding: "10px 20px",
+            background: successMessage ? "#d4edda" : "#f8d7da",
+            color: successMessage ? "#155724" : "#721c24",
+            border: successMessage ? "1px solid #c3e6cb" : "1px solid #f5c6cb",
+            borderRadius: "6px",
+            minWidth: "200px",
+            maxWidth: "350px",
+            boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
+            textAlign: "left",
+          }}
+        >
+          {successMessage || errorMessage}
+        </div>
+      )}
 
 {mentorStatus == "inactive" && (
   <div className="inactive-warning">
