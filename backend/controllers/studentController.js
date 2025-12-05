@@ -1016,32 +1016,52 @@ exports.getAllMentors = async (req, res) => {
   try {
     const query = `
       SELECT 
-        m.mentor_id, 
-        u.name, 
-        u.email, 
-        m.phone_number, 
-        m.current_job_title, 
+        m.mentor_id,
+        u.name,
+        u.email,
+        m.phone_number,
+        m.current_job_title,
         m.company,
-        GROUP_CONCAT(s.subject_name) AS subjects
+        s.id AS subject_id,
+         s.name AS subject_name
       FROM mentordetails AS m
       JOIN users AS u ON m.mentor_id = u.id
       LEFT JOIN mentor_subjects AS ms ON m.mentor_id = ms.mentor_id
-      LEFT JOIN subjects AS s ON ms.subject_id = s.id
-      WHERE u.type = 'mentor'
-      GROUP BY m.mentor_id
+      LEFT JOIN mentorshipsubjects AS s ON ms.subject_id = s.id
+      WHERE u.type = 'mentor';
     `;
 
     const [rows] = await db.execute(query);
+    console.log(rows);
+    // Group subjects per mentor // refrence from chatgpt
+    const mentorsMap = {};
+    rows.forEach(row => {
+      if (!mentorsMap[row.mentor_id]) {
+        mentorsMap[row.mentor_id] = {
+          mentor_id: row.mentor_id,
+          name: row.name,
+          email: row.email,
+          phone_number: row.phone_number,
+          current_job_title: row.current_job_title,
+          company: row.company,
+          subjects: [],
+        };
+      }
+      if (row.subject_id) {
+        mentorsMap[row.mentor_id].subjects.push({
+          id: row.subject_id,
+          name: row.subject_name  
+        });
+      }
+    });
 
-    // Convert subjects string into an array
-    const mentors = rows.map(mentor => ({
-      ...mentor,
-      subjects: mentor.subjects ? mentor.subjects.split(",") : []
-    }));
-
+    const mentors = Object.values(mentorsMap);
     res.json(mentors);
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch mentors" });
   }
 };
+
+

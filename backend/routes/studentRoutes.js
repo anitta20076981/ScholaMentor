@@ -87,6 +87,7 @@ router.get("/get-application/:id", studentController.getApplicationById);
 router.post("/request_remaining_amount/:studentId", studentController.requestRemainingAmount);
 
 router.get("/get-all-sponsorship-applications/:studentId", studentController.getAllStudentSponsorship);
+router.get("/get-all-mentors", studentController.getAllMentors);
 
 
 module.exports = router;
