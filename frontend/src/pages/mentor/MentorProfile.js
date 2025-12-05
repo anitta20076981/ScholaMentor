@@ -28,7 +28,7 @@ function MentorProfile() {
     // subjects: "",
     subjects: [],
     skills: "",
-    days_available: "",
+    days_available: [],
     time_slots: "",
     profile_photo: null,
     resume: null,
@@ -63,9 +63,9 @@ function MentorProfile() {
           industry: data.industry || "",
           short_bio: data.short_bio || "",
           linkedin_profile: data.linkedin_profile || "",
-          subjects: data.subjects ? data.subjects.split(",") : [], //convert string to array : reference from chatgpt
+          subjects: data.subjects || [],
           skills: data.skills || "",
-          days_available: data.days_available || "",
+          days_available: data.days_available ? data.days_available.split(",") : [],
           time_slots: data.time_slots || "",
           profile_photo: data.profile_photo || null,
           resume: data.resume || null,
@@ -89,7 +89,8 @@ function MentorProfile() {
 const handleChange = (e) => {
   const { name, files, value, options, type } = e.target;
 
-  if (type === "select-multiple") {// select all items in multi select dropdown and store value as an arry : refrene from chatgpt
+ if (type === "select-multiple") {
+    // Create an array of selected option values
     const selectedValues = Array.from(options)
       .filter(option => option.selected)
       .map(option => option.value);
@@ -108,36 +109,76 @@ const handleChange = (e) => {
 
 
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setSuccessMessage("");
+  //   setErrorMessage("");
+
+  //   try {
+  //     const data = new FormData();
+  //     Object.keys(formData).forEach((key) => {
+  //       if (formData[key] !== null) data.append(key, formData[key]);
+  //     });
+
+  //     const res = await axios.put(
+  //       `${process.env.REACT_APP_API_URL}/api/mentor/update/${mentorId}`,
+  //       data,
+  //       { headers: { "Content-Type": "multipart/form-data" } }
+  //     );
+
+  //     if (res.data.success) {
+  //       setSuccessMessage("Profile updated successfully!");
+  //       setTimeout(() => setSuccessMessage(""), 3000);
+  //     } else {
+  //       setErrorMessage("Failed to update profile.");
+  //       setTimeout(() => setErrorMessage(""), 3000);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     setErrorMessage("Something went wrong.");
+  //     setTimeout(() => setErrorMessage(""), 3000);
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSuccessMessage("");
-    setErrorMessage("");
+  e.preventDefault();
+  setSuccessMessage("");
+  setErrorMessage("");
 
-    try {
-      const data = new FormData();
-      Object.keys(formData).forEach((key) => {
-        if (formData[key] !== null) data.append(key, formData[key]);
-      });
+  try {
+    const data = new FormData();
 
-      const res = await axios.put(
-        `${process.env.REACT_APP_API_URL}/api/mentor/update/${mentorId}`,
-        data,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+    // Convert subjects array to JSON string before sending
+    if (Array.isArray(formData.subjects)) {
+      data.append("subjects", JSON.stringify(formData.subjects));
+    }
 
-      if (res.data.success) {
-        setSuccessMessage("Profile updated successfully!");
-        setTimeout(() => setSuccessMessage(""), 3000);
-      } else {
-        setErrorMessage("Failed to update profile.");
-        setTimeout(() => setErrorMessage(""), 3000);
+    // Append other fields
+    Object.keys(formData).forEach((key) => {
+      if (key !== "subjects" && formData[key] !== null) {
+        data.append(key, formData[key]);
       }
-    } catch (error) {
-      console.error(error);
-      setErrorMessage("Something went wrong.");
+    });
+
+    const res = await axios.put(
+      `${process.env.REACT_APP_API_URL}/api/mentor/update/${mentorId}`,
+      data,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+
+    if (res.data.success) {
+      setSuccessMessage("Profile updated successfully!");
+      setTimeout(() => setSuccessMessage(""), 3000);
+    } else {
+      setErrorMessage("Failed to update profile.");
       setTimeout(() => setErrorMessage(""), 3000);
     }
-  };
+  } catch (error) {
+    console.error(error);
+    setErrorMessage("Something went wrong.");
+    setTimeout(() => setErrorMessage(""), 3000);
+  }
+};
 
   return (
     <div className="mentor-wrapper">
@@ -355,18 +396,18 @@ const handleChange = (e) => {
                     <div className="form-row">
                       <div className="form-field">
                         <label>Subjects You Can Teach</label>
-                        <select
-                          name="subjects"
-                          multiple
-                          value={formData.subjects} // must be an array
-                          onChange={handleChange}
-                        >
-                          {subjectsList.map(subject => (
-                            <option key={subject.id} value={subject.name}>
-                              {subject.name}
-                            </option>
-                          ))}
-                        </select>
+                       <select
+  name="subjects"
+  multiple
+  value={formData.subjects} // this must be an array
+  onChange={handleChange}
+>
+  {subjectsList.map(subject => (
+    <option key={subject.id} value={subject.id}>
+      {subject.name}
+    </option>
+  ))}
+</select>
                       </div>
                       <div className="form-field">
                         <label>Skills They Can Mentor In</label>
@@ -380,14 +421,22 @@ const handleChange = (e) => {
                     </div>
 
                     <div className="form-row">
-                      <div className="form-field">
+                       <div className="form-field">
                         <label>Days Available (Mon–Sun)</label>
-                        <input
-                          type="text"
+                        <select
                           name="days_available"
-                          value={formData.days_available}
+                          multiple
+                          value={formData.days_available}  
                           onChange={handleChange}
-                        />
+                        >
+                          <option value="Sunday">Sunday</option>
+                          <option value="Monday">Monday</option>
+                          <option value="Tuesday">Tuesday</option>
+                          <option value="Wednesday">Wednesday</option>
+                          <option value="Thursday">Thursday</option>
+                          <option value="Friday">Friday</option>
+                          <option value="Saturday">Saturday</option>
+                        </select>
                       </div>
 
                       <div className="form-field">

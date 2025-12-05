@@ -3,7 +3,6 @@ const db = require("../config/db");
 
 exports.updateMentorDetails = async (req, res) => {
   const { mentorId } = req.params;
-
   const {
     phone_number,
     address,
@@ -40,7 +39,6 @@ exports.updateMentorDetails = async (req, res) => {
         industry = ?,
         short_bio = ?,
         linkedin_profile = ?,
-        subjects = ?,
         skills = ?,
         days_available = ?,
         time_slots = ?,
@@ -59,7 +57,6 @@ exports.updateMentorDetails = async (req, res) => {
             industry,
             short_bio,
             linkedin_profile,
-            subjects,
             skills,
             days_available,
             time_slots,
@@ -69,6 +66,15 @@ exports.updateMentorDetails = async (req, res) => {
             mentorId
         ]);
 
+        const subjectsArray = JSON.parse(subjects); 
+        await db.execute(`DELETE FROM mentor_subjects WHERE mentor_id = ?`, [mentorId]);
+        for (const subjectId of subjectsArray) {
+          await db.execute(
+            `INSERT INTO mentor_subjects (mentor_id, subject_id) VALUES (?, ?)`,
+            [mentorId, subjectId]
+          );
+        }
+     
     res.json({ success: true, message: "Profile updated successfully!" });
   } catch (err) {
     console.error(err);
@@ -80,22 +86,38 @@ exports.getMentorDetails = async (req, res) => {
   const { mentorId } = req.params;
 
   try {
-     const query = `
-      SELECT m.*, u.name,u.email,u.type,u.status   
-      FROM mentordetails AS m JOIN users AS u ON m.mentor_id = u.id
+    // Fetch mentor main details
+    const queryMentor = `
+      SELECT m.*, u.name, u.email, u.type, u.status
+      FROM mentordetails AS m
+      JOIN users AS u ON m.mentor_id = u.id
       WHERE m.mentor_id = ?
     `;
-     const [rows] = await db.execute(query, [mentorId]); 
-    if (rows.length === 0) {
-      return res.status(404).json({ error: "Student not found" });
+    const [mentorRows] = await db.execute(queryMentor, [mentorId]);
+    if (mentorRows.length === 0) {
+      return res.status(404).json({ error: "Mentor not found" });
     }
+    const mentor = mentorRows[0];
 
-    res.json(rows[0]); 
+    // Fetch mentor subjects
+    const querySubjects = `
+      SELECT s.id, s.name
+      FROM mentor_subjects AS ms
+      JOIN subjects AS s ON ms.subject_id = s.id
+      WHERE ms.mentor_id = ?
+    `;
+    const [subjectRows] = await db.execute(querySubjects, [mentorId]);
+
+    // Convert subjects to array of IDs
+    mentor.subjects = subjectRows.map(s => s.id.toString());
+
+    res.json(mentor);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Failed to fetch student details" });
+    res.status(500).json({ error: "Failed to fetch mentor details" });
   }
 };
+
 
 exports.getAllSubjects = async (req, res) => {
   const { mentorId } = req.params;

@@ -112,10 +112,10 @@ function SponsorshipHistory() {
           backgroundPosition: "center",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
+          // alignItems: "center",
           justifyContent: "flex-start",
           padding: "50px 40px",
-          textAlign: "center",
+          // textAlign: "center",
         }}
       >
         {/* Title */}
