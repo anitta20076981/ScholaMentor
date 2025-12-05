@@ -150,6 +150,9 @@ function TopBar({ studentId, successMessage, errorMessage }) {
            <Link to={`/student/sponsorship-history/${studentId}`} style={navLinkStyle}>
             My Sponsorships
           </Link>
+           <Link to={`/student/mentors_list/${studentId}`} style={navLinkStyle}>
+             Mentorship
+          </Link>
 
           {/* Notification Icon */}
           <div style={{ position: "relative" }}>
