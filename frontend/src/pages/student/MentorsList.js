@@ -24,10 +24,18 @@ function MentorList() {
             await axios.post(
             `${process.env.REACT_APP_API_URL}/api/student/request-mentorship/${studentId}/${selectedMentor.mentor_id}`,
                 {
-                    subjectIds: selectedSubjects, // array of selected subject IDs
+                    subjectIds: selectedSubjects, 
                 }
             );
-            Swal.fire("Success", "Mentorship request sent!", "success");
+            Swal.fire({
+                    title: "Success!",
+                    text: "Mentorship request sent successfully!",
+                    icon: "success",
+                    confirmButtonText: "OK"
+                }).then(() => {
+                    window.location.reload();
+
+            });
             setShowModal(false);
         } catch (err) {
             Swal.fire("Error", "Failed to send request.", "error");
@@ -133,22 +141,32 @@ function MentorList() {
                             </p>
 
             <button
-            disabled={mentorshipRequests.some(req => req.mentor_id === m.mentor_id)}
-            style={{
-                marginTop: "10px",
-                padding: "8px 16px",
-                borderRadius: "6px",
-                background: mentorshipRequests.some(req => req.mentor_id === m.mentor_id) ? "#ccc" : "#2d6cdf",
-                color: "white",
-                border: "none",
-                cursor: mentorshipRequests.some(req => req.mentor_id === m.mentor_id) ? "not-allowed" : "pointer",
-                width: "100%",
-            }}
-            onClick={() => openRequestModal(m)}
-            >
-            {mentorshipRequests.some(req => req.mentor_id === m.mentor_id)
-                ? "Request Submitted – Wait for Approval"
-                : "Make Request"}
+                disabled={mentorshipRequests.some(req => req.mentor_id === m.mentor_id)}
+                style={{
+                    marginTop: "10px",
+                    padding: "8px 16px",
+                    borderRadius: "6px",
+                    background: mentorshipRequests.some(req => req.mentor_id === m.mentor_id && req.status === "approved")
+                    ? "#28a745" // green
+                    : mentorshipRequests.some(req => req.mentor_id === m.mentor_id && req.status === "pending")
+                    ? "#ccc" // gray
+                    : mentorshipRequests.some(req => req.mentor_id === m.mentor_id && req.status === "rejected")
+                    ? "#dc3545" // red
+                    : "#2d6cdf", // blue for new request
+                    color: "white",
+                    border: "none",
+                    cursor: mentorshipRequests.some(req => req.mentor_id === m.mentor_id) ? "not-allowed" : "pointer",
+                    width: "100%",
+                }}
+                onClick={() => openRequestModal(m)}
+                >
+                {mentorshipRequests.some(req => req.mentor_id === m.mentor_id && req.status === "approved")
+                    ? "Approved"
+                    : mentorshipRequests.some(req => req.mentor_id === m.mentor_id && req.status === "pending")
+                    ? "Request Submitted – Wait for Approval"
+                    : mentorshipRequests.some(req => req.mentor_id === m.mentor_id && req.status === "rejected")
+                    ? "Rejected"
+                    : "Make Request"}
             </button>
 
 
