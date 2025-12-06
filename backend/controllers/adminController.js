@@ -750,8 +750,7 @@ exports.getAllMentorshipRequests = async (req, res) => {
 
 exports.viewMentorshipRequest = async (req, res) => {
   const { studentId, mentorId } = req.params;
-console.log(studentId);
-console.log(mentorId);
+ 
   const query = `
     SELECT mr.*, s.name AS student_name, u.name AS mentor_name, sub.name AS subject_name
     FROM mentorship_requests mr
@@ -762,6 +761,34 @@ console.log(mentorId);
   `;
 
   const [rows] = await db.execute(query, [studentId, mentorId]);
-console.log(rows);
+ 
   res.json(rows);
+};
+
+exports.approveMentorshipRequest = async (req, res) => {
+  const { studentId, mentorId } = req.params;
+
+  try {
+    const query = `
+      UPDATE mentorship_requests
+      SET status = 'approved'
+      WHERE student_id = ? AND mentor_id = ? AND status = 'pending'
+    `;
+    const [result] = await db.execute(query, [studentId, mentorId]);
+
+    await db.query(
+      `INSERT INTO notifications (user_id, message, type, status, created_at, updated_at)
+       VALUES (?, ?, ?, 'unread', NOW(), NOW())`,
+      [
+        studentId,
+        `Your mentorship application has been approved by admin!.`,
+        "mentorship"
+      ]
+    );
+
+    res.json({ message: "Mentorship request approved successfully!" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to approve mentorship request" });
+  }
 };

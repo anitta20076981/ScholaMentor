@@ -6,6 +6,7 @@ import AdminTopbar from "../../components/AdminTopbar";
 import axios from "axios";
 import { FaEye, FaEdit ,FaTrash} from "react-icons/fa";
 import "./AdminMentorView.css"; 
+import Swal from "sweetalert2";
 
 function ViewMentorshipRequest() {
   const { mentorId,studentId } = useParams();
@@ -35,22 +36,27 @@ function ViewMentorshipRequest() {
 
 
 
-const handleApprove = async () => {
+ const handleApprove = async () => {
     try {
-        await axios.put(`${process.env.REACT_APP_API_URL}/api/admin/approve-mentor/${mentorId}`);
-        alert("Mentor approved successfully!");
-        navigate("/admin/mentor_list");
+        await axios.put(`${process.env.REACT_APP_API_URL}/api/admin/approve-mentorship-request/${mentorId}/${studentId}`);
+        Swal.fire({
+            title: "Success!",
+            text: "Mentorship request approved successfully!",
+            icon: "success",
+            confirmButtonText: "OK"
+        }).then(() => {
+            navigate("/admin/mentorship_request");
+        });
     } catch (error) {
         console.error(error);
-        alert("Approval failed!");
+        Swal.fire({
+            title: "Error!",
+            text: "Approval failed! Please try again.",
+            icon: "error",
+            confirmButtonText: "OK"
+        });
     }
 };
-
-
-
-
-
-
 
   // Inline styles
   
@@ -134,29 +140,18 @@ const main = requestData[0];
               </div>
 
               <div className="request-container">
-
                 {/* Student Details */}
                 <div className="request-column">
-                  <h3 className="section-title">Student Details</h3>
+                  <h3 className="section-title">Student Name</h3>
                   <p><strong>Name:</strong> {main.student_name}</p>
-                </div>
-
-                {/* Mentor Details */}
-                <div className="request-column">
-                  <h3 className="section-title">Mentor Details</h3>
-                  <p><strong>Name:</strong> {main.mentor_name}</p>
-                </div>
-
-                {/* Requested Subjects */}
-                <div className="request-column">
-                  <h3 className="section-title">Requested Subjects</h3>
+                  <p><strong>Requested Mentor:</strong> {main.mentor_name}</p>
+                    <h3 className="section-title">Requested Subjects</h3>
                   <ul>
                     {requestData.map((item, index) => (
                       <li key={index}>{item.subject_name}</li>
                     ))}
-                  </ul>
+                  </ul>                
                 </div>
-
               </div>
             </section>
           )}
