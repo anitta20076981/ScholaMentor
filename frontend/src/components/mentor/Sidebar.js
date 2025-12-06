@@ -26,7 +26,7 @@ export default function Sidebar({ mentorId }) {
           <FaUserCircle className="icon" /> Profile
         </NavLink>
         
-        <NavLink to={`/sponsor/student-request/${mentorId}`} className="sidebar-link">
+        <NavLink to={`/mentor/student-request/${mentorId}`} className="sidebar-link">
           <FaUserGraduate className="icon" /> Students Request
         </NavLink>
 
