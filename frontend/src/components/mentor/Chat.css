@@ -1,14 +1,26 @@
 .chat-box {
+  position: fixed; /* Fix the chat box on the screen */
+  right: 20px;     /* Distance from right edge */
+  bottom: 20px;    /* Distance from bottom edge */
+  width: 300px;    /* Fixed width */
+  max-height: 400px; /* Optional max height */
   border: 1px solid #ccc;
   padding: 10px;
-  width: 300px;
-  margin-top: 10px;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* optional shadow */
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000; /* Make sure it stays above other elements */
 }
+
 .messages {
-  max-height: 200px;
+  flex: 1; /* take remaining vertical space */
+  max-height: 300px; /* optional scroll limit */
   overflow-y: auto;
   margin-bottom: 10px;
 }
+
 .message-sent {
   background-color: #dcf8c6;
   padding: 5px;
@@ -16,6 +28,7 @@
   border-radius: 5px;
   text-align: right;
 }
+
 .message-received {
   background-color: #f1f0f0;
   padding: 5px;
@@ -23,13 +36,24 @@
   border-radius: 5px;
   text-align: left;
 }
+
 .chat-input {
   display: flex;
+  gap: 5px;
 }
+
 .chat-input input {
   flex: 1;
   padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
+
 .chat-input button {
   padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #2d6cdf;
+  color: white;
+  cursor: pointer;
 }
