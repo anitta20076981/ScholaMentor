@@ -51,30 +51,25 @@ function MentorProfile() {
         <section className="mentor-requests">
         <h2>Student Mentor Requests</h2>
 
-        <div className="request-card">
-            <h3>John Doe</h3>
-            <p><strong>Email:</strong> johndoe123@gmail.com</p>
-            <p><strong>Message:</strong> I would love to have your guidance in web development.</p>
-            <p><strong>Date:</strong> Feb 12, 2025</p>
+        {studentRequest.length === 0 ? (
+    <p>No requests found.</p>
+  ) : (
+    studentRequest.map((request) => (
+      <div key={request.student_id + '-' + request.subject_id} className="request-card">
+        <h3>{request.student_name}</h3>
+        <p><strong>Email:</strong> {request.student_email || 'Not available'}</p>
+        <p><strong>Subjects:</strong> {request.subjects}</p>
+        <p><strong>Status:</strong> {request.status}</p>
+        <p><strong>Date:</strong> {new Date(request.request_date).toLocaleDateString()}</p>
 
-            <div className="actions">
-            <button className="accept-btn">Accept</button>
-            <button className="reject-btn">Reject</button>
-            </div>
+        <div className="actions">
+          <button className="accept-btn">Accept</button>
+          <button className="reject-btn">Reject</button>
         </div>
-
-        <div className="request-card">
-            <h3>Sarah Smith</h3>
-            <p><strong>Email:</strong> sarah.smith@gmail.com</p>
-            <p><strong>Message:</strong> I need help improving my interview skills.</p>
-            <p><strong>Date:</strong> Feb 10, 2025</p>
-
-            <div className="actions">
-            <button className="accept-btn">Accept</button>
-            <button className="reject-btn">Reject</button>
-            </div>
-        </div>
-        </section>
+      </div>
+    ))
+  )}
+</section>
 
 
         <Footer />

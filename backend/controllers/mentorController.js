@@ -126,6 +126,7 @@ exports.getAllMentorRequest = async (req, res) => {
           mr.mentor_id,
           mr.status,
           s.name AS student_name,
+          s.email AS student_email,
           u.name AS mentor_name,
           GROUP_CONCAT(msub.name SEPARATOR ', ') AS subjects,
           MIN(mr.created_at) AS request_date
