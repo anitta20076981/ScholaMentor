@@ -30,17 +30,7 @@ export default function Sidebar({ mentorId }) {
           <FaUserGraduate className="icon" /> Students Request
         </NavLink>
 
-        <NavLink to={`/sponsor/approved-sponsorships/${mentorId}`} className="sidebar-link">
-          <FaHandHoldingUsd className="icon" /> My Sponsorships
-        </NavLink>
-
-        <NavLink to="/sponsor/donations" className="sidebar-link">
-          <FaUsers className="icon" /> Donations
-        </NavLink>
-
-        <NavLink to="/sponsor/mentorship" className="sidebar-link">
-          <FaChalkboardTeacher className="icon" /> Mentor Panel
-        </NavLink>
+        
       </nav>
     </aside>
   );
