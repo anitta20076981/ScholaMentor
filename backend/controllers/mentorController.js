@@ -116,14 +116,22 @@ exports.getMentorDetails = async (req, res) => {
 };
 
 
-exports.getAllSubjects = async (req, res) => {
+exports.getAllMentorRequest = async (req, res) => {
   const { mentorId } = req.params;
 
   try {
-     const query = `
-      SELECT * FROM mentorshipsubjects 
-    `;
-    const [rows] = await db.execute(query);
+      const query = `
+         SELECT mr.*, s.name AS student_name, u.name AS mentor_name, sub.name AS subject_name
+         FROM mentorship_requests mr
+         JOIN users s ON mr.student_id = s.id
+         JOIN users u ON mr.mentor_id = u.id
+         JOIN mentorshipsubjects sub ON mr.subject_id = sub.id
+         WHERE mr.mentor_id = ?
+       `;
+     
+       const [rows] = await db.execute(query, [ mentorId]);
+       console.log(rows[0]);
+    // const [rows] = await db.execute(query);
     if (rows.length === 0) {
       return res.status(404).json({ error: "Student not found" });
     }
@@ -134,5 +142,7 @@ exports.getAllSubjects = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch student details" });
   }
 };
+
+
 
 

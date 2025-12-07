@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import TopBar from "../../components/student/TopBar";  
 import Footer from "../../components/student/Footer";
-import { useParams, useNavigate } from "react-router-dom"; 
+import { useParams } from "react-router-dom"; 
 import { FaDownload } from "react-icons/fa";
 
 
 function TrackApplicationStatus() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { studentId } = useParams();
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);

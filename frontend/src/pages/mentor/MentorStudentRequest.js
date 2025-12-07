@@ -4,8 +4,7 @@ import Sidebar from "../../components/mentor/Sidebar";
 import TopBar from "../../components/mentor/TopBar";
 import Footer from "../../components/mentor/Footer";
 import { useParams } from "react-router-dom";
-import "./MentorProfile.css";
-import { FaEye } from "react-icons/fa";
+import "./MentorStudentRequest.css";
 
 function MentorProfile() {
   const { mentorId } = useParams();
@@ -13,8 +12,23 @@ function MentorProfile() {
 
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
- 
+  const [studentRequest, setStudentRequest] = useState("");
 
+ 
+  useEffect(() => {
+    const fetchMentorRequest = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/mentor/get-all-student-mentor-requests/${mentorId}`
+        );
+
+        setStudentRequest(res.data); 
+      } catch (err) {
+        console.error("Failed to fetch recommended students:", err);
+      }
+    };
+    fetchMentorRequest();
+  }, []);
  
 
 
@@ -34,36 +48,34 @@ function MentorProfile() {
           <p>Share your knowledge, guide students, and make a lasting impact on their future.</p>
         </section>
         {/* STUDENT REQUESTS (DUMMY TEMPLATE) */}
-<section className="mentor-requests">
-  <h2>Student Mentor Requests</h2>
+        <section className="mentor-requests">
+        <h2>Student Mentor Requests</h2>
 
-  <div className="request-card">
-    <h3>John Doe</h3>
-    <p><strong>Email:</strong> johndoe123@gmail.com</p>
-    <p><strong>Message:</strong> I would love to have your guidance in web development.</p>
-    <p><strong>Date:</strong> Feb 12, 2025</p>
+        <div className="request-card">
+            <h3>John Doe</h3>
+            <p><strong>Email:</strong> johndoe123@gmail.com</p>
+            <p><strong>Message:</strong> I would love to have your guidance in web development.</p>
+            <p><strong>Date:</strong> Feb 12, 2025</p>
 
-    <div className="actions">
-      <button className="accept-btn">Accept</button>
-      <button className="reject-btn">Reject</button>
-    </div>
-  </div>
+            <div className="actions">
+            <button className="accept-btn">Accept</button>
+            <button className="reject-btn">Reject</button>
+            </div>
+        </div>
 
-  <div className="request-card">
-    <h3>Sarah Smith</h3>
-    <p><strong>Email:</strong> sarah.smith@gmail.com</p>
-    <p><strong>Message:</strong> I need help improving my interview skills.</p>
-    <p><strong>Date:</strong> Feb 10, 2025</p>
+        <div className="request-card">
+            <h3>Sarah Smith</h3>
+            <p><strong>Email:</strong> sarah.smith@gmail.com</p>
+            <p><strong>Message:</strong> I need help improving my interview skills.</p>
+            <p><strong>Date:</strong> Feb 10, 2025</p>
 
-    <div className="actions">
-      <button className="accept-btn">Accept</button>
-      <button className="reject-btn">Reject</button>
-    </div>
-  </div>
-</section>
+            <div className="actions">
+            <button className="accept-btn">Accept</button>
+            <button className="reject-btn">Reject</button>
+            </div>
+        </div>
+        </section>
 
-
-        
 
         <Footer />
       </div>
