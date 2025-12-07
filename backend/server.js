@@ -33,12 +33,7 @@ io.on("connection", (socket) => {
         console.log(`User ${userId} joined room_${userId}`);
     });
 
-    socket.on("send_message", async (data) => {
-        const { senderId, receiverId, message } = data;
-        await db.execute(
-            "INSERT INTO messages (sender_id, receiver_id, message) VALUES (?, ?, ?)",
-            [senderId, receiverId, message]
-        );
+    socket.on("send_message", async (data) => {       
         // Emit to sender and receiver
         io.to(`room_${receiverId}`).emit("receive_message", data);
     });
