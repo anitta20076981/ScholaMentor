@@ -6,6 +6,7 @@ import Footer from "../../components/mentor/Footer";
 import { useParams } from "react-router-dom";
 import "./MentorStudentRequest.css";
 import Chat from "../../components/mentor/Chat";
+import { socket } from "../../components/student/socket";
 
 function MentorProfile() {
   const { mentorId } = useParams();
@@ -15,7 +16,25 @@ function MentorProfile() {
   const [errorMessage, setErrorMessage] = useState("");
   const [studentRequest, setStudentRequest] = useState("");
   const [selectedStudent, setSelectedStudent] = useState(null);
- 
+  const [unreadMsgs, setUnreadMsgs] = useState({});
+
+  useEffect(() => {
+  // Join mentor room for real-time
+  socket.emit("join_room", mentorId);
+
+  // Listen for messages from students
+  socket.on("receive_message", (msg) => {
+    // If chat is not open with this student, mark as unread
+    if (!selectedStudent || selectedStudent.id !== msg.senderId) {
+      setUnreadMsgs((prev) => ({ ...prev, [msg.senderId]: true }));
+    }
+  });
+
+  return () => {
+    socket.off("receive_message");
+  };
+}, [mentorId, selectedStudent]);
+
   useEffect(() => {
     const fetchMentorRequest = async () => {
       try {
@@ -38,6 +57,8 @@ function MentorProfile() {
       id: student.student_id,
       name: student.student_name
     });
+    // Clear unread notification for this student
+  setUnreadMsgs((prev) => ({ ...prev, [student.student_id]: false }));
   };
  
 
@@ -61,37 +82,52 @@ function MentorProfile() {
         <section className="mentor-requests">
         <h2>Student Mentor Requests</h2>
 
-        {studentRequest.length === 0 ? (
-    <p>No requests found.</p>
-  ) : (
-    studentRequest.map((request) => (
-      <div key={request.student_id + '-' + request.subject_id} className="request-card">
-        <h3>{request.student_name}</h3>
-        <p><strong>Email:</strong> {request.student_email || 'Not available'}</p>
-        <p><strong>Subjects:</strong> {request.subjects}</p>
-        <p><strong>Status:</strong> {request.status}</p>
-        <p><strong>Date:</strong> {new Date(request.request_date).toLocaleDateString()}</p>
+                {studentRequest.length === 0 ? (
+            <p>No requests found.</p>
+          ) : (
+            studentRequest.map((request) => (
+              <div key={request.student_id + '-' + request.subject_id} className="request-card">
+                <h3>{request.student_name}</h3>
+                <p><strong>Email:</strong> {request.student_email || 'Not available'}</p>
+                <p><strong>Subjects:</strong> {request.subjects}</p>
+                <p><strong>Status:</strong> {request.status}</p>
+                <p><strong>Date:</strong> {new Date(request.request_date).toLocaleDateString()}</p>
 
-        <div className="actions">
-            <button className="accept-btn" onClick={() => handleStartChat(request)}>
-              Start Chat
-            </button>          
-            <button className="reject-btn">Reject</button>
-        </div>
-      </div>
-    ))
-  )}
-    {/* Render Chat component if a student is selected */}
-    {selectedStudent && (
-      <Chat
-        userId={mentorId}                // Mentor's ID
-        receiverId={selectedStudent.id}  // Selected student's ID
-        receiverName={selectedStudent.name} // Selected student's name
-      />
-    )}
-</section>
-
-
+                <div className="actions">
+                   <button
+                    className="accept-btn"
+                    onClick={() => handleStartChat(request)}
+                    style={{ position: "relative" }}
+                  >
+                    Start Chat
+                    {unreadMsgs[request.student_id] && (
+                      <span style={{
+                        position: "absolute",
+                        top: "-5px",
+                        right: "-5px",
+                        width: "12px",
+                        height: "12px",
+                        borderRadius: "50%",
+                        background: "red",
+                      }}></span>
+                    )}
+                  </button>
+                      
+                    <button className="reject-btn">Reject</button>
+                </div>
+              </div>
+            ))
+          )}
+          {/* Render Chat component if a student is selected */}
+          {selectedStudent && (
+            <Chat
+              userId={mentorId}               
+              receiverId={selectedStudent.id}   
+              receiverName={selectedStudent.name}  
+            />
+            
+          )}
+        </section>
         <Footer />
       </div>
     </div>

@@ -16,12 +16,17 @@ function MentorList() {
     const [chatMessages, setChatMessages] = useState([]);
     const [chatInput, setChatInput] = useState("");
     const [chatMentorId, setChatMentorId] = useState(null);
+    const [unreadMsgs, setUnreadMsgs] = useState({});
 
         // Join student's room
     useEffect(() => {
         socket.emit("join_room", studentId);
 
         socket.on("receive_message", (msg) => {
+             // if student is NOT currently chatting with the mentor → mark unread
+        if (!chatMentorId || chatMentorId !== msg.senderId) {
+            setUnreadMsgs((prev) => ({ ...prev, [msg.senderId]: true }));
+        }
             setChatMessages((prev) => [...prev, msg]);
         });
 
@@ -33,6 +38,9 @@ function MentorList() {
 
     const startChatWithMentor = async (mentorId) => {
     setChatMentorId(mentorId);
+    
+    // Mark unread as read
+    setUnreadMsgs((prev) => ({ ...prev, [mentorId]: false }));
 
     try {
         const res = await axios.get(
@@ -227,10 +235,25 @@ function MentorList() {
                             color: "white",
                             border: "none",
                             width: "100%",
+                            position: "relative"
                         }}
                     >
-                        Start Chat
-                    </button>
+                     Start Chat
+
+                    {unreadMsgs[m.mentor_id] && (
+                        <span
+                            style={{
+                                position: "absolute",
+                                top: "8px",
+                                right: "8px",
+                                width: "10px",
+                                height: "10px",
+                                background: "red",
+                                borderRadius: "50%"
+                            }}
+                        ></span>
+                    )}
+                </button>
                 )}
                 </div>
             ))}
