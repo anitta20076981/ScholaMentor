@@ -5,6 +5,7 @@ import TopBar from "../../components/mentor/TopBar";
 import Footer from "../../components/mentor/Footer";
 import { useParams } from "react-router-dom";
 import "./MentorStudentRequest.css";
+import Chat from "../../components/mentor/Chat";
 
 function MentorProfile() {
   const { mentorId } = useParams();
@@ -13,7 +14,7 @@ function MentorProfile() {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [studentRequest, setStudentRequest] = useState("");
-
+  const [selectedStudent, setSelectedStudent] = useState(null);
  
   useEffect(() => {
     const fetchMentorRequest = async () => {
@@ -29,6 +30,15 @@ function MentorProfile() {
     };
     fetchMentorRequest();
   }, []);
+
+ 
+// Function called when clicking "Start Chat"
+  const handleStartChat = (student) => {
+    setSelectedStudent({
+      id: student.student_id,
+      name: student.student_name
+    });
+  };
  
 
 
@@ -63,12 +73,22 @@ function MentorProfile() {
         <p><strong>Date:</strong> {new Date(request.request_date).toLocaleDateString()}</p>
 
         <div className="actions">
-          <button className="accept-btn">Accept</button>
-          <button className="reject-btn">Reject</button>
+            <button className="accept-btn" onClick={() => handleStartChat(request)}>
+              Start Chat
+            </button>          
+            <button className="reject-btn">Reject</button>
         </div>
       </div>
     ))
   )}
+    {/* Render Chat component if a student is selected */}
+    {selectedStudent && (
+      <Chat
+        userId={mentorId}                // Mentor's ID
+        receiverId={selectedStudent.id}  // Selected student's ID
+        receiverName={selectedStudent.name} // Selected student's name
+      />
+    )}
 </section>
 
 
