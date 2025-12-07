@@ -159,14 +159,14 @@ function MentorList() {
             >
             {mentors.map((m, idx) => (
                 <div
-                key={idx}
-                style={{
-                    background: "white",
-                    padding: "20px",
-                    borderRadius: "15px",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                    textAlign: "center",
-                }}
+                    key={idx}
+                    style={{
+                        background: "white",
+                        padding: "20px",
+                        borderRadius: "15px",
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                        textAlign: "center",
+                    }}
                 >
                 <img
                     src={m.image}
@@ -180,103 +180,107 @@ function MentorList() {
                     }}
                 />
 
-                <h3 style={{ marginBottom: "5px" }}>{m.name}</h3>
-                <p style={{ color: "#555" }}>
-                {m.subjects && m.subjects.length > 0
-                    ? m.subjects.map(sub => sub.name).join(", ")
-                    : "No subjects"}
-                            </p>
+                    <h3 style={{ marginBottom: "5px" }}>{m.name}</h3>
+                    <p style={{ color: "#555" }}>
+                    {m.subjects && m.subjects.length > 0
+                        ? m.subjects.map(sub => sub.name).join(", ")
+                        : "No subjects"}
+                                </p>
 
-            <button
-                disabled={mentorshipRequests.some(req => req.mentor_id === m.mentor_id)}
-                style={{
-                    marginTop: "10px",
-                    padding: "8px 16px",
-                    borderRadius: "6px",
-                    background: mentorshipRequests.some(req => req.mentor_id === m.mentor_id && req.status === "approved")
-                    ? "#28a745" // green
-                    : mentorshipRequests.some(req => req.mentor_id === m.mentor_id && req.status === "pending")
-                    ? "#ccc" // gray
-                    : mentorshipRequests.some(req => req.mentor_id === m.mentor_id && req.status === "rejected")
-                    ? "#dc3545" // red
-                    : "#2d6cdf", // blue for new request
-                    color: "white",
-                    border: "none",
-                    cursor: mentorshipRequests.some(req => req.mentor_id === m.mentor_id) ? "not-allowed" : "pointer",
-                    width: "100%",
-                }}
-                onClick={() => openRequestModal(m)}
-                >
-                {mentorshipRequests.some(req => req.mentor_id === m.mentor_id && req.status === "approved")
-                    ? "Approved"
-                    : mentorshipRequests.some(req => req.mentor_id === m.mentor_id && req.status === "pending")
-                    ? "Request Submitted – Wait for Approval"
-                    : mentorshipRequests.some(req => req.mentor_id === m.mentor_id && req.status === "rejected")
-                    ? "Rejected"
-                    : "Make Request"}
-            </button>
-            <button
-    onClick={() => startChatWithMentor(m.mentor_id)}
-    style={{
-        marginTop: "10px",
-        padding: "8px 16px",
-        borderRadius: "6px",
-        background: "#2d6cdf",
-        color: "white",
-        border: "none",
-        width: "100%",
-    }}
->
-    Start Chat
-</button>
+                <button
+                    disabled={mentorshipRequests.some(req => req.mentor_id === m.mentor_id)}
+                    style={{
+                        marginTop: "10px",
+                        padding: "8px 16px",
+                        borderRadius: "6px",
+                        background: mentorshipRequests.some(req => req.mentor_id === m.mentor_id && req.status === "approved")
+                        ? "#28a745" // green
+                        : mentorshipRequests.some(req => req.mentor_id === m.mentor_id && req.status === "pending")
+                        ? "#ccc" // gray
+                        : mentorshipRequests.some(req => req.mentor_id === m.mentor_id && req.status === "rejected")
+                        ? "#dc3545" // red
+                        : "#2d6cdf", // blue for new request
+                        color: "white",
+                        border: "none",
+                        cursor: mentorshipRequests.some(req => req.mentor_id === m.mentor_id) ? "not-allowed" : "pointer",
+                        width: "100%",
+                    }}
+                    onClick={() => openRequestModal(m)}
+                    >
+                    {mentorshipRequests.some(req => req.mentor_id === m.mentor_id && req.status === "approved")
+                        ? "Approved"
+                        : mentorshipRequests.some(req => req.mentor_id === m.mentor_id && req.status === "pending")
+                        ? "Request Submitted – Wait for Approval"
+                        : mentorshipRequests.some(req => req.mentor_id === m.mentor_id && req.status === "rejected")
+                        ? "Rejected"
+                        : "Make Request"}
+                </button>
+                {mentorshipRequests.some(req => req.mentor_id === m.mentor_id && req.status === "approved") && (
 
-
+                    <button
+                        onClick={() => startChatWithMentor(m.mentor_id)}
+                        style={{
+                            marginTop: "10px",
+                            padding: "8px 16px",
+                            borderRadius: "6px",
+                            background: "#2d6cdf",
+                            color: "white",
+                            border: "none",
+                            width: "100%",
+                        }}
+                    >
+                        Start Chat
+                    </button>
+                )}
                 </div>
             ))}
             </div>
         </section>
-{chatMentorId && (
-    <div style={{
-        position: "fixed",
-        bottom: "20px",
-        right: "20px",
-        width: "300px",
-        height: "400px",
-        background: "#fff",
-        borderRadius: "10px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-        display: "flex",
-        flexDirection: "column",
-        zIndex: 1000
-    }}>
-        <div style={{ flex: 1, padding: "10px", overflowY: "auto" }}>
-            {chatMessages.map((msg, idx) => (
-                <div key={idx} style={{ marginBottom: "8px", textAlign: msg.senderId === studentId ? "right" : "left" }}>
-                    <span style={{
-                        display: "inline-block",
-                        padding: "6px 10px",
-                        borderRadius: "12px",
-                        background: msg.senderId === studentId ? "#2d6cdf" : "#eee",
-                        color: msg.senderId === studentId ? "#fff" : "#000"
-                    }}>
-                        {msg.message}
-                    </span>
+        {chatMentorId && (
+            <div style={{
+                position: "fixed",
+                bottom: "20px",
+                right: "20px",
+                width: "300px",
+                height: "400px",
+                background: "#fff",
+                borderRadius: "10px",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
+                display: "flex",
+                flexDirection: "column",
+                zIndex: 1000
+            }}>
+                <div style={{ flex: 1, padding: "10px", overflowY: "auto" }}>
+                    {chatMessages.map((msg, idx) => (
+                        <div key={idx} style={{ marginBottom: "8px", textAlign: msg.senderId === studentId ? "right" : "left" }}>
+                            <span style={{
+                                display: "inline-block",
+                                padding: "6px 10px",
+                                borderRadius: "12px",
+                                background: msg.senderId === studentId ? "#2d6cdf" : "#eee",
+                                color: msg.senderId === studentId ? "#fff" : "#000"
+                            }}>
+                                {msg.message}
+                            </span>
+                        </div>
+                    ))}
                 </div>
-            ))}
-        </div>
 
-        <div style={{ display: "flex", padding: "10px", gap: "6px" }}>
-            <input
-                type="text"
-                value={chatInput}
-                onChange={(e) => setChatInput(e.target.value)}
-                placeholder="Type a message..."
-                style={{ flex: 1, padding: "6px 10px", borderRadius: "6px", border: "1px solid #ccc" }}
-            />
-            <button onClick={sendChatMessage} style={{ padding: "6px 12px", borderRadius: "6px", background: "#2d6cdf", color: "#fff", border: "none" }}>Send</button>
-        </div>
-    </div>
-)}
+            {/* student msg send option*/}
+
+                <div style={{ display: "flex", padding: "10px", gap: "6px" }}>
+                    <input
+                        type="text"
+                        value={chatInput}
+                        onChange={(e) => setChatInput(e.target.value)}
+                        placeholder="Type a message..."
+                        style={{ flex: 1, padding: "6px 10px", borderRadius: "6px", border: "1px solid #ccc" }}
+                    />
+                    <button onClick={sendChatMessage} style={{ padding: "6px 12px", borderRadius: "6px", background: "#2d6cdf", color: "#fff", border: "none" }}>Send</button>
+                </div>
+
+            </div>
+        )}
 
         {/* Modal */}
         {showModal && (
