@@ -1,28 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
-import "./Chat.css"; // optional styling
+import axios from "axios";
+import "./Chat.css";
 
-const socket = io("http://localhost:5000"); // replace with your backend URL
+const socket = io("http://localhost:5000"); // backend URL
 
 function Chat({ userId, receiverId, receiverName }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
   useEffect(() => {
-    // Join room for the logged-in user
+    // Join room for real-time
     socket.emit("join_room", userId);
 
-    // Listen for messages
-    socket.on("receive_message", (msg) => {
-    console.log("New message:", msg);
-
+    // Listen for new messages
+    const handleReceiveMessage = (msg) => {
       setMessages((prev) => [...prev, msg]);
-    });
+    };
+    socket.on("receive_message", handleReceiveMessage);
+
+    // Fetch old messages from backend
+    const fetchOldMessages = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:5000/api/chat/messages/${userId}/${receiverId}`
+        );
+        setMessages(res.data);
+      } catch (err) {
+        console.error("Failed to fetch old messages:", err);
+      }
+    };
+    fetchOldMessages();
 
     return () => {
-      socket.off("receive_message");
+      socket.off("receive_message", handleReceiveMessage);
     };
-  }, [userId]);
+  }, [userId, receiverId]);
 
   const sendMessage = () => {
     if (!newMessage.trim()) return;
@@ -44,7 +57,10 @@ function Chat({ userId, receiverId, receiverName }) {
       <h4>Chat with {receiverName}</h4>
       <div className="messages">
         {messages.map((m, i) => (
-          <div key={i} className={m.senderId === userId ? "message-sent" : "message-received"}>
+          <div
+            key={i}
+            className={m.sender_id === userId || m.senderId === userId ? "message-sent" : "message-received"}
+          >
             {m.message}
           </div>
         ))}
