@@ -5,7 +5,7 @@ import Footer from "../../components/student/Footer";
 import axios from "axios";
 import "./MentorsList.css";
 import Swal from "sweetalert2";
-
+import { socket } from "../../components/student/socket";
 function MentorList() {
     const { studentId } = useParams();
     const [showModal, setShowModal] = useState(false);
@@ -13,6 +13,52 @@ function MentorList() {
     const [selectedMentor, setSelectedMentor] = useState(null);
     const [selectedSubjects, setSelectedSubjects] = useState([]);
     const [mentorshipRequests, setMentorshipRequests] = useState([]);
+    const [chatMessages, setChatMessages] = useState([]);
+    const [chatInput, setChatInput] = useState("");
+    const [chatMentorId, setChatMentorId] = useState(null);
+
+        // Join student's room
+    useEffect(() => {
+        socket.emit("join_room", studentId);
+
+        socket.on("receive_message", (msg) => {
+            setChatMessages((prev) => [...prev, msg]);
+        });
+
+        return () => {
+            socket.off("receive_message");
+        };
+    }, [studentId]);
+
+
+    const startChatWithMentor = async (mentorId) => {
+    setChatMentorId(mentorId);
+
+    try {
+        const res = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/chat/messages/${studentId}/${mentorId}`
+        );
+        setChatMessages(res.data); // load old messages
+    } catch (err) {
+        console.error("Failed to fetch old messages:", err);
+        setChatMessages([]); // fallback
+    }
+};
+
+    const sendChatMessage = () => {
+        if (!chatInput || !chatMentorId) return;
+
+        const msgData = {
+            senderId: studentId,
+            receiverId: chatMentorId,
+            message: chatInput,
+            timestamp: new Date(),
+        };
+
+        socket.emit("send_message", msgData);
+        setChatMessages((prev) => [...prev, msgData]); // add locally
+        setChatInput("");
+    };
 
     const submitMentorshipRequest = async () => {
         if (selectedSubjects.length === 0) {
@@ -67,6 +113,7 @@ function MentorList() {
 
     fetchMentorshipRequests();
     fetchAllMentors();
+    
     }, [studentId]);
 
     const openRequestModal = (mentor) => {
@@ -168,12 +215,68 @@ function MentorList() {
                     ? "Rejected"
                     : "Make Request"}
             </button>
+            <button
+    onClick={() => startChatWithMentor(m.mentor_id)}
+    style={{
+        marginTop: "10px",
+        padding: "8px 16px",
+        borderRadius: "6px",
+        background: "#2d6cdf",
+        color: "white",
+        border: "none",
+        width: "100%",
+    }}
+>
+    Start Chat
+</button>
 
 
                 </div>
             ))}
             </div>
         </section>
+{chatMentorId && (
+    <div style={{
+        position: "fixed",
+        bottom: "20px",
+        right: "20px",
+        width: "300px",
+        height: "400px",
+        background: "#fff",
+        borderRadius: "10px",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
+        display: "flex",
+        flexDirection: "column",
+        zIndex: 1000
+    }}>
+        <div style={{ flex: 1, padding: "10px", overflowY: "auto" }}>
+            {chatMessages.map((msg, idx) => (
+                <div key={idx} style={{ marginBottom: "8px", textAlign: msg.senderId === studentId ? "right" : "left" }}>
+                    <span style={{
+                        display: "inline-block",
+                        padding: "6px 10px",
+                        borderRadius: "12px",
+                        background: msg.senderId === studentId ? "#2d6cdf" : "#eee",
+                        color: msg.senderId === studentId ? "#fff" : "#000"
+                    }}>
+                        {msg.message}
+                    </span>
+                </div>
+            ))}
+        </div>
+
+        <div style={{ display: "flex", padding: "10px", gap: "6px" }}>
+            <input
+                type="text"
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                placeholder="Type a message..."
+                style={{ flex: 1, padding: "6px 10px", borderRadius: "6px", border: "1px solid #ccc" }}
+            />
+            <button onClick={sendChatMessage} style={{ padding: "6px 12px", borderRadius: "6px", background: "#2d6cdf", color: "#fff", border: "none" }}>Send</button>
+        </div>
+    </div>
+)}
 
         {/* Modal */}
         {showModal && (
