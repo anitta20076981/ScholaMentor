@@ -121,17 +121,25 @@ exports.getAllMentorRequest = async (req, res) => {
 
   try {
       const query = `
-         SELECT mr.*, s.name AS student_name, u.name AS mentor_name, sub.name AS subject_name
-         FROM mentorship_requests mr
-         JOIN users s ON mr.student_id = s.id
-         JOIN users u ON mr.mentor_id = u.id
-         JOIN mentorshipsubjects sub ON mr.subject_id = sub.id
-         WHERE mr.mentor_id = ?
+         SELECT 
+          mr.student_id,
+          mr.mentor_id,
+          mr.status,
+          s.name AS student_name,
+          u.name AS mentor_name,
+          GROUP_CONCAT(msub.name SEPARATOR ', ') AS subjects,
+          MIN(mr.created_at) AS request_date
+        FROM mentorship_requests AS mr
+        LEFT JOIN users AS s ON mr.student_id = s.id
+        LEFT JOIN users AS u ON mr.mentor_id = u.id
+        LEFT JOIN mentorshipsubjects AS msub ON mr.subject_id = msub.id
+        WHERE mr.mentor_id = ?
+        GROUP BY mr.student_id, mr.mentor_id, mr.status, s.name, u.name
+        ORDER BY request_date DESC;
        `;
-     
+       //Combines multiple subjects per student using group by : if student have multiple entry combine it into one
        const [rows] = await db.execute(query, [ mentorId]);
-       console.log(rows[0]);
-    // const [rows] = await db.execute(query);
+       console.log(rows);
     if (rows.length === 0) {
       return res.status(404).json({ error: "Student not found" });
     }
@@ -142,6 +150,9 @@ exports.getAllMentorRequest = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch student details" });
   }
 };
+
+
+
 
 
 
