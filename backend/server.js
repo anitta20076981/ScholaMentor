@@ -26,7 +26,9 @@ const io = new Server(server, {
 
 //  SOCKET.IO EVENTS 
 io.on("connection", (socket) => {
-    console.log(`User connected: ${socket.user.username}`);
+    if (socket.user && socket.user.username) {
+        console.log(`User connected: ${socket.user.username}`);
+    }
     // User joins a private room (based on their user ID)
     socket.on("join_room", (userId) => {
         socket.join(`room_${userId}`);
