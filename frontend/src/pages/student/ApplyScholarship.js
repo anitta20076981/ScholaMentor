@@ -4,6 +4,7 @@ import TopBar from "../../components/student/TopBar";
 import Footer from "../../components/student/Footer";
 import axios from "axios";
 import { FaEye } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 function ApplyScholarship() {
   const { studentId, type } = useParams();
@@ -135,9 +136,14 @@ function ApplyScholarship() {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-
-      setSuccessMessage("Application submitted successfully!");
-      setTimeout(() => setSuccessMessage(""), 3000);
+       Swal.fire({
+          title: "Success!",
+          text: "Application submitted successfully,wait for admin approval!",
+          icon: "success",
+          confirmButtonText: "OK"
+        }).then(() => {
+            window.location.reload();
+        });
     } catch (err) {
       console.error(err);
       const backendError =err.response?.data?.message || 
