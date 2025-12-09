@@ -5,6 +5,7 @@ import Footer from "../../components/student/Footer";
 import axios from "axios";
 import { FaEye } from "react-icons/fa";
 import { FaDownload } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 function FeeConcession() {
   const { studentId } = useParams();
@@ -93,9 +94,19 @@ function FeeConcession() {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      setSuccessMessage("Application submitted successfully!");
+      // setSuccessMessage("Application submitted successfullykkkk!");
       setLatestApplication(res.data); // Update status box
       setTimeout(() => setSuccessMessage(""), 3000);
+      Swal.fire({
+        title: "Success!",
+        text: "Application submitted successfully!",
+        icon: "success",
+        confirmButtonText: "OK"
+      }).then(() => {
+          window.location.reload();
+      });
+
+
     } catch (err) {
       console.error(err);
       setErrorMessage("Failed to submit application.");

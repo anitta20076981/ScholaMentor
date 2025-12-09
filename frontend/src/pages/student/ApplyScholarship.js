@@ -140,7 +140,10 @@ function ApplyScholarship() {
       setTimeout(() => setSuccessMessage(""), 3000);
     } catch (err) {
       console.error(err);
-      setErrorMessage("Failed to submit application.");
+      const backendError =err.response?.data?.message || 
+                          err.response?.data?.error || "Failed to submit application.";   
+
+      setErrorMessage(backendError);
       setTimeout(() => setErrorMessage(""), 3000);
     }
   };

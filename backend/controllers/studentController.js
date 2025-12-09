@@ -181,6 +181,19 @@ exports.getScholarshipCount = async (req, res) => {
 exports.applyScholarshipByType = async (req, res) => {
   const { studentId, type } = req.params;
 
+  const [details] = await db.execute(
+      `SELECT * FROM studentdetails WHERE student_id = ?`,
+      [studentId]
+  );
+ const studentdetails = details[0];
+
+  if(studentdetails.phone == null || studentdetails.dob == null || studentdetails.gender == null || studentdetails.address == null || studentdetails.	pincode == null || studentdetails.school_or_college == null || studentdetails.course == null || studentdetails.department == null || studentdetails.year	 == null || studentdetails.id_proof	 == null ||  studentdetails.address_proof	 == null){
+ return res.status(400).json({
+    success: false,
+    error: "Please fill all fields in your profile before applying."
+  });
+  }
+
   const {
     academic_percentage,
     attendance_percentage,
@@ -336,7 +349,9 @@ exports.applyScholarshipByType = async (req, res) => {
 
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, error: "Failed to submit scholarship application" });
+    res.status(500).json({ success: false, error: "Make sure that you fill all the informations in your profile" }
+ 
+    );
   }
 };
 
