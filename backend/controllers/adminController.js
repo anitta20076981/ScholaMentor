@@ -211,6 +211,23 @@ exports.approveScholarshipApplication = async (req, res) => {
       [applicationId]
     );
 
+    const [scholarshipApplication] = await db.query(
+      `SELECT * FROM scholarship_applications WHERE id = ?`,
+      [applicationId]
+    );
+
+    if(scholarshipApplication[0].status == "Approved")
+
+     await db.query(
+      `INSERT INTO notifications (user_id, message, type, status, created_at, updated_at)
+       VALUES (?, ?, ?, 'unread', NOW(), NOW())`,
+      [
+        scholarshipApplication[0].student_id,
+        `Your scholarship application has been approved by admin! now you can download your scholarship certificate.`,
+        "scholarship"
+      ]
+    );
+
     res.json(updated[0]);
 
   } catch (error) {
@@ -261,6 +278,26 @@ exports.rejectScholarshipApplication = async (req, res) => {
     );
 
     res.json(updated[0]);
+
+     const [scholarshipApplication] = await db.query(
+      `SELECT * FROM scholarship_applications WHERE id = ?`,
+      [applicationId]
+    );
+
+    if(scholarshipApplication[0].status == "Rejected")
+
+     await db.query(
+      `INSERT INTO notifications (user_id, message, type, status, created_at, updated_at)
+       VALUES (?, ?, ?, 'unread', NOW(), NOW())`,
+      [
+        scholarshipApplication[0].student_id,
+        `Your scholarship application has been rejected by admin! you are not eligible for this scholarship certificate.`,
+        "scholarship"
+      ]
+    );
+
+
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to reject application" });
@@ -450,6 +487,24 @@ exports.approveFeeConcessionApplication = async (req, res) => {
     );
 
     res.json(updated[0]);
+
+     const [feeconcessionApplication] = await db.query(
+      `SELECT * FROM fee_concession_applications WHERE id = ?`,
+      [applicationId]
+    );
+    if(feeconcessionApplication[0].status == "Approved")
+
+     await db.query(
+      `INSERT INTO notifications (user_id, message, type, status, created_at, updated_at)
+       VALUES (?, ?, ?, 'unread', NOW(), NOW())`,
+      [
+        feeconcessionApplication[0].student_id,
+        `Your fee concession application has been approved by admin!!!.`,
+        "feeconcession"
+      ]
+    );
+
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to approve application" });
@@ -474,6 +529,22 @@ exports.rejectFeeConcessioApplication = async (req, res) => {
     );
 
     res.json(updated[0]);
+
+    const [feeconcessionApplication] = await db.query(
+      `SELECT * FROM fee_concession_applications WHERE id = ?`,
+      [applicationId]
+    );
+    if(feeconcessionApplication[0].status == "Rejected")
+
+     await db.query(
+      `INSERT INTO notifications (user_id, message, type, status, created_at, updated_at)
+       VALUES (?, ?, ?, 'unread', NOW(), NOW())`,
+      [
+        feeconcessionApplication[0].student_id,
+        `Your fee concession application has been rejected by admin!!!.`,
+        "feeconcession"
+      ]
+    );
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to reject application" });
