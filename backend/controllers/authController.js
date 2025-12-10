@@ -59,7 +59,7 @@ exports.register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         let status = 'active';
-        if (type === 'mentor') {
+        if (type === 'mentor' || type ==='sponsor') {
             status = 'inactive'; // by default mentor is inactive 
         }else{
             status = 'active';
@@ -85,6 +85,12 @@ exports.register = async (req, res) => {
         if (type === "mentor") {
             await db.query(
                 `INSERT INTO mentordetails (mentor_id) VALUES (?)`,
+                [userId]
+            );
+        }
+        if (type === "sponsor") {
+            await db.query(
+                `INSERT INTO sponsor_details (sponsor_id) VALUES (?)`,
                 [userId]
             );
         }
