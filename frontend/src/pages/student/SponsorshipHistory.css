@@ -1,28 +1,36 @@
-.card-grid {
+/* Container for cards */
+.card-grid1 {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
   justify-content: flex-start; /* left-aligned */
   align-items: flex-start;
+  padding: 20px 0;
 }
 
-.student-card {
-  background: rgba(255,255,255,0.9); /* slightly transparent to show hero behind */
+/* Card styling */
+.student-card1 {
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  width: 280px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  flex: 0 1 calc(30% - 20px); /* smaller width, still 3 per row */
   padding: 20px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
+  min-height: 300px;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.student-card:hover {
+
+/* Hover effect for card */
+.student-card1:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
+/* Student image inside card */
 .student-image {
   width: 80px;
   height: 80px;
@@ -31,6 +39,7 @@
   margin-bottom: 15px;
 }
 
+/* Card text */
 .card-info h3 {
   font-size: 18px;
   margin: 5px 0;
@@ -45,9 +54,11 @@
   text-align: center;
 }
 
+/* Buttons common styling */
 .sponsor-btn,
 .sponsorship-approve-btn,
-.rejected-btn {
+.rejected-btn,
+.request-remaining-btn {
   margin-top: 10px;
   padding: 8px 12px;
   width: 100%;
@@ -59,6 +70,7 @@
   transition: all 0.2s;
 }
 
+/* Specific button styles */
 .sponsor-btn {
   background-color: #4a90e2;
   color: white;
@@ -77,7 +89,7 @@
   background-color: #218838;
 }
 
-/* For Partial Sponsorship */
+/* Partial sponsorship button */
 .sponsorship-approve-btn.partial {
   background-color: #ffc107;
   color: #333;
@@ -87,46 +99,32 @@
   background-color: #e0a800;
 }
 
-/* Responsive: Cards stack on smaller screens */
-@media (max-width: 768px) {
-  .card-grid {
-    justify-content: center;
-  }
-}
-.request-remaining-btn {
-  background-color: #f39c12; /* orange */
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.request-remaining-btn:hover {
-  background-color: #e67e22; /* darker orange on hover */
-}
-
-.card-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-}
-
-.student-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* Pushes buttons to the bottom */
-  width: 250px; /* fixed width */
-  min-height: 300px; /* ensures all cards have same height */
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-  padding: 20px;
-}
-
 .rejected-btn {
   background-color: #ef240d;
   color: white;
+}
+
+.request-remaining-btn {
+  background-color: #f39c12; /* orange */
+  color: white;
+  border-radius: 8px;
+  padding: 10px 20px;
+}
+
+.request-remaining-btn:hover {
+  background-color: #e67e22; /* darker orange */
+}
+
+/* Responsive: 2 cards per row on tablets */
+@media (max-width: 992px) {
+  .student-card1 {
+    flex: 0 1 calc(50% - 20px);
+  }
+}
+
+/* Responsive: 1 card per row on mobile */
+@media (max-width: 600px) {
+  .student-card1 {
+    flex: 0 1 100%;
+  }
 }

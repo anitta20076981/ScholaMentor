@@ -23,6 +23,7 @@ function ViewStudentRequest() {
   const [approvedAmount, setApprovedAmount] = useState('');
   const [error, setError] = useState('');
   const [sponsorRemarks, setSponsorRemarks] = useState("");
+  const [sponsorStatus, setSponsorStatus] = useState("");
 
   useEffect(() => {
     const fetchStudentRequest = async () => {
@@ -61,8 +62,15 @@ function ViewStudentRequest() {
         console.error("Failed to fetch student request:", err);
       }
     };
-
-    
+    const getSponsorDetails = async () => {
+      try {
+        const resMentor = await axios.get(`${process.env.REACT_APP_API_URL}/api/sponsor/get-details/${sponsorId}`);
+        setSponsorStatus(resMentor.data.status); 
+      } catch (err) {
+        console.error("Failed to fetch recommended students:", err);
+      }
+    };
+    getSponsorDetails();
     fetchSubmittedDocuments();
     fetchStudentRequest();
     fetchInfoRequest();
@@ -171,11 +179,13 @@ function ViewStudentRequest() {
 };
 
 
+ 
+
 
 
   return (
     <div className="sponsor-wrapper">
-      <Sidebar sponsorId={sponsorId} />
+      <Sidebar sponsorId={sponsorId} sponsorStatus={sponsorStatus}/>
 
       <div className="content">
         <TopBar  sponsorId={sponsorId} />

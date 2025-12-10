@@ -6,6 +6,7 @@ import Footer from "../../components/sponsor/Footer";
 import { useParams } from "react-router-dom";
 import "./SponsorProfile.css";
 import { FaEye } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 function SponsorProfile() {
   const { sponsorId } = useParams();
@@ -115,8 +116,13 @@ const handleChange = (e) => {
     );
 
     if (res.data.success) {
-      setSuccessMessage("Profile updated successfully!");
-      setTimeout(() => setSuccessMessage(""), 3000);
+      await Swal.fire({
+        title: "Success!",
+        text: `Profile updated successfully!`,
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+
     } else {
       setErrorMessage("Failed to update profile.");
       setTimeout(() => setErrorMessage(""), 3000);

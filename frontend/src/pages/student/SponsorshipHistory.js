@@ -96,6 +96,7 @@ function SponsorshipHistory() {
     }
   };
 
+  
   return (
     <div style={{ fontFamily: "Arial, sans-serif", background: "#f8f9ff" }}>
       <TopBar studentId={studentId} />
@@ -129,9 +130,9 @@ function SponsorshipHistory() {
         </h3>
 
         {/* Cards container */}
-        <div className="card-grid">
+        <div className="card-grid1">
           {approvedOrRejectApplications.map((application, i) => (
-            <div className="student-card" key={i}>
+            <div className="student-card1" key={i}>
               <div className="student-image"></div>
               <div className="card-info">
                 <h3>{application.student_name}</h3>
