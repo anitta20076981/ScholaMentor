@@ -6,6 +6,7 @@ import {
   FaHandHoldingUsd,
   FaUsers,
   FaChalkboardTeacher,
+  FaUserCircle
 } from "react-icons/fa";
 
 import "./Sidebar.css";
@@ -20,6 +21,10 @@ export default function Sidebar({ sponsorId }) {
         <NavLink to={`/sponsor/dashboard/${sponsorId}`} className="sidebar-link">
           <FaHome className="icon" /> Dashboard
         </NavLink>
+
+         <NavLink to={`/sponsor/sponsor-profile/${sponsorId}`} className="sidebar-link">
+            <FaUserCircle className="icon" /> Profile
+          </NavLink>
 
         <NavLink to={`/sponsor/student-request/${sponsorId}`} className="sidebar-link">
           <FaUserGraduate className="icon" /> Students Request

@@ -31,6 +31,10 @@ import AdminMentorShipRequest from "./pages/admin/AdminMentorShipRequest";
 import ViewMentorshipRequest from "./pages/admin/ViewMentorshipRequest"; 
 import MentorStudentRequest from "./pages/mentor/MentorStudentRequest"; 
 
+import AdminSponsorList from "./pages/admin/AdminSponsorList"; 
+import SponsorProfile from "./pages/sponsor/SponsorProfile"; 
+
+
 
 
 
@@ -75,6 +79,9 @@ function App() {
         <Route path="/admin/mentorship_request" element={<AdminMentorShipRequest />} /> 
         <Route path="/admin/view-mentorshiprequest/:studentId/:mentorId" element={<ViewMentorshipRequest />}/>
         <Route path="/mentor/student-request/:mentorId" element={<MentorStudentRequest />} /> 
+
+        <Route path="/admin/sponsor_list" element={<AdminSponsorList />} /> 
+        <Route path="/sponsor/sponsor-profile/:mentorId" element={<SponsorProfile />} /> 
 
         
         
