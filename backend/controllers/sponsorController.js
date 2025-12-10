@@ -350,79 +350,51 @@ exports.getSponsorDetails = async (req, res) => {
 };
 
 exports.updateSponsorDetails = async (req, res) => {
-  const { mentorId } = req.params;
+  const { sponsorId } = req.params;
+
   const {
-    phone_number,
+    phone,
     address,
     gender,
-    
-    current_job_title,
-    company,
-    years_of_experience,
-    industry,
-    short_bio,
-    linkedin_profile,
-    subjects,
-    skills,
-    days_available,
-    time_slots
+    occupation,
+    reason_for_sponsorship,
   } = req.body;
 
   // Files
-  const resume = req.files?.resume ? req.files.resume[0].filename : null;
-  const certificates = req.files?.certificates ? req.files.certificates[0].filename : null;
-  const id_proof = req.files?.id_proof ? req.files.id_proof[0].filename : null;
- 
+  const gov_id = req.files?.gov_id ? req.files.gov_id[0].filename : null;
+  const income_certificate = req.files?.income_certificate ? req.files.income_certificate[0].filename : null;
+  const bank_statement = req.files?.bank_statement ? req.files.bank_statement[0].filename : null;
+  const profile_photo = req.files?.profile_photo ? req.files.profile_photo[0].filename : null;
+   console.log(phone);
   try {
     const query = `
-    UPDATE mentordetails
+    UPDATE  sponsor_details
     SET 
        
-        phone_number = ?,
+        phone = ?,
         address = ?,
         gender = ?,
-        current_job_title = ?,
-        company = ?,
-        years_of_experience = ?,
-        industry = ?,
-        short_bio = ?,
-        linkedin_profile = ?,
-        skills = ?,
-        days_available = ?,
-        time_slots = ?,
-        resume = COALESCE(?, resume),
-        certificates = COALESCE(?, certificates),
-        id_proof = COALESCE(?, id_proof)
-        WHERE mentor_id = ?`;
+        occupation = ?,
+        reason_for_sponsorship = ?,
+         
+        gov_id = COALESCE(?, gov_id),
+        income_certificate = COALESCE(?, income_certificate),
+        bank_statement = COALESCE(?, bank_statement),
+        profile_photo = COALESCE(?, profile_photo)
+        WHERE sponsor_id = ?`;
 
         await db.execute(query, [
-            phone_number,
+            phone,
             address,
             gender,
-            current_job_title,
-            company,
-            years_of_experience,
-            industry,
-            short_bio,
-            linkedin_profile,
-            skills,
-            days_available,
-            time_slots,
-            resume,
-            certificates,
-            id_proof,
-            mentorId
+            occupation,
+            reason_for_sponsorship,
+            gov_id,
+            income_certificate,
+            bank_statement,
+            profile_photo,
+            sponsorId
         ]);
-
-        const subjectsArray = JSON.parse(subjects); 
-        await db.execute(`DELETE FROM mentor_subjects WHERE mentor_id = ?`, [mentorId]);
-        for (const subjectId of subjectsArray) {
-          await db.execute(
-            `INSERT INTO mentor_subjects (mentor_id, subject_id) VALUES (?, ?)`,
-            [mentorId, subjectId]
-          );
-        }
-     
     res.json({ success: true, message: "Profile updated successfully!" });
   } catch (err) {
     console.error(err);

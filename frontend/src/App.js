@@ -81,7 +81,7 @@ function App() {
         <Route path="/mentor/student-request/:mentorId" element={<MentorStudentRequest />} /> 
 
         <Route path="/admin/sponsor_list" element={<AdminSponsorList />} /> 
-        <Route path="/sponsor/sponsor-profile/:mentorId" element={<SponsorProfile />} /> 
+        <Route path="/sponsor/sponsor-profile/:sponsorId" element={<SponsorProfile />} /> 
 
         
         

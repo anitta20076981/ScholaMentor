@@ -1,6 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const sponsorController = require("../controllers/sponsorController");
+const multer = require("multer");//this packeg for uplaod image
+
+// Multer setup for file uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/"); // folder to save files
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+const upload = multer({ storage: storage });
  
 router.get("/recommended-students", sponsorController.getRecommendedStudents);
 router.get("/get-all-student-requests/:sponsorId", sponsorController.getAllStudentRequest);
@@ -19,7 +31,7 @@ router.get("/get-details/:sponsorId", sponsorController.getSponsorDetails);
 router.put(
   "/update/:sponsorId",
   upload.fields([
-    // { name: "profile_photo", maxCount: 1 },
+    { name: "profile_photo", maxCount: 1 },
     { name: "gov_id", maxCount: 1 },
     { name: "income_certificate", maxCount: 1 },
     { name: "bank_statement", maxCount: 1 },

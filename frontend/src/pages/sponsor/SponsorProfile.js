@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 import "./SponsorProfile.css";
 import { FaEye } from "react-icons/fa";
 
-function MentorProfile() {
+function SponsorProfile() {
   const { sponsorId } = useParams();
   const [activeTab, setActiveTab] = useState("personal");
 
@@ -20,13 +20,13 @@ function MentorProfile() {
     reason_for_sponsorship: "",
     income_certificate:  null,
     profile_photo: null,
-    bank_statement: null
+    bank_statement: null,
+    profile_photo: null
   });
 
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [allSubjects, setAllSubjects] = useState([]);
-  const [subjectsList, setSubjectsList] = useState([]);
+  const [sponsorStatus, setSponsorStatus] = useState("");
 
   useEffect(() => {
     async function fetchMentor() {
@@ -46,12 +46,24 @@ function MentorProfile() {
           gov_id: data.gov_id || null,
           income_certificate: data.income_certificate || null,
           bank_statement: data.bank_statement || null,
+          profile_photo: data.	profile_photo || null,
         }));
 
       } catch (e) {
         console.error("Error fetching mentor details:", e);
       }
     }
+
+     const getSponsorDetails = async () => {
+      try {
+        const resMentor = await axios.get(`${process.env.REACT_APP_API_URL}/api/sponsor/get-details/${sponsorId}`);
+        setSponsorStatus(resMentor.data.status); 
+      } catch (err) {
+        console.error("Failed to fetch recommended students:", err);
+      }
+    };
+    getSponsorDetails();
+
     fetchMentor();
   }, [sponsorId]);
 
@@ -118,12 +130,12 @@ const handleChange = (e) => {
 
   return (
     <div className="mentor-wrapper">
-      <Sidebar sponsorId={sponsorId} />
+      <Sidebar sponsorId={sponsorId} sponsorStatus={sponsorStatus}/>
       <div className="content">
         <TopBar
           sponsorId={sponsorId}
           successMessage={successMessage}
-          errorMessage={errorMessage}
+          errorMessage={errorMessage} sponsorStatus={sponsorStatus}
         />
 
         {/* HERO / INTRO TEXT */}
@@ -201,8 +213,8 @@ const handleChange = (e) => {
                         <label>Phone Number</label>
                         <input
                           type="text"
-                          name="phone_number"
-                          value={formData.phone_number}
+                          name="phone"
+                          value={formData.phone}
                           onChange={handleChange}
                         />
                       </div>
@@ -309,4 +321,4 @@ const handleChange = (e) => {
   );
 }
 
-export default MentorProfile;
+export default SponsorProfile;

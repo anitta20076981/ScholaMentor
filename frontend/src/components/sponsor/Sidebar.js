@@ -11,7 +11,7 @@ import {
 
 import "./Sidebar.css";
 
-export default function Sidebar({ sponsorId }) {
+export default function Sidebar({ sponsorId , sponsorStatus}) {
   return (
     <aside className="sidebar">
       <h2 className="sidebar-title">ScholaMentor</h2>
@@ -25,22 +25,24 @@ export default function Sidebar({ sponsorId }) {
          <NavLink to={`/sponsor/sponsor-profile/${sponsorId}`} className="sidebar-link">
             <FaUserCircle className="icon" /> Profile
           </NavLink>
-
+        {sponsorStatus == "active" && (
         <NavLink to={`/sponsor/student-request/${sponsorId}`} className="sidebar-link">
           <FaUserGraduate className="icon" /> Students Request
-        </NavLink>
-
+        </NavLink> )}
+        
+        {sponsorStatus == "active" && (
         <NavLink to={`/sponsor/approved-sponsorships/${sponsorId}`} className="sidebar-link">
           <FaHandHoldingUsd className="icon" /> My Sponsorships
-        </NavLink>
+        </NavLink>)}
 
-        <NavLink to="/sponsor/donations" className="sidebar-link">
+        {/* <NavLink to="/sponsor/donations" className="sidebar-link">
           <FaUsers className="icon" /> Donations
         </NavLink>
 
         <NavLink to="/sponsor/mentorship" className="sidebar-link">
           <FaChalkboardTeacher className="icon" /> Mentor Panel
-        </NavLink>
+        </NavLink> */}
+       
       </nav>
     </aside>
   );

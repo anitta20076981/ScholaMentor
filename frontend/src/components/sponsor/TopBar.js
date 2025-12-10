@@ -45,10 +45,10 @@ const TopBar = ({ sponsorId, studentId, sponsorStatus }) => {
       <div style={{ fontWeight: "600" }}>Welcome, Sponsor</div>
 
       {sponsorStatus == "inactive" && (
-  <div className="inactive-warning">
-    You are currently inactive. Please update your profile and wait for admin approval.
-  </div>
-)}
+        <div className="inactive-warning">
+          You are currently inactive. Please update your profile and wait for admin approval.
+        </div>
+      )}
 
       {/* Right side: Notification + Avatar */}
       <div style={{ display: "flex", alignItems: "center", gap: "20px", marginLeft: "auto" }}>

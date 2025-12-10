@@ -56,7 +56,7 @@ function SponsorDashboard() {
   return (
     <div className="sponsor-wrapper">
 
-      <Sidebar sponsorId={sponsorId} /> 
+      <Sidebar sponsorId={sponsorId} sponsorStatus={sponsorStatus} /> 
 
       <div className="content">
         <TopBar sponsorId={sponsorId} sponsorStatus={sponsorStatus}/>
@@ -77,20 +77,22 @@ function SponsorDashboard() {
           <div className="hero-text">
             <h1>Empower Students Through Sponsorship</h1>
             <p>Support talented students, contribute to education, and change lives.</p>
-            <button onClick={() => {
-                const element = document.getElementById("recommended-students");
-                if (element) {
-                  element.scrollIntoView({ behavior: "smooth" });
-                }
-              }}
-            >
-            Explore Students
-            </button>
+            {sponsorStatus == "active" && (
+              <button onClick={() => {
+                  const element = document.getElementById("recommended-students");
+                  if (element) {
+                    element.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+              >
+              Explore Students
+              </button>
+            )}
           </div>
         </section>
 
         {/* RECOMMENDED STUDENTS */}
-        
+        {sponsorStatus == "active" && (
         <section id="recommended-students" className="recommend-section">
           <h2>Recommended Students</h2>
           {recommendedStudents && recommendedStudents.length > 0 ? (
@@ -115,6 +117,7 @@ function SponsorDashboard() {
             </div>
           )}
         </section>
+        )}
 
 
         <Footer />

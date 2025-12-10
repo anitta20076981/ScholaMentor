@@ -12,6 +12,7 @@ function ApprovedSponsorship() {
   const { sponsorId } = useParams(); // get sponsorId from URL
   const [recommendedStudents, setRecommendedStudents] = useState([]);
   const navigate = useNavigate();
+  const [sponsorStatus, setSponsorStatus] = useState("");
 
 
   useEffect(() => {
@@ -26,16 +27,25 @@ function ApprovedSponsorship() {
         console.error("Failed to fetch recommended students:", err);
       }
     };
+    const getSponsorDetails = async () => {
+      try {
+        const resMentor = await axios.get(`${process.env.REACT_APP_API_URL}/api/sponsor/get-details/${sponsorId}`);
+        setSponsorStatus(resMentor.data.status); 
+      } catch (err) {
+        console.error("Failed to fetch recommended students:", err);
+      }
+    };
+    getSponsorDetails();
     fetchRecommended();
   }, []);
 
   return (
     <div className="sponsor-wrapper">
-      <Sidebar sponsorId={sponsorId} />
+      <Sidebar sponsorId={sponsorId} sponsorStatus={sponsorStatus} />
 
       <div className="content">
      
-    <TopBar sponsorId={sponsorId}   />
+    <TopBar sponsorId={sponsorId}   sponsorStatus={sponsorStatus}/>
 
         {/* RECOMMENDED STUDENTS */}
         <section id="recommended-students" className="recommend-section">
