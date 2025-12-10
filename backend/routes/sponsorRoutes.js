@@ -14,6 +14,7 @@ router.get("/get-info-request/:sponsorId/:requestId", sponsorController.getInfoR
 router.get("/get-submitted-docs/:sponsorId/:requestId", sponsorController.getSubmittedDocs);
 router.post("/approve-sponsorship/:sponsorId/:requestId", sponsorController.approveSponsorship);
 router.get("/get-approved-requested/:sponsorId", sponsorController.getApprovedSponsorship);
+router.get("/get-details/:sponsorId", sponsorController.getSponsorDetails);
 
 
  

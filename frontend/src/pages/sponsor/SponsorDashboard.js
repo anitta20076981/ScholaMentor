@@ -16,6 +16,7 @@ function SponsorDashboard() {
   const { sponsorId } = useParams(); // define studentid
   const [recommendedStudents, setRecommendedStudents] = useState([]);
   const navigate = useNavigate();
+  const [sponsorStatus, setSponsorStatus] = useState("");
 
   useEffect(() => {
     const fetchRecommended = async () => {
@@ -27,6 +28,16 @@ function SponsorDashboard() {
         console.error("Failed to fetch recommended students:", err);
       }
     };
+
+    const getSponsorDetails = async () => {
+      try {
+        const resMentor = await axios.get(`${process.env.REACT_APP_API_URL}/api/sponsor/get-details/${sponsorId}`);
+        setSponsorStatus(resMentor.data.status); 
+      } catch (err) {
+        console.error("Failed to fetch recommended students:", err);
+      }
+    };
+    getSponsorDetails();
     fetchRecommended();
   }, []);
 
@@ -48,7 +59,7 @@ function SponsorDashboard() {
       <Sidebar sponsorId={sponsorId} /> 
 
       <div className="content">
-        <TopBar sponsorId={sponsorId} />
+        <TopBar sponsorId={sponsorId} sponsorStatus={sponsorStatus}/>
 
         {/* HERO SLIDER */}
         <section className="hero-slider">

@@ -29,6 +29,9 @@ router.post("/sponsorship-application/:applicationId/reject",adminController.rej
 router.get("/mentor_list", adminController.getAllMentor);
 router.get("/view-mentor/:mentorId", adminController.getMentorById);
 
+router.get("/sponsor_list", adminController.getAllSponsors);
+
+
 router.put("/approve-mentor/:mentorId",adminController.approveMentor);
 router.get("/mentorship_request", adminController.getAllMentorshipRequests);
 router.get("/view-mentorship-request/:studentId/:mentorId", adminController.viewMentorshipRequest);

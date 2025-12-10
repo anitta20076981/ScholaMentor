@@ -17,6 +17,16 @@
   margin-top: 60px;
 }
 
+.inactive-warning {
+  background-color: #ffcccb;
+  color: #a00;
+  padding: 15px;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 1px;
+  border-radius: 5px;
+}
+
 .slider-img {
   width: 97%;
   height: 450px;

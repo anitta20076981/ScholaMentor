@@ -124,7 +124,7 @@
   padding: 15px;
   text-align: center;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 1px;
   border-radius: 5px;
 }
 .topbar-container {  /* parent container of the warning */

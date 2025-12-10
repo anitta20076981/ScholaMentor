@@ -332,7 +332,22 @@ exports.getApprovedSponsorship = async (req, res) => {
   }
 };
 
+exports.getSponsorDetails = async (req, res) => {
+  const { sponsorId } = req.params;
 
+  try {
+     const querySponsor = `
+      SELECT sd.*, u.* FROM sponsor_details sd JOIN users u ON u.id = sd.sponsor_id
+      WHERE sd.sponsor_id = ?
+    `;
+    const [sponsorRows] = await db.execute(querySponsor, [sponsorId]);
+    const sponsor = sponsorRows[0];
+    res.json(sponsor);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch sponsor details" });
+  }
+};
 
 
 
