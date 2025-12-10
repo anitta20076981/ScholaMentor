@@ -628,6 +628,22 @@ exports.applySponsorship = async (req, res) => {
   const marksheet = req.files?.marksheet?.[0]?.filename || null;
 
   try {
+
+    //start:check student full profile info:
+    const [details] = await db.execute(
+        `SELECT * FROM studentdetails WHERE student_id = ?`,
+        [studentId]
+    );
+    const studentdetails = details[0];
+
+    if(studentdetails.phone == null || studentdetails.dob == null || studentdetails.gender == null || studentdetails.address == null || studentdetails.	pincode == null || studentdetails.school_or_college == null || studentdetails.course == null || studentdetails.department == null || studentdetails.year	 == null || studentdetails.id_proof	 == null ||  studentdetails.address_proof	 == null){
+      return res.status(400).json({
+        success: false,
+        error: "Please fill all fields in your profile before applying."
+      });
+    }
+    //end:
+
     const [existingApplication] = await db.execute(
       `SELECT * FROM sponsorshipapplications WHERE student_id = ? AND purpose = ?`,
       [studentId, purpose]
@@ -661,7 +677,7 @@ exports.applySponsorship = async (req, res) => {
       [studentId]
     );
 
-    if (cgpa <= 8) {
+    if (cgpa < 8) {
       return res.status(400).json({
         success: false,
         error:
