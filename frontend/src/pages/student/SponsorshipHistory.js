@@ -5,6 +5,7 @@ import Footer from "../../components/student/Footer";
 import axios from "axios";
 import "./SponsorshipHistory.css";
 import Swal from "sweetalert2";
+import { FaDownload } from "react-icons/fa";
 
 function SponsorshipHistory() {
   const { studentId } = useParams();
@@ -15,6 +16,27 @@ function SponsorshipHistory() {
   const [remainingAmount, setRemainingAmount] = useState("");
   const [currentApplicationId, setCurrentApplicationId] = useState(null);
   const [activeSponsorshipExists, setActiveSponsorshipExists] = useState(false);
+
+  const handleDownloadCertificate = async (applicationId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/student/${studentId}/download-fee-concession-certificate/${applicationId}`,
+        { responseType: "blob" } // Important to handle binary files
+      );
+
+      // Create a URL for the file
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `Scholarship_Certificate_${applicationId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error("Error downloading certificate:", error);
+      alert("Failed to download certificate. Please try again later.");
+    }
+  };
 
    const checkActiveSponsorship = (applications) => {
     const active = applications.some(app =>
@@ -164,6 +186,39 @@ function SponsorshipHistory() {
                   )}                
                   
                 </>
+              )}
+             {application?.status === "ApprovedBySponsor" && (
+                <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "15px" }}>
+                  <div
+                    onClick={() => handleDownloadCertificate(application.id)}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      padding: "10px 20px",
+                      backgroundColor: "#5cb85c",
+                      color: "#fff",
+                      borderRadius: "12px",
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      fontSize: "15px",
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                      transition: "all 0.3s ease",
+                      userSelect: "none",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "translateY(-2px)";
+                      e.currentTarget.style.boxShadow = "0 6px 16px rgba(0,0,0,0.2)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "translateY(0)";
+                      e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
+                    }}
+                    title="Download Certificate"
+                  >
+                    <FaDownload style={{ fontSize: "18px" }} />
+                  </div>
+                </div>
               )}
             </div>
           ))}
