@@ -416,7 +416,6 @@ exports.applyFeeConcession = async (req, res) => {
 
   // Uploaded files (if available)
   const supporting_doc = req.files?.supporting_doc?.[0]?.filename || null;
-
   try {
 
     const [studentDetails] = await db.execute(
@@ -428,7 +427,7 @@ exports.applyFeeConcession = async (req, res) => {
 
     // Check for existing application
     const [existingApplication] = await db.execute(
-      `SELECT * FROM fee_concession_applications WHERE student_id = ?`,
+      `SELECT * FROM fee_concession_applications WHERE student_id = ? AND deleted_at IS NULL`,
       [studentId]
     );    
 
@@ -437,7 +436,7 @@ exports.applyFeeConcession = async (req, res) => {
       const current = existingApplication[0];
 
       // Keep old file if new is not uploaded
-      const supporting_doc = marksheet_file || current.supporting_doc;
+      const supporting_doc = supporting_doc || current.supporting_doc;
       const updateQuery = `
         UPDATE fee_concession_applications SET
           family_income = ?, 

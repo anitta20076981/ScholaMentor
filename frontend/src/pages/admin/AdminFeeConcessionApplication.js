@@ -3,6 +3,7 @@ import AdminSidebar from "../../components/AdminSidebar";
 import axios from "axios";
 import { FaEye, FaEdit ,FaTrash} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function AdminFeeConcessionApplication() {
   const [applications, setApplications] = useState([]);
@@ -111,7 +112,7 @@ function AdminFeeConcessionApplication() {
 
   return (
     <AdminSidebar>
-      <h1 style={headingStyle}>List of Scholarship Applications</h1>
+      <h1 style={headingStyle}>List of Fee Concession Applications</h1>
       {loading ? (
         <p style={loadingStyle}>Loading...</p>
       ) : (
@@ -216,18 +217,8 @@ function AdminFeeConcessionApplication() {
                     >
                         <FaEye />
                     </button>
-                    {/* <button
-                        style={{
-                        border: "none",
-                        background: "none",
-                        cursor: "pointer",
-                        color: "#1e1e2f",
-                        }}
-                        onClick={() => console.log("Edit student", application.id)}
-                    >
-                        <FaEdit />
-                    </button> */}
-                   {application.status === "Pending" && (
+                    
+                  {application.status === "Pending" && (
                     <button
                       style={{
                         border: "none",
@@ -236,24 +227,50 @@ function AdminFeeConcessionApplication() {
                         color: "red",
                       }}
                       onClick={async () => {
-                        if (!window.confirm("Are you sure you want to delete this application?")) return;
                         try {
-                          const res = await axios.post(
-                            `${process.env.REACT_APP_API_URL}/api/admin/delete-scholarship-application/${application.id}`
+                          const result = await Swal.fire({
+                            title: "Are you sure?",
+                            text: "Do you really want to delete this application?",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Yes, delete it!",
+                            cancelButtonText: "Cancel",
+                          });
+
+                          if (!result.isConfirmed) return; 
+
+                          await axios.post(
+                            `${process.env.REACT_APP_API_URL}/api/admin/delete-feeconcession-application/${application.id}`
                           );
-                          window.alert("Application deleted successfully.");
+
+                          await Swal.fire({
+                            title: "Deleted!",
+                            text: "Application deleted successfully.",
+                            icon: "success",
+                            confirmButtonText: "OK",
+                          });
+
                           setApplications((prev) =>
                             prev.filter((app) => app.id !== application.id)
                           );
+
                         } catch (err) {
                           console.error(err);
-                          window.alert("Failed to delete application.");
+                          Swal.fire({
+                            title: "Error!",
+                            text: "Failed to delete application.",
+                            icon: "error",
+                            confirmButtonText: "OK",
+                          });
                         }
                       }}
                     >
                       <FaTrash />
                     </button>
                   )}
+
 
                   </td>
                     </tr>

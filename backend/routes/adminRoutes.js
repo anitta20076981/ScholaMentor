@@ -16,6 +16,7 @@ router.get("/get-all-fee-concession-applications", adminController.getAllFeeConc
 router.get("/get-fee-concession-application/:applicationId", adminController.getFeeConcessionApplicationById);
 router.post("/fee-concession-application/:applicationId/approve",adminController.approveFeeConcessionApplication);
 router.post("/fee-concession-application/:applicationId/reject",adminController.rejectFeeConcessioApplication);
+router.post("/delete-feeconcession-application/:applicationId",adminController.deleteFeeConcessionpApplication);
 
 router.get("/scholarship-settings", adminController.getScholarshipSettings);
 router.patch("/scholarship-settings/:id/toggle", adminController.toggleScholarshipSetting);

@@ -551,6 +551,33 @@ exports.rejectFeeConcessioApplication = async (req, res) => {
   }
 };
 
+exports.deleteFeeConcessionpApplication = async (req, res) => {
+  const { applicationId } = req.params;
+
+  try {
+    const [existing] = await db.query(
+      "SELECT * FROM fee_concession_applications WHERE id = ?",
+      [applicationId]
+    );
+
+    if (existing.length === 0) {
+      return res.status(404).json({ message: "Application not found." });
+    }
+
+     await db.query(
+      "UPDATE fee_concession_applications SET deleted_at = NOW() WHERE id = ?",
+      [applicationId]
+    );
+
+
+    return res.json({ message: "Application deleted successfully." });
+
+  } catch (err) {
+    console.error("Error deleting application:", err);
+    return res.status(500).json({ message: "Server error while deleting application." });
+  }
+};
+
 
 exports.getScholarshipSettings = async (req, res) => {
   try {

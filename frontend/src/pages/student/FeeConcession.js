@@ -204,6 +204,7 @@ function FeeConcession() {
             <input
               type="number"
               name="family_income"
+              required
               value={formData.family_income}
               onChange={handleChange}
               style={inputStyle}
@@ -228,10 +229,11 @@ function FeeConcession() {
           </label>
 
           <div style={{ position: "relative" }}>
-            <label>Upload Supporting Document (Optional)</label>
+            <label>Upload Supporting Document</label>
             <input
               type="file"
               name="supporting_doc"
+              required={!formData.supporting_doc}
               onChange={handleChange}
               style={{ width: "100%", marginTop: "5px" }}
               disabled={isReadOnly}
