@@ -143,6 +143,7 @@ function TrackApplicationStatus() {
                     })}
                   </p>                  
                   <p style={{ margin: "5px 0" }}><strong>Status:</strong> {app.status}</p>
+                  <p style={{ margin: "5px 0" }}><strong>Admin Remarks:</strong> {app.admin_remarks}</p>
                 <div
                   style={{
                     display: "flex",

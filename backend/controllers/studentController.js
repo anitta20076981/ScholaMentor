@@ -145,7 +145,7 @@ exports.getScholarship = async (req, res) => {
   try {
     const query = `
       SELECT * FROM scholarship_applications 
-      WHERE student_id = ? AND scholarship_type = ?
+      WHERE student_id = ? AND scholarship_type = ?  AND deleted_at IS NULL
     `;
 
     const [rows] = await db.execute(query, [studentId, type]);
@@ -188,7 +188,7 @@ exports.applyScholarshipByType = async (req, res) => {
  const studentdetails = details[0];
 
   if(studentdetails.phone == null || studentdetails.dob == null || studentdetails.gender == null || studentdetails.address == null || studentdetails.	pincode == null || studentdetails.school_or_college == null || studentdetails.course == null || studentdetails.department == null || studentdetails.year	 == null || studentdetails.id_proof	 == null ||  studentdetails.address_proof	 == null){
- return res.status(400).json({
+  return res.status(400).json({
     success: false,
     error: "Please fill all fields in your profile before applying."
   });
@@ -231,13 +231,21 @@ exports.applyScholarshipByType = async (req, res) => {
 
     // Check for existing application
     const [existingApplication] = await db.execute(
-      `SELECT * FROM scholarship_applications WHERE student_id = ? AND scholarship_type = ?`,
+      `SELECT * FROM scholarship_applications WHERE student_id = ? AND scholarship_type = ? AND deleted_at IS NULL`,
       [studentId, type]
     );    
 
     if (existingApplication.length > 0) {
 
       const current = existingApplication[0];
+      console.log(existingApplication[0]);
+
+      if(existingApplication[0].status == 'Approved'){
+        return res.status(400).json({
+          success: false,
+          error: "Your application is alredy approved by the admin.You can downlaod the certificate."
+        });
+      }
 
       // Keep old file if new is not uploaded
       const final_marksheet = marksheet_file || current.marksheet_file;
@@ -360,7 +368,7 @@ exports.trackScholarship = async (req, res) => {
 
   try {
     const [rows] = await db.query(
-      `SELECT id, scholarship_type, created_at, status
+      `SELECT id, scholarship_type, created_at, status, admin_remarks
        FROM scholarship_applications
        WHERE student_id = ? AND deleted_at IS NULL`,
       [studentId]

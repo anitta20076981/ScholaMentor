@@ -45,7 +45,7 @@ function ApplyScholarship() {
         "Double-check all information before submitting.",
         "Keep a copy of the submitted application for your records.",
     ],
-    need: [
+    'Need-based': [
         "Provide accurate family income details.",
         "Upload a valid income certificate.",
         "Explain your need clearly and concisely.",
@@ -59,7 +59,7 @@ function ApplyScholarship() {
         "Explain your achievements clearly.",
         "Keep a copy of the submitted application for your records.",
     ],
-    special: [
+    'Special Scheme': [
         "Provide correct category type.",
         "Upload category and disability certificates if applicable.",
         "Explain the reason for applying clearly.",
@@ -137,20 +137,25 @@ function ApplyScholarship() {
         }
       );
        Swal.fire({
-          title: "Success!",
-          text: "Application submitted successfully,wait for admin approval!",
+          title: "Sucess!",
+          text: "The admin has taken appropriate action on your application. Please check the dashboard to view the current status.!",
           icon: "success",
           confirmButtonText: "OK"
         }).then(() => {
             window.location.reload();
         });
     } catch (err) {
-      console.error(err);
-      const backendError =err.response?.data?.message || 
-                          err.response?.data?.error || "Failed to submit application.";   
+        const backendError =
+        err.response?.data?.message ||
+         err.response?.data?.error ||
+         "Failed to submit application.";
 
-      setErrorMessage(backendError);
-      setTimeout(() => setErrorMessage(""), 3000);
+        await Swal.fire({
+          title: "Error!",
+          text: backendError,
+          icon: "error",
+          confirmButtonText: "OK",
+        });
     }
   };
 
@@ -220,6 +225,7 @@ function ApplyScholarship() {
                 placeholder="e.g., 88.50"
                 name="academic_percentage"
                 value={formData.academic_percentage}
+                required
                 onChange={handleChange}
                 style={{
                 width: "100%",
@@ -240,6 +246,7 @@ function ApplyScholarship() {
                 name="attendance_percentage"
                 value={formData.attendance_percentage}
                 onChange={handleChange}
+                required
                 style={{
                 width: "100%",
                 padding: "12px",
@@ -256,6 +263,7 @@ function ApplyScholarship() {
                     type="file"
                     name="marksheet_file"
                     onChange={handleChange}
+                    required={!formData.marksheet_file}
                     style={{ paddingRight: formData.marksheet_file ? "30px" : "0" }}
                 />
                 {formData.marksheet_file && (
@@ -307,6 +315,7 @@ function ApplyScholarship() {
                 placeholder="e.g., 50000"
                 name="family_income"
                 value={formData.family_income}
+                required
                 onChange={handleChange}
                 style={{
                 width: "100%",
@@ -326,6 +335,7 @@ function ApplyScholarship() {
                 name="father_occupation"
                 value={formData.father_occupation}
                 onChange={handleChange}
+                required
                 style={{
                 width: "100%",
                 padding: "12px",
@@ -343,6 +353,7 @@ function ApplyScholarship() {
                 placeholder="Mother's Occupation"
                 name="mother_occupation"
                 value={formData.mother_occupation}
+                required
                 onChange={handleChange}
                 style={{
                 width: "100%",
@@ -361,6 +372,7 @@ function ApplyScholarship() {
                 placeholder="Number of family members"
                 name="dependents"
                 value={formData.dependents}
+                required
                 onChange={handleChange}
                 style={{
                 width: "100%",
@@ -378,6 +390,7 @@ function ApplyScholarship() {
                 type="file"
                 name="income_certificate"
                 onChange={handleChange}
+                required={!formData.income_certificate}
                 style={{
                 width: "100%",
                 padding: "12px",
@@ -421,6 +434,7 @@ function ApplyScholarship() {
                 name="sport_name"
                 value={formData.sport_name}
                 onChange={handleChange}
+                required
                 style={{
                 width: "100%",
                 padding: "12px",
@@ -437,6 +451,7 @@ function ApplyScholarship() {
                 name="level"
                 value={formData.level}
                 onChange={handleChange}
+                required
                 style={{
                 width: "100%",
                 padding: "12px",
@@ -464,6 +479,7 @@ function ApplyScholarship() {
                     name="team_or_individual"
                     value={formData.team_or_individual}
                     onChange={handleChange}
+                    required
                     style={{
                     width: "100%",
                     padding: "12px",
@@ -480,6 +496,7 @@ function ApplyScholarship() {
                     type="file"
                     name="sports_certificate"
                     onChange={handleChange}
+                    required={!formData.sports_certificate}
                     style={{ paddingRight: formData.sports_certificate ? "30px" : "0" }}
                 />
                 {formData.sports_certificate && (
@@ -509,6 +526,7 @@ function ApplyScholarship() {
                     name="coach_name"
                     value={formData.coach_name}
                     onChange={handleChange}
+                    required
                     style={{
                     width: "100%",
                     padding: "12px",
@@ -527,6 +545,7 @@ function ApplyScholarship() {
                     name="coach_contact"
                     value={formData.coach_contact}
                     onChange={handleChange}
+                    required
                     style={{
                     width: "100%",
                     padding: "12px",
@@ -568,6 +587,7 @@ function ApplyScholarship() {
                 name="category_type"
                 value={formData.category_type}
                 onChange={handleChange}
+                required
                 style={{
                 width: "100%",
                 padding: "12px",
@@ -584,6 +604,7 @@ function ApplyScholarship() {
                     type="file"
                     name="category_certificate"
                     onChange={handleChange}
+                    required={!formData.category_certificate}
                     style={{ paddingRight: formData.category_certificate ? "30px" : "0" }}
                 />
                 {formData.category_certificate && (
@@ -611,6 +632,7 @@ function ApplyScholarship() {
                     type="file"
                     name="disability_certificate"
                     onChange={handleChange}
+                    required={!formData.disability_certificate}
                     style={{ paddingRight: formData.disability_certificate ? "30px" : "0" }}
                 />
                 {formData.disability_certificate && (
