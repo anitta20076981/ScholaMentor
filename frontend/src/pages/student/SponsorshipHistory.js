@@ -20,7 +20,7 @@ function SponsorshipHistory() {
   const handleDownloadCertificate = async (applicationId) => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/student/${studentId}/download-fee-concession-certificate/${applicationId}`,
+        `${process.env.REACT_APP_API_URL}/api/student/${studentId}/download-sponsorship-certificate/${applicationId}`,
         { responseType: "blob" } // Important to handle binary files
       );
 
@@ -188,38 +188,32 @@ function SponsorshipHistory() {
                 </>
               )}
              {application?.status === "ApprovedBySponsor" && (
-                <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "15px" }}>
-                  <div
-                    onClick={() => handleDownloadCertificate(application.id)}
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "8px",
-                      padding: "10px 20px",
-                      backgroundColor: "#5cb85c",
-                      color: "#fff",
-                      borderRadius: "12px",
-                      cursor: "pointer",
-                      fontWeight: "600",
-                      fontSize: "15px",
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                      transition: "all 0.3s ease",
-                      userSelect: "none",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = "translateY(-2px)";
-                      e.currentTarget.style.boxShadow = "0 6px 16px rgba(0,0,0,0.2)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = "translateY(0)";
-                      e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
-                    }}
-                    title="Download Certificate"
-                  >
-                    <FaDownload style={{ fontSize: "18px" }} />
-                  </div>
+                <div
+                  onClick={() => handleDownloadCertificate(application.id)}
+                  style={{
+                    position: "absolute",
+                    top: "15px",
+                    right: "15px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding: "10px 20px",
+                    backgroundColor: "#5cb85c",
+                    color: "#fff",
+                    borderRadius: "12px",
+                    cursor: "pointer",
+                    fontWeight: "600",
+                    fontSize: "15px",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                    transition: "all 0.3s ease",
+                    userSelect: "none",
+                  }}
+                  title="Download Certificate"
+                >
+                  <FaDownload style={{ fontSize: "18px" }} />
                 </div>
               )}
+
             </div>
           ))}
         </div>

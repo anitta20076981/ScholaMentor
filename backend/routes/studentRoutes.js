@@ -91,5 +91,7 @@ router.get("/get-all-mentors", studentController.getAllMentors);
 router.post("/request-mentorship/:studentId/:mentorId", studentController.requestMentorship);
 router.get("/get-mentorship-requests/:studentId", studentController.getMentorshipRequest);
 
+router.get("/:studentId/download-sponsorship-certificate/:applicationId", studentController.downloadSponsorshipCertificate);
+
 
 module.exports = router;
