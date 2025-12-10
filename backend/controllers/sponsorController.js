@@ -44,26 +44,59 @@ exports.getAllStudentRequest = async (req, res) => {
 
     //it takes only approved application as well as current sponsors approved list also: reference from stack overflow
     const query = `
-      SELECT 
-        sa.*,
-        u.name AS student_name,
-        u.email AS student_email,
-        u.type AS user_type,
-        sd.course,
-        sd.cgpa AS student_cgpa,
-        CASE 
-          WHEN sa.sponsor_id = ? THEN 1
-          ELSE 0
-        END AS approved_by_current_sponsor
-      FROM sponsorshipapplications AS sa
-      JOIN users AS u ON sa.student_id = u.id
-      JOIN studentdetails AS sd ON sd.student_id = u.id
-      WHERE sa.status LIKE 'Approved%'  
-        AND (sa.sponsor_id = ? OR sa.sponsor_id IS NULL)
-      ORDER BY approved_by_current_sponsor DESC, sd.cgpa DESC
-    `;
+  SELECT 
+    sa.*,
+    u.name AS student_name,
+    u.email AS student_email,
+    u.type AS user_type,
+    sd.course,
+    sd.cgpa AS student_cgpa,
+    CASE 
+      WHEN sa.sponsor_id = ? THEN 1
+      ELSE 0
+    END AS approved_by_current_sponsor
+  FROM sponsorshipapplications AS sa
+  JOIN users AS u ON sa.student_id = u.id
+  JOIN studentdetails AS sd ON sd.student_id = u.id
+  WHERE (
+        sa.status LIKE 'Approved%' 
+     OR sa.status LIKE 'MoreInfo%' 
+     OR sa.status LIKE 'InfoSubmitted%' 
+     OR sa.status LIKE 'ApprovedBySponsor%'
+  )
+  AND (
+        (sa.sponsor_id IS NOT NULL AND sa.sponsor_id = ?)
+        OR sa.sponsor_id IS NULL
+      )
+  ORDER BY approved_by_current_sponsor DESC, sd.cgpa DESC
+`;
+//reference from https://chatgpt.com/share/6939e6cc-67b0-8001-91d4-96542becaa0c
 
     const [rows] = await db.execute(query, [sponsorId, sponsorId]);
+
+//     const query = `
+//   SELECT 
+//     sa.*,
+//     u.name AS student_name,
+//     u.email AS student_email,
+//     u.type AS user_type,
+//     sd.course,
+//     sd.cgpa AS student_cgpa,
+//     CASE 
+//       WHEN sa.sponsor_id = ? THEN 1
+//       ELSE 0
+//     END AS approved_by_current_sponsor
+//   FROM sponsorshipapplications AS sa
+//   JOIN users AS u ON sa.student_id = u.id
+//   JOIN studentdetails AS sd ON sd.student_id = u.id
+//   WHERE 
+//     (sa.status LIKE 'Approved%' AND sa.sponsor_id = ?)
+//     OR sa.status = 'MoreInfo'
+//   ORDER BY approved_by_current_sponsor DESC, sd.cgpa DESC
+// `;
+
+// const [rows] = await db.execute(query, [sponsorId, sponsorId]);
+
 
     if (rows.length === 0) {
       return res.status(404).json({ error: "No sponsorship requests found" });
@@ -117,7 +150,7 @@ exports.getStudentRequest = async (req, res) => {
 exports.requestMoreInfo = async (req, res) => {
   const { requestId, sponsorId } = req.params; // get from URL
   const { message, required_document } = req.body;
-
+ 
   try {
     // Get the student_id from the application
     const [apps] = await db.execute(
@@ -159,13 +192,14 @@ exports.requestMoreInfo = async (req, res) => {
       JSON.stringify({ infoRequestId }) 
     ]);
 
-    await db.query(
-      `UPDATE sponsorshipapplications
-       SET status = 'MoreInfo' 
-       WHERE id = ?`,
-      [requestId]
-    );
-
+   await db.query(
+  `UPDATE sponsorshipapplications
+   SET status = 'MoreInfo',
+       sponsor_id = ?
+   WHERE id = ?`,
+  [sponsorId, requestId]
+);
+ 
 
     res.json({ success: true, infoRequestId });
   } catch (err) {
