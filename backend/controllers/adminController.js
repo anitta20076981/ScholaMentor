@@ -638,11 +638,15 @@ exports.getSponsorshipRequestById = async (req, res) => {
           u.name AS student_name,
           u.email AS student_email,
           sf.course,
-          sf.school_or_college
+          sf.school_or_college,
+          s.name AS sponsor_name,
+          s.email AS sponsor_email
        FROM sponsorshipapplications sa
        JOIN users u ON sa.student_id = u.id
        LEFT JOIN studentdetails sf 
       ON sa.student_id = sf.student_id
+        LEFT JOIN users s ON sa.sponsor_id = s.id
+
        WHERE sa.id = ?`,
       [applicationId]
     );

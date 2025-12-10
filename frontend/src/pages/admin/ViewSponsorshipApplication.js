@@ -196,7 +196,10 @@ export default function ViewSposorshipApplication() {
             </span>
           </p>
         </div>
+        
        {/* Admin Actions */}
+       {application.status === "Pending" && (
+
         <div className="section">
           <h3>Admin Actions</h3>
           <textarea
@@ -216,6 +219,33 @@ export default function ViewSposorshipApplication() {
             </button>
           </div>
         </div>
+       )}
+      {application.status === "ApprovedBySponsor" && (
+       <div className="section">
+          <h3>Sponsors Details</h3>
+          <p>
+            <span className="label">Sponsor Name:</span>
+            <span className="value">{application.sponsor_name}</span>
+          </p>
+          <p>
+            <span className="label">Sponsor Email:</span>
+            <span className="value">{application.sponsor_email}</span>
+          </p>
+           <p>
+            <span className="label">Request Amount:</span>
+            <span className="value">{application.required_amount}</span>
+          </p>
+           <p>
+            <span className="label">Approved Amount:</span>
+            <span className="value">{application.approved_amount}</span>
+          </p>
+           <p>
+            <span className="label">Approved on:</span>
+            <span className="value">{application.approved_date?.split("T")[0]}</span>
+          </p>
+          
+        </div>
+      )}
        
       </div>
     </AdminSidebar>
