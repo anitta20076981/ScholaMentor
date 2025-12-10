@@ -890,3 +890,66 @@ exports.approveMentorshipRequest = async (req, res) => {
     res.status(500).json({ error: "Failed to approve mentorship request" });
   }
 };
+
+
+exports.getAllSponsors = async (req, res) => {
+  try {
+    const [results] = await db.query("SELECT * FROM users WHERE type = 'sponsor'");
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.getSponsorById = async (req, res) => {
+  const { sponsorId } = req.params;
+  try {
+   const query = `
+      SELECT u.id, u.name, u.email, u.type, u.status, md.*
+      FROM users u
+      LEFT JOIN sponsor_details md ON md.sponsor_id = u.id
+      WHERE u.id = ? AND u.type = 'sponsor'
+    `;
+
+    const [results] = await db.execute(query, [sponsorId]);
+ 
+    if (results.length === 0) {
+      return res.status(404).json({ message: "Sponsor not found" });
+    }
+
+    res.json(results[0]); 
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.approveSponsor = async (req, res) => {
+  try {
+    const { sponsorId } = req.params;
+
+    const [updated] = await db.query(
+      `UPDATE users 
+       SET status = 'active'
+       WHERE id = ?`,
+      [sponsorId]
+    );
+
+     await db.query(
+      `INSERT INTO notifications (user_id, message, type, status, created_at, updated_at)
+       VALUES (?, ?, ?, 'unread', NOW(), NOW())`,
+      [
+        sponsorId,
+        `Thank for registering with us! You are now active you can sponsor users.`,
+        "sponsor"
+      ]
+    );
+
+    res.json(updated[0]);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to approve" });
+  }
+};

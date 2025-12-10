@@ -1,0 +1,318 @@
+.sponsor-wrapper {
+  display: flex;
+  font-family: "Poppins", sans-serif;
+}
+
+.content {
+  margin-left: 280px; /* sidebar width */
+  width: calc(100% - 280px);
+  position: relative;
+  z-index: 1;
+}
+
+/* RECOMMENDED STUDENTS / VIEW REQUEST */
+.recommend-section {
+  padding: 40px 30px;
+  background: #f8f8f8;
+}
+
+.recommend-section h2 {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 30px;
+}
+
+.view-request-section .request-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: space-between;
+}
+
+
+.request-column {
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  flex: 1 1 45%; /* two columns with gap */
+  min-width: 300px;
+}
+
+.section-title {
+  font-size: 22px;
+  color: #ff6a00;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #ff6a00;
+  padding-bottom: 5px;
+}
+
+.request-column p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.doc-icon {
+  color: #ff6a00;
+  font-size: 18px;
+  margin-left: 5px;
+}
+
+.doc-icon:hover {
+  color: #e65c00;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+}
+
+.modal-content textarea {
+  width: 100%;
+  height: 80px;
+  margin-bottom: 10px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.info-btn-wrapper {
+  display: flex;
+  justify-content: flex-end; /* moves button to the right */
+  margin: 10px 0; /* optional spacing */
+}
+
+.info-btn {
+  background-color: #ff6a00; /* button color */
+  color: white; /* text color */
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px; /* rounded corners */
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.info-btn:hover {
+  background-color: #e65c00; /* slightly darker on hover */
+}
+/* Modal overlay covers the screen */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal box */
+.modal-content {
+  background-color: #fff;
+  padding: 25px 30px;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Modal heading */
+.modal-content h4 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Textarea styling */
+.modal-content textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+/* Select styling */
+.modal-content select {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+/* Modal actions buttons */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Buttons inside modal */
+.modal-actions button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+/* Send Request button */
+.modal-actions button:first-child {
+  background-color: #ff6a00;
+  color: white;
+}
+
+.modal-actions button:first-child:hover {
+  background-color: #e65c00;
+}
+
+/* Cancel button */
+.modal-actions button:last-child {
+  background-color: #ccc;
+  color: #333;
+}
+
+.modal-actions button:last-child:hover {
+  background-color: #b3b3b3;
+}
+.submitted-docs {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.submitted-docs h4 {
+  margin-bottom: 15px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.doc-box {
+  border: 1px solid #e3e3e3;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  background: #fafafa;
+  transition: all 0.2s ease-in-out;
+}
+
+.doc-box:hover {
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.doc-box p {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  color: #222;
+}
+
+.doc-link {
+  display: inline-block;
+  padding: 8px 14px;
+  margin-top: 5px;
+  background: #fff;
+  color: #fff !important;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: background 0.2s ease-in-out;
+}
+
+.doc-link:hover {
+  background: #fff;
+}
+
+.doc-date {
+  display: block;
+  margin-top: 10px;
+  font-size: 13px;
+  color: #777;
+  font-style: italic;
+}
+.doc-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;  
+  margin-bottom: 10px;
+}
+
+.doc-eye a {
+  font-weight: bold;
+  color: #ff6a00;  
+  text-decoration: none;
+}
+
+.doc-eye a:hover {
+  text-decoration: underline;
+}
+.info-btn-row {
+  display: flex;
+  gap: 10px; 
+  justify-content: flex-end; 
+  align-items: center;  
+}
+/* Label for Approved Amount */
+.modal-content label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+}
+
+/* Input for Approved Amount */
+.modal-content input[type="number"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+/* Focus effect */
+.modal-content input[type="number"]:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+
+

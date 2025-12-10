@@ -302,6 +302,21 @@ const handleChange = (e) => {
                           </a>
                         )}
                       </div>
+
+                       <div className="form-field" style={{ position: "relative" }}>
+                        <label>Gov Id</label>
+                        <input type="file" name="gov_id" onChange={handleChange} />
+                        {formData.gov_id && (
+                          <a
+                            href={`${process.env.REACT_APP_API_URL}/uploads/${formData.gov_id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="icon-eye"
+                          >
+                            <FaEye size={20} />
+                          </a>
+                        )}
+                      </div>
  
                     </div>
                   </div>

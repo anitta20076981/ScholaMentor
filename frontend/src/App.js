@@ -34,6 +34,7 @@ import MentorStudentRequest from "./pages/mentor/MentorStudentRequest";
 import AdminSponsorList from "./pages/admin/AdminSponsorList"; 
 import SponsorProfile from "./pages/sponsor/SponsorProfile"; 
 
+import AdminSponsorView from "./pages/admin/AdminSponsorView"; 
 
 
 
@@ -82,6 +83,7 @@ function App() {
 
         <Route path="/admin/sponsor_list" element={<AdminSponsorList />} /> 
         <Route path="/sponsor/sponsor-profile/:sponsorId" element={<SponsorProfile />} /> 
+        <Route path="/admin/view-sponsor/:sponsorId" element={<AdminSponsorView />} /> 
 
         
         
