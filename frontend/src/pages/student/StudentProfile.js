@@ -5,6 +5,7 @@ import Footer from "../../components/student/Footer";
 import { useParams } from "react-router-dom";
 import "../../pages/student/studentProfile.css";
 import { FaEye } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 function StudentProfile() {
   const { studentId } = useParams();
@@ -98,10 +99,12 @@ function StudentProfile() {
       );
 
       if (res.data.success) {
-        setSuccessMessage("Profile updated successfully!"); 
-        setTimeout(() => {
-          setSuccessMessage("");
-        }, 3000);
+        await Swal.fire({
+          icon: "success",
+          title: "Success!",
+          text: "Profile updated successfull!",
+          confirmButtonText: "OK",
+        });
 
       } else {
         setErrorMessage("Failed to update profile.");

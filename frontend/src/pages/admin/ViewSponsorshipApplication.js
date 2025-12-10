@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import AdminSidebar from "../../components/AdminSidebar";
 import axios from "axios";
 import "./ViewSponsorshipApplication.css"; 
+import { FaEye} from "react-icons/fa";
+import Swal from "sweetalert2";
 
 export default function ViewSposorshipApplication() {
   const { applicationId } = useParams();
@@ -41,7 +43,17 @@ export default function ViewSposorshipApplication() {
   }, [applicationId]);
 
    const handleAction = async (action) => {
-    if (!window.confirm(`Are you sure you want to ${action} this application?`)) return;
+    // if (!window.confirm(`Are you sure you want to ${action} this application?`)) return;
+    const result = await Swal.fire({
+        title: "Are you sure?",
+        text: `Do you really want to ${action} this application?`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, continue",
+        cancelButtonText: "Cancel",
+    });
     try {
       setProcessing(true);
       const endpoint =
@@ -54,8 +66,16 @@ export default function ViewSposorshipApplication() {
         };
       const res = await axiosInstance.post(endpoint, payload);
       setApplication(res.data);
-      window.alert(`Application ${action}d successfully.`);
-      navigate("/admin/sponsorship-request");
+      // window.alert(`Application ${action}d successfully.`);
+      // navigate("/admin/sponsorship-request");
+      await Swal.fire({
+        title: "Success!",
+        text: `Application ${action}d successfully.`,
+        icon: "success",
+        confirmButtonText: "OK",
+      }).then(() => {
+        navigate("/admin/sponsorship-request");
+      });
     } catch (err) {
       console.error(err);
       window.alert(err.response?.data?.message || `Failed to ${action} application.`);
@@ -74,10 +94,14 @@ export default function ViewSposorshipApplication() {
     const href = `${process.env.REACT_APP_API_URL}/uploads/${filePath}`;
 
     return (
-      <p className="doc-link">
+        <p className="doc-link1"  style={{
+          marginBottom: "10px",
+          fontSize: "14px",
+          color: "#555"
+        }}>
         <strong>{label}:</strong>{" "}
         <a href={href} target="_blank" rel="noopener noreferrer">
-          View 
+          <FaEye />  
         </a>
       </p>
     );

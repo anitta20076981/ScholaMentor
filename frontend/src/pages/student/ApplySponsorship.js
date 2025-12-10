@@ -196,8 +196,13 @@ function ApplySponsorship() {
       const errorMsg =
         err.response?.data?.error ||
         "Failed to submit application. Please try again.";
-      setErrorMessage(errorMsg);
-      setTimeout(() => setErrorMessage(""), 5000);
+        await Swal.fire({
+          icon: "error",
+          title: "Error!",
+          text: errorMsg,
+          confirmButtonText: "OK",
+        });
+      window.location.reload();
     }
   };
 
@@ -263,7 +268,7 @@ function ApplySponsorship() {
             Apply for Sponsorship
           </h1>
           <p style={{ textAlign: "center", fontSize: "16px", color: "#333" }}>
-            If your CGPA is greater than 85, you may be eligible for a sponsorship. Please fill out the application form below to apply.
+            If your CGPA is greater than 8, you may be eligible for a sponsorship. Please fill out the application form below to apply.
           </p>
           <p
             style={{
