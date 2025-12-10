@@ -16,6 +16,16 @@ router.post("/approve-sponsorship/:sponsorId/:requestId", sponsorController.appr
 router.get("/get-approved-requested/:sponsorId", sponsorController.getApprovedSponsorship);
 router.get("/get-details/:sponsorId", sponsorController.getSponsorDetails);
 
+router.put(
+  "/update/:sponsorId",
+  upload.fields([
+    // { name: "profile_photo", maxCount: 1 },
+    { name: "gov_id", maxCount: 1 },
+    { name: "income_certificate", maxCount: 1 },
+    { name: "bank_statement", maxCount: 1 },
+  ]),
+  sponsorController.updateSponsorDetails
+);
 
  
 module.exports = router;
