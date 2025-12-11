@@ -11,12 +11,13 @@
 
 
 
-const mysql = require("mysql2");
-// Use Railway environment variables if available, fallback to local for dev
+const mysql = require('mysql2');
+
+// Create a connection pool using environment variables, with fallbacks for local development
 const pool = mysql.createPool({
   host: process.env.MYSQLHOST || "localhost",
   user: process.env.MYSQLUSER || "root",
-  password: process.env.MYSQLPASSWORD || "MyNewStrongPassword!",
+  password: process.env.MYSQLPASSWORD || "",
   database: process.env.MYSQLDATABASE || "scholamentor",
   port: process.env.MYSQLPORT || 3306,
   waitForConnections: true,
@@ -24,6 +25,7 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
+// Test the connection
 pool.getConnection((err, conn) => {
   if (err) {
     console.error("❌ MySQL Connection Error:", err);
@@ -33,5 +35,5 @@ pool.getConnection((err, conn) => {
   }
 });
 
-module.exports = pool;
+module.exports = pool.promise();
 
