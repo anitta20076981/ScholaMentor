@@ -75,21 +75,6 @@ function LoginForm() {
   {/* RIGHT SIDE BUTTONS */}
   <div style={{ display: "flex", gap: "15px" }}>
     <button
-      onClick={() => navigate("/")}
-      style={{
-        background: "white",
-        color: "#2d6cdf",
-        border: "none",
-        padding: "8px 14px",
-        borderRadius: "8px",
-        fontWeight: "600",
-        cursor: "pointer",
-      }}
-    >
-      Main Page
-    </button>
-
-    <button
       onClick={() => navigate("/register")}
       style={{
         background: "#ffffff",
@@ -106,8 +91,6 @@ function LoginForm() {
   </div>
 </div>
 
-
-    {/* 🔵 LOGIN CONTENT */}
     <div className="login-page">
       <div className="login-card">
         <h2 className="login-title">Login</h2>

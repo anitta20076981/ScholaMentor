@@ -122,32 +122,7 @@ function StudentDashboard() {
 
         </p>
 
-        {/* Search */}
-        <form onSubmit={handleSearch} style={{ display: "flex", justifyContent: "center", gap: "10px", flexWrap: "wrap" }}>
-          <input
-            type="text"
-            placeholder="Search scholarships, mentors..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            style={{
-              width: "400px",
-              padding: "12px 15px",
-              borderRadius: "8px",
-              border: "none",
-            }}
-          />
-          <button type="submit" style={{
-            padding: "12px 25px",
-            background: "#fff",
-            color: "#2d6cdf",
-            border: "none",
-            borderRadius: "8px",
-            fontWeight: "bold",
-            cursor: "pointer",
-          }}>
-            Search
-          </button>
-        </form>
+        
       </section>
 
       {/* -------------------- SECOND HERO / CTA SECTION -------------------- */}
@@ -215,19 +190,7 @@ function StudentDashboard() {
     <p style={{ fontSize: "16px", marginBottom: "20px" }}>
       Quickly explore scholarships, sponsorships, mentors, and donors without signing up.
     </p>
-    <button
-      style={{
-        padding: "12px 25px",
-        background: "white",
-        color: "#2d6cdf",
-        border: "none",
-        borderRadius: "8px",
-        fontWeight: "bold",
-        cursor: "pointer",
-      }}
-    >
-      Browse Now
-    </button>
+     
   </div>
 </section>
 
@@ -242,17 +205,6 @@ function StudentDashboard() {
             <div key={idx} style={{ background: "white", borderRadius: "12px", padding: "20px", boxShadow: "0 3px 10px rgba(0,0,0,0.08)" }}>
               <h3>{s.name}</h3>
               <p><strong>Type:</strong> {s.type}</p>
-              <p><strong>Location:</strong> {s.location}</p>
-              <p><strong>Amount:</strong> {s.amount}</p>
-              <button style={{
-                marginTop: "10px",
-                padding: "8px 16px",
-                borderRadius: "6px",
-                background: "#2d6cdf",
-                color: "white",
-                border: "none",
-                cursor: "pointer",
-              }}>Apply</button>
             </div>
           ))}
         </div>
@@ -281,30 +233,6 @@ function StudentDashboard() {
         </div>
       </div>
     </section>
-
-
-      {/* -------------------- MENTORS -------------------- */}
-      <section style={{ padding: "50px 40px" }}>
-        <h2 style={{ marginBottom: "25px" }}>Connect with Mentors</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px" }}>
-          {mentors.map((m, idx) => (
-            <div key={idx} style={{ background: "white", padding: "20px", borderRadius: "12px", boxShadow: "0 3px 10px rgba(0,0,0,0.08)" }}>
-              <h3>{m.name}</h3>
-              <p>{m.expertise}</p>
-              <button style={{
-                marginTop: "10px",
-                padding: "8px 16px",
-                borderRadius: "6px",
-                background: "#2d6cdf",
-                color: "white",
-                border: "none",
-                cursor: "pointer",
-              }}>Connect</button>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* -------------------- FOOTER -------------------- */}
       <Footer />
     </div>

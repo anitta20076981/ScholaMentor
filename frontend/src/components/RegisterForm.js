@@ -44,6 +44,52 @@ function RegisterForm() {
     }
   };
 return (
+  <div>
+  <div
+  style={{
+    width: "97%",
+    background: "#2d6cdf",
+    padding: "12px 25px",
+    display: "flex",
+    justifyContent: "space-between",  
+    alignItems: "center",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    zIndex: 1000,
+  }}
+>
+  <h2
+  onClick={() => navigate("/")}  
+    style={{
+      margin: 0,
+      color: "white",
+      fontSize: "22px",
+      fontWeight: "700",
+      letterSpacing: "1px",
+    }}
+  >
+    Scholamentor
+  </h2>
+
+  {/* RIGHT SIDE BUTTONS */}
+  <div style={{ display: "flex", gap: "15px" }}>
+    <button
+      onClick={() => navigate("/login")}
+      style={{
+        background: "#ffffff",
+        color: "#2d6cdf",
+        border: "none",
+        padding: "8px 14px",
+        borderRadius: "8px",
+        fontWeight: "600",
+        cursor: "pointer",
+      }}
+    >
+      Login
+    </button>
+    </div>
+    </div>
     <div className="register-page">
       <div className="register-card">
 
@@ -88,7 +134,6 @@ return (
             <option value="student">Student</option>
             <option value="mentor">Mentor</option>
             <option value="sponsor">Sponsor</option>
-            <option value="donor">Donor</option>
           </select>
 
           <button type="submit" className="register-button">
@@ -110,6 +155,8 @@ return (
 
       </div>
     </div>
+  </div>
+
   );
 }
 
