@@ -259,7 +259,7 @@ function TopBar({ studentId, successMessage, errorMessage }) {
                   Profile
                 </Link>
                 <Link
-                  to="/logout"
+                  to="/"
                   style={{ display: "block", padding: "10px 20px", color: "black", textDecoration: "none" }}
                 >
                   Logout

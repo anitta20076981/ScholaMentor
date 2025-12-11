@@ -190,7 +190,7 @@ const TopBar = ({ mentorId, studentId, mentorStatus ,successMessage, errorMessag
               </Link>
 
                <Link
-                to="/logout"
+                to="/"
                 style={{
                   display: "block",
                   padding: "10px 20px",

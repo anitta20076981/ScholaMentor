@@ -1,14 +1,16 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function AdminTopbar() {
   const [openMenu, setOpenMenu] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setOpenMenu(!openMenu);
   };
 
   const handleLogout = () => {
-    alert("Logging out...");
+    navigate("/");
   };
 
   return (
@@ -64,7 +66,7 @@ function AdminTopbar() {
               zIndex: 20,
             }}
           >
-            <div
+            {/* <div
               style={{
                 padding: "10px",
                 cursor: "pointer",
@@ -73,7 +75,7 @@ function AdminTopbar() {
               onClick={() => alert("Go to Profile")}
             >
               Profile
-            </div>
+            </div> */}
 
             <div
               style={{

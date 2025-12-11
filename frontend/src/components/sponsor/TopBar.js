@@ -157,7 +157,18 @@ const TopBar = ({ sponsorId, studentId, sponsorStatus }) => {
             >
                
               <Link
-                to="/logout"
+                to={`/sponsor/sponsor-profile/${sponsorId}`} 
+                style={{
+                  display: "block",
+                  padding: "10px 20px",
+                  color: "black",
+                  textDecoration: "none",
+                }}
+              >
+                Profile
+              </Link>
+               <Link
+                to="/"
                 style={{
                   display: "block",
                   padding: "10px 20px",
