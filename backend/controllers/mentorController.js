@@ -134,7 +134,7 @@ exports.getAllMentorRequest = async (req, res) => {
         LEFT JOIN users AS s ON mr.student_id = s.id
         LEFT JOIN users AS u ON mr.mentor_id = u.id
         LEFT JOIN mentorshipsubjects AS msub ON mr.subject_id = msub.id
-        WHERE mr.mentor_id = ?
+        WHERE mr.mentor_id = ?  AND mr.status = 'approved'
         GROUP BY mr.student_id, mr.mentor_id, mr.status, s.name, u.name
         ORDER BY request_date DESC;
        `;

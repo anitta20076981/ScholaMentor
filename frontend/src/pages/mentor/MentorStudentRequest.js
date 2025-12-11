@@ -17,6 +17,7 @@ function MentorProfile() {
   const [studentRequest, setStudentRequest] = useState("");
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [unreadMsgs, setUnreadMsgs] = useState({});
+  const [mentorStatus, setMentorStatus] = useState("");
 
   useEffect(() => {
   // Join mentor room for real-time
@@ -47,8 +48,23 @@ function MentorProfile() {
         console.error("Failed to fetch recommended students:", err);
       }
     };
+      const fetchMentorAndRecommended = async () => {
+    try {
+      // Get recommended students
+      // const resStudents = await axios.get(`${process.env.REACT_APP_API_URL}/api/sponsor/recommended-students`);
+      // setRecommendedStudents(resStudents.data);
+
+      // Get mentor details
+      const resMentor = await axios.get(`${process.env.REACT_APP_API_URL}/api/mentor/get-details/${mentorId}`);
+      setMentorStatus(resMentor.data.status);  
+
+    } catch (err) {
+      console.error("Failed to fetch data:", err);
+    }
+  };
+  fetchMentorAndRecommended();
     fetchMentorRequest();
-  }, []);
+  }, [mentorId]);
 
  
 // Function called when clicking "Start Chat"
@@ -65,12 +81,12 @@ function MentorProfile() {
 
   return (
     <div className="mentor-wrapper">
-      <Sidebar mentorId={mentorId} />
+      <Sidebar mentorId={mentorId}  mentorStatus={mentorStatus}/>
       <div className="content">
         <TopBar
           mentorId={mentorId}
           successMessage={successMessage}
-          errorMessage={errorMessage}
+          errorMessage={errorMessage}  mentorStatus={mentorStatus}
         />
 
         {/* HERO / INTRO TEXT */}
