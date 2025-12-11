@@ -14,36 +14,44 @@ app.use(bodyParser.json());    // Parse JSON requests
 
 //  Create HTTP server for Socket.IO 
 const server = http.createServer(app); 
-
+//error correction : https://chatgpt.com/share/693a9f21-16c8-8001-aca6-2d59bd88c239
 //  Initialize Socket.IO 
 const io = new Server(server, {
     cors: {
         origin: "*",     
-        origin: "http://localhost:3000",       // For development, allow all origins
+        origin: "http://localhost:3000",     
         methods: ["GET", "POST"]
     }
 });
 
 //  SOCKET.IO EVENTS 
 io.on("connection", (socket) => {
-    if (socket.user && socket.user.username) {
-        console.log(`User connected: ${socket.user.username}`);
-    }
+     if (socket.user && socket.user.username) {
+    console.log("User connected:", socket.id);
+     }
+
     // User joins a private room (based on their user ID)
     socket.on("join_room", (userId) => {
         socket.join(`room_${userId}`);
         console.log(`User ${userId} joined room_${userId}`);
     });
 
-    socket.on("send_message", async (data) => {       
-        // Emit to sender and receiver
-        io.to(`room_${receiverId}`).emit("receive_message", data);
+    socket.on("send_message", async (data) => {
+    const { senderId, receiverId, message } = data;
+
+        if (!receiverId) {
+            console.error("receiverId missing in send_message payload");
+            return;
+        }
+
+       
     });
-    // Fires when client disconnects
+
     socket.on("disconnect", () => {
         console.log("User disconnected:", socket.id);
     });
 });
+
 
 
 // Test API route
