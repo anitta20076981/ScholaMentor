@@ -4,7 +4,9 @@ import axios from "axios";
 import "./Chat.css";
 
 // const socket = io("http://localhost:5000"); // backend URL
-const socket = io(process.env.REACT_APP_BACKEND_URL);
+const socket = io(process.env.REACT_APP_BACKEND_URL, {
+  transports: ["websocket", "polling"]
+});
 
 
 function Chat({ userId, receiverId, receiverName }) {
