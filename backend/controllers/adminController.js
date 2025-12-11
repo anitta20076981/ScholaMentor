@@ -991,3 +991,24 @@ exports.deleteMentor = async (req, res) => {
     res.status(500).json({ message: "Failed to delete mentor" });
   }
 };
+
+exports.getStudentById = async (req, res) => {
+  const { studentId } = req.params;
+  try {
+    const query = `SELECT u.*,sd.*, sf.* FROM users u
+    LEFT JOIN studentdetails sd ON sd.student_id = u.id
+    LEFT JOIN student_fees sf ON sf.student_id = u.id
+    WHERE u.id = ? AND u.type = 'student'`;
+
+    const [results] = await db.execute(query, [studentId]);
+ 
+    if (results.length === 0) {
+      return res.status(404).json({ message: "  Student not found" });
+    }
+
+    res.json(results[0]); 
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};

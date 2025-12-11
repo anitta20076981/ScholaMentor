@@ -42,5 +42,7 @@ router.post("/approve-sponsor/:sponsorId/approve",adminController.approveSponsor
 
 router.delete("/delete-mentor/:mentorId",adminController.deleteMentor);
 
+router.get("/view-student/:studentId", adminController.getStudentById);
+
 
 module.exports = router;

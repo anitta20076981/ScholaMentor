@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; 
 import AdminSidebar from "../../components/AdminSidebar";
 import axios from "axios";
 import { FaEye, FaEdit ,FaTrash} from "react-icons/fa";
@@ -10,6 +11,7 @@ function AdminStudentList() {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const studentsPerPage = 10;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -113,6 +115,7 @@ function AdminStudentList() {
                   <th style={thStyle}>S.No</th>
                   <th style={thStyle}>Name</th>
                   <th style={thStyle}>Email</th>
+                  <th style={thStyle}>Status</th>
                   <th style={thStyle}></th>
                   <th style={thStyle}></th>
                 </tr>
@@ -130,6 +133,7 @@ function AdminStudentList() {
                       <td style={tdStyle}>{indexOfFirstStudent + index + 1}</td>
                       <td style={tdStyle}>{student.name}</td>
                       <td style={tdStyle}>{student.email}</td>
+                      <td style={tdStyle}>{student.status}</td>
                      <td style={tdStyle}>
                     <button
                         style={{
@@ -139,21 +143,11 @@ function AdminStudentList() {
                         color: "#1e1e2f",
                         marginRight: "10px",
                         }}
-                        onClick={() => console.log("View student", student.id)}
+                        onClick={() => navigate(`/admin/view-student/${student.id}`)}
                     >
                         <FaEye />
                     </button>
-                    <button
-                        style={{
-                        border: "none",
-                        background: "none",
-                        cursor: "pointer",
-                        color: "#1e1e2f",
-                        }}
-                        onClick={() => console.log("Edit student", student.id)}
-                    >
-                        <FaEdit />
-                    </button>
+                    
                     <button
                     style={{
                         border: "none",
