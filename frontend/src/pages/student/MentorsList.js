@@ -153,11 +153,11 @@ function MentorList() {
         </h1>
 
         <h3 style={{ color: "white", fontWeight: "400", marginBottom: "30px", fontSize: "20px" }}>
-            Track all your sponsorship requests and see their status
+            Keep an eye on your mentorship requests and their progress
         </h3>
             
         <section style={{ padding: "50px 40px" }}>
-            <h2 style={{ marginBottom: "25px" }}>Connect with Mentors</h2>
+            <h2 style={{ marginBottom: "25px" , color: "white"}}>Connect with Mentors</h2>
             <div
             style={{
                 display: "grid",
@@ -176,17 +176,7 @@ function MentorList() {
                         textAlign: "center",
                     }}
                 >
-                <img
-                    src={m.image}
-                    alt={m.name}
-                    style={{
-                    width: "100%",
-                    height: "160px",
-                    objectFit: "cover",
-                    borderRadius: "12px",
-                    marginBottom: "15px",
-                    }}
-                />
+                
 
                     <h3 style={{ marginBottom: "5px" }}>{m.name}</h3>
                     <p style={{ color: "#555" }}>
@@ -259,8 +249,9 @@ function MentorList() {
             ))}
             </div>
         </section>
-        {chatMentorId && (
-            <div style={{
+       {chatMentorId && (
+            <div
+                style={{
                 position: "fixed",
                 bottom: "20px",
                 right: "20px",
@@ -271,109 +262,136 @@ function MentorList() {
                 boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
                 display: "flex",
                 flexDirection: "column",
-                zIndex: 1000
-            }}>
+                zIndex: 1000,
+                }}
+            >
+                {/* add close button reference from chat gpt: https://chatgpt.com/share/693aabae-7114-8001-9496-028a0dd8fdb1 */}
+                <div style={{ display: "flex", justifyContent: "flex-end", padding: "6px 10px" }}>
+                <span
+                    onClick={() => setChatMentorId(null)} // hides the chat box
+                    style={{
+                    cursor: "pointer",
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    color: "#888",
+                    userSelect: "none",
+                    }}
+                >
+                    ×
+                </span>
+             
+                </div>
+
+                {/* Chat messages */}
                 <div style={{ flex: 1, padding: "10px", overflowY: "auto" }}>
-                    {chatMessages.map((msg, idx) => (
-                        <div key={idx} style={{ marginBottom: "8px", textAlign: msg.senderId === studentId ? "right" : "left" }}>
-                            <span style={{
-                                display: "inline-block",
-                                padding: "6px 10px",
-                                borderRadius: "12px",
-                                background: msg.senderId === studentId ? "#2d6cdf" : "#eee",
-                                color: msg.senderId === studentId ? "#fff" : "#000"
-                            }}>
-                                {msg.message}
-                            </span>
-                        </div>
-                    ))}
+                {chatMessages.map((msg, idx) => (
+                    <div
+                    key={idx}
+                    style={{ marginBottom: "8px", textAlign: msg.senderId === studentId ? "right" : "left" }}
+                    >
+                    <span
+                        style={{
+                        display: "inline-block",
+                        padding: "6px 10px",
+                        borderRadius: "12px",
+                        background: msg.senderId === studentId ? "#2d6cdf" : "#eee",
+                        color: msg.senderId === studentId ? "#fff" : "#000",
+                        }}
+                    >
+                        {msg.message}
+                    </span>
+                    </div>
+                ))}
                 </div>
 
-            {/* student msg send option*/}
-
+                {/* Input box */}
                 <div style={{ display: "flex", padding: "10px", gap: "6px" }}>
-                    <input
-                        type="text"
-                        value={chatInput}
-                        onChange={(e) => setChatInput(e.target.value)}
-                        placeholder="Type a message..."
-                        style={{ flex: 1, padding: "6px 10px", borderRadius: "6px", border: "1px solid #ccc" }}
-                    />
-                    <button onClick={sendChatMessage} style={{ padding: "6px 12px", borderRadius: "6px", background: "#2d6cdf", color: "#fff", border: "none" }}>Send</button>
+                <input
+                    type="text"
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    placeholder="Type a message..."
+                    style={{ flex: 1, padding: "6px 10px", borderRadius: "6px", border: "1px solid #ccc" }}
+                />
+                <button
+                    onClick={sendChatMessage}
+                    style={{ padding: "6px 12px", borderRadius: "6px", background: "#2d6cdf", color: "#fff", border: "none" }}
+                >
+                    Send
+                </button>
                 </div>
-
             </div>
         )}
 
         {/* Modal */}
         {showModal && (
             <div  style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        backgroundColor: "rgba(0,0,0,0.5)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: 1000,
-    }}
-    onClick={() => setShowModal(false)}
-    >
-    <div
-        style={{
-        background: "#fff",
-        padding: "30px",
-        borderRadius: "12px",
-        minWidth: "300px",
-        maxWidth: "500px",
-        }}
-        onClick={(e) => e.stopPropagation()}
-    >
-        <h3>Request Mentorship</h3>
-        <p><strong>Mentor:</strong> {selectedMentor.name}</p>
-
-        <label>Select Subjects:</label>
-        <select
-        multiple
-        value={selectedSubjects}
-        onChange={(e) =>
-            setSelectedSubjects(
-            Array.from(e.target.selectedOptions, (option) => option.value)
-            )
-        }
-        style={{ width: "100%", padding: "10px", marginBottom: "15px" }}
-        >
-        {selectedMentor.subjects.map((sub) => (
-            <option key={sub.id} value={sub.id}>
-            {sub.name}
-            </option>
-        ))}
-        </select>
-
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
-        <button
-            onClick={() => setShowModal(false)}
-            style={{ padding: "10px 20px", borderRadius: "6px" }}
-        >
-            Cancel
-        </button>
-
-        <button
-            onClick={submitMentorshipRequest}
-            style={{
-            padding: "10px 20px",
-            borderRadius: "6px",
-            background: "#2d6cdf",
-            color: "#fff",
-            border: "none",
+                position: "fixed",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                backgroundColor: "rgba(0,0,0,0.5)",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: 1000,
             }}
+            onClick={() => setShowModal(false)}
+            >
+        <div
+            style={{
+            background: "#fff",
+            padding: "30px",
+            borderRadius: "12px",
+            minWidth: "300px",
+            maxWidth: "500px",
+            }}
+            onClick={(e) => e.stopPropagation()}
         >
-            Send Request
-        </button>
+            <h3>Request Mentorship</h3>
+            <p><strong>Mentor:</strong> {selectedMentor.name}</p>
+
+            <label>Select Subjects:</label>
+            <select
+            multiple
+            value={selectedSubjects}
+            onChange={(e) =>
+                setSelectedSubjects(
+                Array.from(e.target.selectedOptions, (option) => option.value)
+                )
+            }
+            style={{ width: "100%", padding: "10px", marginBottom: "15px" }}
+            >
+            {selectedMentor.subjects.map((sub) => (
+                <option key={sub.id} value={sub.id}>
+                {sub.name}
+                </option>
+            ))}
+            </select>
+
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
+            <button
+                onClick={() => setShowModal(false)}
+                style={{ padding: "10px 20px", borderRadius: "6px" }}
+            >
+                Cancel
+            </button>
+
+            <button
+                onClick={submitMentorshipRequest}
+                style={{
+                padding: "10px 20px",
+                borderRadius: "6px",
+                background: "#2d6cdf",
+                color: "#fff",
+                border: "none",
+                }}
+            >
+                Send Request
+            </button>
+            </div>
         </div>
-    </div>
     </div>
         )}
         </section>

@@ -129,7 +129,7 @@ function MentorProfile() {
                     )}
                   </button>
                       
-                    <button className="reject-btn">Reject</button>
+                    {/* <button className="reject-btn">Reject</button> */}
                 </div>
               </div>
             ))

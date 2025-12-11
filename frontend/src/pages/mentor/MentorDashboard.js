@@ -74,7 +74,7 @@ function MentorDashboard() {
               <img src="/mentorship4.jpg" className="slider-img" alt="slide4" />
             </div>
           </Slider>
-          <div className="hero-text">
+          {/* <div className="hero-text">
             <h1>Inspire Students Through Mentorship</h1>
             <p>Guide young minds, share your expertise, and help shape successful futures.</p>
             <button onClick={() => {
@@ -86,12 +86,12 @@ function MentorDashboard() {
             >
             Explore Students
             </button>
-          </div>
+          </div> */}
         </section>
 
         {/* RECOMMENDED STUDENTS */}
         
-        <section id="recommended-students" className="recommend-section">
+        {/* <section id="recommended-students" className="recommend-section">
           <h2>Recommended Students</h2>
           {recommendedStudents && recommendedStudents.length > 0 ? (
             <div className="card-grid">
@@ -114,7 +114,7 @@ function MentorDashboard() {
               No recommended students exist.
             </div>
           )}
-        </section>
+        </section> */}
 
 
         <Footer />

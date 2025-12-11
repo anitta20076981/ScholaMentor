@@ -53,8 +53,8 @@ function MentorProfile() {
 
         setFormData((prev) => ({
           ...prev,
-        //   fullName: data.name || "",
-        //   email: data.email || "",
+          name: data.name || "",
+          email: data.email || "",
           phone_number: data.phone_number || "",
           gender: data.gender || "",
           address: data.address || "",
@@ -254,12 +254,13 @@ const handleChange = (e) => {
                 {activeTab === "personal" && (
                   <div className="tab-content">
                     <div className="form-row">
-                      {/* <div className="form-field">
+                      <div className="form-field">
                         <label>Full Name</label>
                         <input
                           type="text"
-                          name="fullName"
-                          value={formData.fullName}
+                          name="name"
+                          readOnly
+                          value={formData.name}
                           onChange={handleChange}
                         />
                       </div>
@@ -268,11 +269,12 @@ const handleChange = (e) => {
                         <label>Email</label>
                         <input
                           type="email"
+                          readOnly
                           name="email"
                           value={formData.email}
                           onChange={handleChange}
                         />
-                      </div> */}
+                      </div>
 
                       <div className="form-field">
                         <label>Phone Number</label>
@@ -407,7 +409,7 @@ const handleChange = (e) => {
                       </div>
                     </div>
 
-                    <div className="form-row">
+                    {/* <div className="form-row">
                        <div className="form-field">
                         <label>Days Available (Mon–Sun)</label>
                         <select
@@ -435,7 +437,7 @@ const handleChange = (e) => {
                           onChange={handleChange}
                         />
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 )}
 

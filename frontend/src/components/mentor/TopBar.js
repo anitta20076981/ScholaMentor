@@ -178,6 +178,18 @@ const TopBar = ({ mentorId, studentId, mentorStatus ,successMessage, errorMessag
             >
                
               <Link
+                to={`/mentor/mentor-profile/${mentorId}`} 
+                style={{
+                  display: "block",
+                  padding: "10px 20px",
+                  color: "black",
+                  textDecoration: "none",
+                }}
+              >
+                Profile
+              </Link>
+
+               <Link
                 to="/logout"
                 style={{
                   display: "block",

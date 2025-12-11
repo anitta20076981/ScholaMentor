@@ -766,13 +766,29 @@ exports.getAllMentor = async (req, res) => {
 exports.getMentorById = async (req, res) => {
   const { mentorId } = req.params;
   try {
+  //  const query = `
+  //     SELECT u.id, u.name, u.email, u.type, u.status, md.*
+  //     FROM users u
+  //     LEFT JOIN mentordetails md ON md.mentor_id = u.id
+  //     WHERE u.id = ? AND u.type = 'mentor'
+  //   `;
+  //join with mentorshipsubjects table to show subject name also referene fron chat gpt
    const query = `
-      SELECT u.id, u.name, u.email, u.type, u.status, md.*
-      FROM users u
-      LEFT JOIN mentordetails md ON md.mentor_id = u.id
-      WHERE u.id = ? AND u.type = 'mentor'
-    `;
-
+  SELECT 
+    u.id,
+    u.name,
+    u.email,
+    u.type,
+    u.status,
+    md.*,
+    GROUP_CONCAT(msub.name SEPARATOR ', ') AS subjects
+  FROM users u
+  LEFT JOIN mentordetails md ON md.mentor_id = u.id
+  LEFT JOIN mentor_subjects ms ON ms.mentor_id = u.id
+  LEFT JOIN mentorshipsubjects msub ON msub.id = ms.subject_id
+  WHERE u.id = ? AND u.type = 'mentor'
+  GROUP BY u.id
+`;
     const [results] = await db.execute(query, [mentorId]);
 
     if (results.length === 0) {

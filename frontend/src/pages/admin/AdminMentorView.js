@@ -182,12 +182,9 @@ const handleApprove = async () => {
             <p><strong>Years of Experience:</strong> {students.years_of_experience}</p>
             <p><strong>Industry:</strong> {students.industry}</p>
             <p><strong>Short Bio / About Me:</strong> {students.short_bio}</p>
-            <p><strong>Short Bio / About Me:</strong> {students.short_bio}</p>
             <p><strong>Linkedin Profile:</strong> {students.linkedin_profile}</p>
             <p><strong>Subject:</strong> {students.subjects}</p>
-            <p><strong>Subject:</strong> {students.skills}</p>
-            <p><strong>Subject:</strong> {students.days_available}</p>
-            <p><strong>Skills:</strong> {students.time_slots}</p>
+            <p><strong>Skills:</strong> {students.skills}</p>
             <p>
                 <strong>Marksheet:</strong> {renderDocLink(":", students.resume)}
             </p><p>
