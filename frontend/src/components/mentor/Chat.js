@@ -3,7 +3,9 @@ import { io } from "socket.io-client";
 import axios from "axios";
 import "./Chat.css";
 
-const socket = io("http://localhost:5000"); // backend URL
+// const socket = io("http://localhost:5000"); // backend URL
+const socket = io(process.env.REACT_APP_BACKEND_URL);
+
 
 function Chat({ userId, receiverId, receiverName }) {
   const [messages, setMessages] = useState([]);
@@ -22,9 +24,13 @@ function Chat({ userId, receiverId, receiverName }) {
     // Fetch old messages from backend
     const fetchOldMessages = async () => {
       try {
+        // const res = await axios.get(
+        //   `http://localhost:5000/api/chat/messages/${userId}/${receiverId}`
+        // );
+
         const res = await axios.get(
-          `http://localhost:5000/api/chat/messages/${userId}/${receiverId}`
-        );
+  `${process.env.REACT_APP_BACKEND_URL}/api/chat/messages/${userId}/${receiverId}`
+);
         setMessages(res.data);
       } catch (err) {
         console.error("Failed to fetch old messages:", err);

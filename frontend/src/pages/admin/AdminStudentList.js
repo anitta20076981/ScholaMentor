@@ -18,9 +18,12 @@ function AdminStudentList() {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
+        // const res = await axios.get(
+        //   "http://localhost:5000/api/admin/students_list"
+        // );
         const res = await axios.get(
-          "http://localhost:5000/api/admin/students_list"
-        );
+  `${process.env.REACT_APP_BACKEND_URL}/api/admin/students_list`
+);
         setStudents(res.data);
         setLoading(false);
       } catch (err) {
