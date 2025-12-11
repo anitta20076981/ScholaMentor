@@ -44,7 +44,24 @@ io.on("connection", (socket) => {
             return;
         }
 
-       
+        try {
+            const insertQuery = `
+                INSERT INTO messages (sender_id, receiver_id, message)
+                VALUES (?, ?, ?)
+            `;
+            await db.execute(insertQuery, [senderId, receiverId, message]);
+
+            // Send message to receiver only (ONE TIME)
+            io.to(`room_${receiverId}`).emit("receive_message", {
+                senderId,
+                receiverId,
+                message,
+            });
+
+            console.log(`Message saved & sent from ${senderId} to ${receiverId}`);
+        } catch (err) {
+            console.error("DB Insert Error (send_message):", err);
+        }
     });
 
     socket.on("disconnect", () => {
