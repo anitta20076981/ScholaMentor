@@ -52,7 +52,7 @@ function MentorDashboard() {
   return (
     <div className="sponsor-wrapper">
 
-      <Sidebar mentorId={mentorId} /> 
+      <Sidebar mentorId={mentorId} mentorStatus={mentorStatus}/> 
 
       <div className="content">
         <TopBar mentorId={mentorId} mentorStatus={mentorStatus} />

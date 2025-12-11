@@ -40,6 +40,7 @@ function MentorProfile() {
   const [errorMessage, setErrorMessage] = useState("");
   const [allSubjects, setAllSubjects] = useState([]);
   const [subjectsList, setSubjectsList] = useState([]);
+  const [mentorStatus, setMentorStatus] = useState("");
 
   useEffect(() => {
     async function fetchMentor() {
@@ -83,7 +84,23 @@ function MentorProfile() {
         console.error("Error fetching mentor details:", e);
       }
     }
-    fetchMentor();
+
+    const fetchMentorAndRecommended = async () => {
+    try {
+      // Get recommended students
+      // const resStudents = await axios.get(`${process.env.REACT_APP_API_URL}/api/sponsor/recommended-students`);
+      // setRecommendedStudents(resStudents.data);
+
+      // Get mentor details
+      const resMentor = await axios.get(`${process.env.REACT_APP_API_URL}/api/mentor/get-details/${mentorId}`);
+      setMentorStatus(resMentor.data.status);  
+
+    } catch (err) {
+      console.error("Failed to fetch data:", err);
+    }
+  };
+  fetchMentorAndRecommended();
+  fetchMentor();
   }, [mentorId]);
 
 const handleChange = (e) => {
@@ -182,12 +199,12 @@ const handleChange = (e) => {
 
   return (
     <div className="mentor-wrapper">
-      <Sidebar mentorId={mentorId} />
+      <Sidebar mentorId={mentorId} mentorStatus={mentorStatus}/>
       <div className="content">
         <TopBar
           mentorId={mentorId}
           successMessage={successMessage}
-          errorMessage={errorMessage}
+          errorMessage={errorMessage} mentorStatus={mentorStatus}
         />
 
         {/* HERO / INTRO TEXT */}
@@ -199,44 +216,7 @@ const handleChange = (e) => {
         {/* PROFILE FORM */}
         <div className="profile-main">
           {/* LEFT SIDE PROFILE CARD */}
-          <div className="profile-sidebar">
-            <div className="profile-card">
-              <div className="avatar-wrapper">
-                {formData.profile_photo ? (
-                  typeof formData.profile_photo === "object" ? (
-                    <img
-                      src={URL.createObjectURL(formData.profile_photo)}
-                      className="avatar"
-                      alt="Profile"
-                    />
-                  ) : (
-                    <img
-                      src={`${process.env.REACT_APP_API_URL}/uploads/${formData.profile_photo}`}
-                      className="avatar"
-                      alt="Profile"
-                    />
-                  )
-                ) : (
-                  <img src="/avatar.jpg" className="avatar" alt="default" />
-                )}
-
-                <label htmlFor="profile_photo" className="edit-avatar-btn">
-                  &#9998;
-                </label>
-                <input
-                  type="file"
-                  id="profile_photo"
-                  name="profile_photo"
-                  accept="image/*"
-                  onChange={handleChange}
-                  style={{ display: "none" }}
-                />
-              </div>
-
-              {/* <h2 className="profile-name">{formData.fullName}</h2> */}
-              {/* <p className="profile-email">{formData.email}</p> */}
-            </div>
-          </div>
+           
 
           {/* RIGHT SIDE CONTENT */}
           <div className="profile-content">

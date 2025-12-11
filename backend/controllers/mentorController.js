@@ -152,8 +152,17 @@ exports.getAllMentorRequest = async (req, res) => {
   }
 };
 
+exports.getAllSubjects = async (req, res) => {
+  try {
+    const query = `SELECT * FROM mentorshipsubjects`;
+    const [rows] = await db.execute(query);
 
-
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch subjects" });
+  }
+};
 
 
 
