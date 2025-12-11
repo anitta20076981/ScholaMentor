@@ -13,10 +13,12 @@
 const mysql = require('mysql2');
 
 const db = mysql.createPool({
-  host: process.env.DB_HOST,       // MySQL host from Railway
-  user: process.env.DB_USER,       // MySQL username from Railway
-  password: process.env.DB_PASSWORD, // MySQL password from Railway
-  database: process.env.DB_NAME     // Database name from Railway
+  host: process.env.MYSQLHOST,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE,
+  port: process.env.MYSQLPORT
 });
 
 module.exports = db.promise();
+
