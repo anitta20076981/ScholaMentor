@@ -957,3 +957,21 @@ exports.approveSponsor = async (req, res) => {
     res.status(500).json({ message: "Failed to approve" });
   }
 };
+
+//reference from chat gpt : https://chatgpt.com/share/693aabae-7114-8001-9496-028a0dd8fdb1
+
+exports.deleteMentor = async (req, res) => {
+  try {
+    const { mentorId } = req.params;
+    const [deleted] = await db.query(
+      `DELETE FROM users WHERE id = ?`,
+      [mentorId]
+    );
+
+    res.json({ message: "Mentor deleted successfully", affectedRows: deleted.affectedRows });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to delete mentor" });
+  }
+};

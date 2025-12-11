@@ -6,6 +6,7 @@ import AdminTopbar from "../../components/AdminTopbar";
 import axios from "axios";
 import { FaEye, FaEdit ,FaTrash} from "react-icons/fa";
 import "./AdminMentorView.css"; 
+import Swal from "sweetalert2";
 
 function AdminMentorView() {
   const { mentorId } = useParams();
@@ -44,41 +45,52 @@ function AdminMentorView() {
         );
   };
 
-const handleApprove = async () => {
-    try {
-        await axios.put(`${process.env.REACT_APP_API_URL}/api/admin/approve-mentor/${mentorId}`);
-        alert("Mentor approved successfully!");
-        navigate("/admin/mentor_list");
-    } catch (error) {
-        console.error(error);
-        alert("Approval failed!");
-    }
-};
-
-// const handleReject = async () => {
-//   const reason = prompt("Enter the rejection reason:");
-//   if (!reason || reason.trim() === "") {
-//     alert("Rejection reason is required!");
-//     return;
-//   }
-
-//   try {
-//     await axios.put(
-//       `${process.env.REACT_APP_API_URL}/api/admin/reject-mentor/${mentorId}`,
-//       { reason }
-//     );
-
-//     alert("Mentor rejected successfully!");
-//     navigate("/admin/mentor_list");
-//   } catch (error) {
-//     console.error(error);
-//     alert("Rejection failed!");
-//   }
+// const handleApprove = async () => {
+//     try {
+//         await axios.put(`${process.env.REACT_APP_API_URL}/api/admin/approve-mentor/${mentorId}`);
+//         alert("Mentor approved successfully!");
+//         navigate("/admin/mentor_list");
+//     } catch (error) {
+//         console.error(error);
+//         alert("Approval failed!");
+//     }
 // };
 
+const handleApprove = async () => {
+  try {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to approve this mentor?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes, approve!",
+      cancelButtonText: "Cancel",
+    });
 
+    if (result.isConfirmed) {
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/admin/approve-mentor/${mentorId}`);
+      
+      Swal.fire({
+        title: "Approved!",
+        text: "Mentor approved successfully!",
+        icon: "success",
+        confirmButtonText: "OK",
+      }).then(() => {
+        navigate("/admin/mentor_list");
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    Swal.fire({
+      title: "Error!",
+      text: "Approval failed!",
+      icon: "error",
+      confirmButtonText: "OK",
+    });
+  }
+};
 
-
+  const backToList = () => navigate("/admin/mentor_list");
 
   // Inline styles
   
@@ -151,17 +163,6 @@ const handleApprove = async () => {
       ) : (
         <>
         <section className="recommend-section view-request-section">
-            <div className="action-buttons">
-                {students.status === "inactive" && (
-                    <button className="approve-btn" onClick={handleApprove}>
-                        Approve
-                    </button>
-                )}
-
-                {/* <button className="reject-btn" onClick={handleReject}>
-                    Reject
-                </button> */}
-            </div>
             <div className="request-container">
             {/* Student Details */}
             <div className="request-column">
@@ -196,6 +197,22 @@ const handleApprove = async () => {
             </p>
             </div>              
         </div>
+
+          {students.status === "inactive" && (    
+            <div className="section">
+              <h3>Admin Actions</h3>
+              
+              <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
+                <button onClick={handleApprove} className="button button-approve"  >
+                  { "Make Mentor Active"}
+                </button>
+              
+                <button onClick={backToList}  className="button button-back">
+                  Back to list
+                </button>
+              </div>
+            </div> 
+          )}   
 
         </section>
         </>

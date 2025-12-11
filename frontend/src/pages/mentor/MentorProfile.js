@@ -6,6 +6,7 @@ import Footer from "../../components/mentor/Footer";
 import { useParams } from "react-router-dom";
 import "./MentorProfile.css";
 import { FaEye } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 function MentorProfile() {
   const { mentorId } = useParams();
@@ -184,8 +185,14 @@ const handleChange = (e) => {
     );
 
     if (res.data.success) {
-      setSuccessMessage("Profile updated successfully!");
-      setTimeout(() => setSuccessMessage(""), 3000);
+      // setSuccessMessage("Profile updated successfully!");
+      // setTimeout(() => setSuccessMessage(""), 3000);
+      await Swal.fire({
+        title: "Success!",
+        text: `Profile updated successfully!`,
+        icon: "success",
+        confirmButtonText: "OK",
+      });
     } else {
       setErrorMessage("Failed to update profile.");
       setTimeout(() => setErrorMessage(""), 3000);

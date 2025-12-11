@@ -40,6 +40,7 @@ router.put("/approve-mentorship-request/:mentorId/:studentId", adminController.a
 router.get("/view-sponsor/:sponsorId", adminController.getSponsorById);
 router.post("/approve-sponsor/:sponsorId/approve",adminController.approveSponsor);
 
- 
+router.delete("/delete-mentor/:mentorId",adminController.deleteMentor);
+
 
 module.exports = router;
