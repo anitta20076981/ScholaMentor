@@ -8,7 +8,7 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-
+ 
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -44,6 +44,70 @@ function LoginForm() {
   };
 
  return (
+  <div>
+  <div
+  style={{
+    width: "97%",
+    background: "#2d6cdf",
+    padding: "12px 25px",
+    display: "flex",
+    justifyContent: "space-between",  
+    alignItems: "center",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    zIndex: 1000,
+  }}
+>
+  <h2
+  onClick={() => navigate("/")}  
+    style={{
+      margin: 0,
+      color: "white",
+      fontSize: "22px",
+      fontWeight: "700",
+      letterSpacing: "1px",
+    }}
+  >
+    Scholamentor
+  </h2>
+
+  {/* RIGHT SIDE BUTTONS */}
+  <div style={{ display: "flex", gap: "15px" }}>
+    <button
+      onClick={() => navigate("/")}
+      style={{
+        background: "white",
+        color: "#2d6cdf",
+        border: "none",
+        padding: "8px 14px",
+        borderRadius: "8px",
+        fontWeight: "600",
+        cursor: "pointer",
+      }}
+    >
+      Main Page
+    </button>
+
+    <button
+      onClick={() => navigate("/register")}
+      style={{
+        background: "#ffffff",
+        color: "#2d6cdf",
+        border: "none",
+        padding: "8px 14px",
+        borderRadius: "8px",
+        fontWeight: "600",
+        cursor: "pointer",
+      }}
+    >
+      Register
+    </button>
+  </div>
+</div>
+
+
+    {/* 🔵 LOGIN CONTENT */}
     <div className="login-page">
       <div className="login-card">
         <h2 className="login-title">Login</h2>
@@ -69,6 +133,9 @@ function LoginForm() {
         {message && <p className="login-message">{message}</p>}
       </div>
     </div>
+  </div>
+
+
   );
 }
 
