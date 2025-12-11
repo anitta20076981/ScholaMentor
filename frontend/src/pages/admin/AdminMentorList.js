@@ -4,6 +4,7 @@ import AdminSidebar from "../../components/AdminSidebar";
 import axios from "axios";
 import { FaEye, FaEdit ,FaTrash} from "react-icons/fa";
 import Swal from "sweetalert2";
+import AdminTopbar from "../../components/AdminTopbar";
 
 function AdminMentorList() {
   const [students, setStudents] = useState([]);
@@ -139,6 +140,7 @@ const handleDelete = async (mentorId) => {
 
   return (
     <AdminSidebar>
+      <AdminTopbar />
       <h1 style={headingStyle}>Mentor List</h1>
       {loading ? (
         <p style={loadingStyle}>Loading...</p>

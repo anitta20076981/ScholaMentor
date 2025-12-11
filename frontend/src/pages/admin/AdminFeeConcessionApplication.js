@@ -4,6 +4,7 @@ import axios from "axios";
 import { FaEye, FaEdit ,FaTrash} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import AdminTopbar from "../../components/AdminTopbar";
 
 function AdminFeeConcessionApplication() {
   const [applications, setApplications] = useState([]);
@@ -112,6 +113,8 @@ function AdminFeeConcessionApplication() {
 
   return (
     <AdminSidebar>
+      <AdminTopbar />
+
       <h1 style={headingStyle}>List of Fee Concession Applications</h1>
       {loading ? (
         <p style={loadingStyle}>Loading...</p>

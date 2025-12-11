@@ -1012,3 +1012,19 @@ exports.getStudentById = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+exports.deleteStudent = async (req, res) => {
+  try {
+    const { studentId } = req.params;
+    const [deleted] = await db.query(
+      `DELETE FROM users WHERE id = ?`,
+      [studentId]
+    );
+
+    res.json({ message: "Student deleted successfully", affectedRows: deleted.affectedRows });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to delete student" });
+  }
+};

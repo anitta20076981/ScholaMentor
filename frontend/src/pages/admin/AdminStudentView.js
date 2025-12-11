@@ -160,7 +160,7 @@ const handleAction = async (action) => {
   return (
     <AdminSidebar>
          <AdminTopbar />
-      <h1 style={headingStyle}>Student List</h1>
+      <h1 style={headingStyle}>Student View</h1>
       {loading ? (
         <p style={loadingStyle}>Loading...</p>
       ) : (

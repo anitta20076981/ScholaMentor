@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import AdminSidebar from "../../components/AdminSidebar";
 import axios from "axios";
 import { FaEye, FaEdit ,FaTrash} from "react-icons/fa";
+import Swal from "sweetalert2";
+import AdminTopbar from "../../components/AdminTopbar";
 
 function AdminStudentList() {
   const [students, setStudents] = useState([]);
@@ -28,6 +30,41 @@ function AdminStudentList() {
     };
     fetchStudents();
   }, []);
+
+  const handleDelete = async (studentId) => {
+  try {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to delete this student?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete!",
+      cancelButtonText: "Cancel",
+    });
+
+    if (result.isConfirmed) {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/admin/delete-student/${studentId}`);
+      
+      // Show success alert
+      Swal.fire({
+        title: "Deleted!",
+        text: "Student has been deleted successfully.",
+        icon: "success",
+        confirmButtonText: "OK",
+      }).then(() => {
+        window.location.reload();
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    Swal.fire({
+      title: "Error!",
+      text: "Failed to delete student.",
+      icon: "error",
+      confirmButtonText: "OK",
+    });
+  }
+};
 
   // Calculate pagination
   const totalPages = Math.ceil(students.length / studentsPerPage);
@@ -103,6 +140,7 @@ function AdminStudentList() {
 
   return (
     <AdminSidebar>
+      <AdminTopbar />
       <h1 style={headingStyle}>Student List</h1>
       {loading ? (
         <p style={loadingStyle}>Loading...</p>
@@ -155,11 +193,11 @@ function AdminStudentList() {
                         cursor: "pointer",
                         color: "red",
                     }}
-                    onClick={() => console.log("Delete student", student.id)}
+                    onClick={() => handleDelete(student.id)}
                     >
                     <FaTrash />
                     </button>
-        </td>
+                  </td>
                     </tr>
                   ))
                 ) : (

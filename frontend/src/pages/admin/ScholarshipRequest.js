@@ -3,6 +3,7 @@ import AdminSidebar from "../../components/AdminSidebar";
 import axios from "axios";
 import { FaEye, FaEdit ,FaTrash} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import AdminTopbar from "../../components/AdminTopbar";
 
 function ScholarshipRequest() {
   const [applications, setApplications] = useState([]);
@@ -111,6 +112,8 @@ function ScholarshipRequest() {
 
   return (
     <AdminSidebar>
+      <AdminTopbar />
+
       <h1 style={headingStyle}>List of Sponsorship Request</h1>
       {loading ? (
         <p style={loadingStyle}>Loading...</p>

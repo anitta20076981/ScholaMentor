@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AdminSidebar from "../../components/AdminSidebar";
 import axios from "axios";
+import AdminTopbar from "../../components/AdminTopbar";
 
 export default function AdminScholarshipSettings() {
   const [settings, setSettings] = useState([]);
@@ -58,6 +59,8 @@ export default function AdminScholarshipSettings() {
 
   return (
     <AdminSidebar>
+      <AdminTopbar />
+
       <div style={{ padding: "20px" }}>
         <h2>Scholarship Settings</h2>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
