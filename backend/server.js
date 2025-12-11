@@ -16,13 +16,27 @@ app.use(bodyParser.json());    // Parse JSON requests
 const server = http.createServer(app); 
 //error correction : https://chatgpt.com/share/693a9f21-16c8-8001-aca6-2d59bd88c239
 //  Initialize Socket.IO 
+
+
+//commented this code while deploying it
+// const io = new Server(server, {
+//     cors: {
+//         origin: "*",     
+//         origin: "http://localhost:3000",     
+//         methods: ["GET", "POST"]
+//     }
+// });
+
 const io = new Server(server, {
     cors: {
-        origin: "*",     
-        origin: "http://localhost:3000",     
+        origin: [
+            "http://localhost:3000",                        // for local development
+            "https://majestic-boba-bcf2cf.netlify.app"     // for deployed frontend
+        ],
         methods: ["GET", "POST"]
     }
 });
+
 
 //  SOCKET.IO EVENTS 
 io.on("connection", (socket) => {
