@@ -4,7 +4,7 @@ import axios from "axios";
 import "./Chat.css";
 
 // const socket = io("http://localhost:5000"); // backend URL
-const socket = io(process.env.REACT_APP_BACKEND_URL, {
+const socket = io(process.env.REACT_APP_API_URL, {
   transports: ["websocket", "polling"]
 });
 
@@ -31,7 +31,7 @@ function Chat({ userId, receiverId, receiverName }) {
         // );
 
         const res = await axios.get(
-  `${process.env.REACT_APP_BACKEND_URL}/api/chat/messages/${userId}/${receiverId}`
+  `${process.env.REACT_APP_API_URL}/api/chat/messages/${userId}/${receiverId}`
 );
         setMessages(res.data);
       } catch (err) {
