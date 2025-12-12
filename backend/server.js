@@ -27,14 +27,24 @@ const server = http.createServer(app);
 //     }
 // });
 
+// const io = new Server(server, {
+//     cors: {
+//         origin: [
+//             "http://localhost:3000",                        // for local development
+//             "https://majestic-boba-bcf2cf.netlify.app"     // for deployed frontend
+//         ],
+//         methods: ["GET", "POST"]
+//     }
+// });
+
 const io = new Server(server, {
-    cors: {
-        origin: [
-            "http://localhost:3000",                        // for local development
-            "https://majestic-boba-bcf2cf.netlify.app"     // for deployed frontend
-        ],
-        methods: ["GET", "POST"]
-    }
+  cors: {
+    origin: [
+      "http://localhost:3000", // local frontend
+      "https://693b77416e7d99f02e32cbca--majestic-boba-bcf2cf.netlify.app" // your deployed frontend
+    ],
+    methods: ["GET", "POST"]
+  }
 });
 
 
