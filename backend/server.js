@@ -39,10 +39,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: [
-      "http://localhost:3000", // local frontend
-      "https://693b77416e7d99f02e32cbca--majestic-boba-bcf2cf.netlify.app" // your deployed frontend
-    ],
+    origin: "*",  // allow all origins
     methods: ["GET", "POST"]
   }
 });

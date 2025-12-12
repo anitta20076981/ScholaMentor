@@ -5,7 +5,7 @@ import "./Chat.css";
 
 // const socket = io("http://localhost:5000"); // backend URL
 const socket = io(process.env.REACT_APP_API_URL, {
-  transports: ["websocket", "polling"]
+  transports: ["websocket"]  // forces WebSocket, avoids CORS polling issues
 });
 
 
