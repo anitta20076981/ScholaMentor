@@ -45,7 +45,7 @@ exports.login = async (req, res) => {
 
 // REGISTER 
 exports.register = async (req, res) => {
-    // try {
+    try {
         const { name, email, password, type } = req.body;
         const [existing] = await db.query(
             "SELECT id FROM users WHERE email = ?",
@@ -65,9 +65,12 @@ exports.register = async (req, res) => {
             status = 'active';
         }
 
+        const createdAt = new Date();
+
+
         const [result] = await db.query(
-            "INSERT INTO users (name, email, password, type ,status) VALUES (?, ?, ?, ?, ?)",
-            [name, email, hashedPassword, type, status]
+            "INSERT INTO users (name, email, password, type ,status, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+            [name, email, hashedPassword, type, status, createdAt]
         );
 
         const userId = result.insertId;
@@ -105,8 +108,8 @@ exports.register = async (req, res) => {
             }
         });
 
-    // } catch (error) {
-    //     console.error(error);
-    //     return res.status(500).json({ message: "Server error" });
-    // }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server error" });
+    }
 };
