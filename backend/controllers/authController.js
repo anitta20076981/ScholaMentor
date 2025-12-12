@@ -45,7 +45,7 @@ exports.login = async (req, res) => {
 
 // REGISTER 
 exports.register = async (req, res) => {
-    try {
+    // try {
         const { name, email, password, type } = req.body;
         const [existing] = await db.query(
             "SELECT id FROM users WHERE email = ?",
@@ -105,8 +105,8 @@ exports.register = async (req, res) => {
             }
         });
 
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Server error" });
-    }
+    // } catch (error) {
+    //     console.error(error);
+    //     return res.status(500).json({ message: "Server error" });
+    // }
 };
