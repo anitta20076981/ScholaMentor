@@ -19,7 +19,8 @@ router.post("/fee-concession-application/:applicationId/reject",adminController.
 router.post("/delete-feeconcession-application/:applicationId",adminController.deleteFeeConcessionpApplication);
 
 router.get("/scholarship-settings", adminController.getScholarshipSettings);
-router.patch("/scholarship-settings/:id/toggle", adminController.toggleScholarshipSetting);
+// router.put("/scholarship-settings/:id/toggle", adminController.toggleScholarshipSetting);
+router.put(  "/scholarship-settings/:id",  adminController.updateScholarshipSetting);
 
 router.get("/get-all-sponsorship-request", adminController.getAllSponsorshipRequest);
 router.get("/get-sponsorship-request/:applicationId", adminController.getSponsorshipRequestById);

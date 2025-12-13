@@ -194,6 +194,19 @@ exports.applyScholarshipByType = async (req, res) => {
   });
   }
 
+  //if student is applied for scholarship then student cant apply scholarship
+  const [existingSponsorip] = await db.execute(
+    `SELECT * FROM sponsorshipapplications WHERE student_id = ? AND status != 'Rejected'`,
+    [studentId]);
+
+  if (existingSponsorip.length > 0 ) {
+    return res.status(400).json({
+      success: false,
+      error:
+        "You have already applied for a sponsorship so scholarship is not allowed."
+    });
+  }
+
   const {
     academic_percentage,
     attendance_percentage,
@@ -428,6 +441,19 @@ exports.applyFeeConcession = async (req, res) => {
         return res.status(400).json({
         success: false,
         error: "Please fill all fields in your profile before applying."
+      });
+    }
+
+     //if student is applied for scholarship then student cant apply fee concession
+    const [existingSponsorip] = await db.execute(
+      `SELECT * FROM sponsorshipapplications WHERE student_id = ? AND status != 'Rejected'`,
+      [studentId]);
+
+    if (existingSponsorip.length > 0 ) {
+      return res.status(400).json({
+        success: false,
+        error:
+          "You have already applied for a sponsorship so scholarship is not allowed."
       });
     }
 

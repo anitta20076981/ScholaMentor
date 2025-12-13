@@ -339,6 +339,7 @@ export default function ViewScholarshipApplication() {
             onChange={(e) => setAdminRemarks(e.target.value)}
             rows={4}
           />
+          {application.status === "Pending" && (
           <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
             <button onClick={() => handleAction("approve")} className="button button-approve" disabled={processing}>
               {processing ? "Processing..." : "Approve"}
@@ -350,6 +351,7 @@ export default function ViewScholarshipApplication() {
               Back to list
             </button>
           </div>
+          )}
         </div>
        
       </div>

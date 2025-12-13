@@ -159,7 +159,7 @@ exports.approveScholarshipApplication = async (req, res) => {
     const app = results[0];
 
     const [settings] = await db.query(
-      `SELECT * FROM scholarship_settings WHERE type = ? AND active = 1`,
+      `SELECT * FROM scholarship_settings WHERE type = ? `,
       [app.scholarship_type]
     );
 
@@ -597,8 +597,8 @@ exports.updateScholarshipSetting = async (req, res) => {
 
   try {
     await db.query(
-      "UPDATE scholarship_settings SET amount_type = ?, amount_value = ?, percentage = ?, description = ? WHERE id = ?",
-      [amount_type, amount_value, percentage, description, id]
+      "UPDATE scholarship_settings SET amount_type = ?, amount_value = ?, percentage = ? WHERE id = ?",
+      [amount_type, amount_value, percentage, id]
     );
 
     const [updated] = await db.query("SELECT * FROM scholarship_settings WHERE id = ?", [id]);
