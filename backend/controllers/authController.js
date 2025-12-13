@@ -77,16 +77,11 @@ exports.register = async (req, res) => {
         const userId = result.insertId;
         // If type is student, create entry in student_details table
         if (type === "student") {
-            // await db.query(
-            //     `INSERT INTO studentdetails (student_id) VALUES (?)`,
-            //     [userId]
-            // );
             await db.query(
-                `INSERT INTO studentdetails 
-                (student_id, family_income, cgpa, dob)
-                VALUES (?, 0, 0.00, NULL)`,
+                `INSERT INTO studentdetails (student_id) VALUES (?)`,
                 [userId]
             );
+            
              await db.query(
                 `INSERT INTO student_fees (student_id) VALUES (?)`,
                 [userId]
