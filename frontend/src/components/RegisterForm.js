@@ -14,7 +14,7 @@ function RegisterForm() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    // try {
+    try {
       const res = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/auth/register`,
           { 
@@ -38,15 +38,15 @@ function RegisterForm() {
         navigate(`/mentor/dashboard/${mentorId}`);
       } 
        
-    // } catch (err) {
-    //   console.error(err);
-    //   // setMessage("Registration failed!");
-    //   if (err.response && err.response.data && err.response.data.message) {
-    //   setMessage(err.response.data.message);
-    //   } else {
-    //     setMessage("Registration failed!");
-    //   }
-    // }
+    } catch (err) {
+      console.error(err);
+      // setMessage("Registration failed!");
+      if (err.response && err.response.data && err.response.data.message) {
+      setMessage(err.response.data.message);
+      } else {
+        setMessage("Registration failed!");
+      }
+    }
   };
 return (
   <div>

@@ -65,12 +65,9 @@ exports.register = async (req, res) => {
             status = 'active';
         }
 
-        const createdAt = new Date();
-
-
         const [result] = await db.query(
-            "INSERT INTO users (name, email, password, type ,status, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-            [name, email, hashedPassword, type, status, createdAt]
+            "INSERT INTO users (name, email, password, type ,status) VALUES (?, ?, ?, ?, ?)",
+            [name, email, hashedPassword, type, status]
         );
 
         const userId = result.insertId;
