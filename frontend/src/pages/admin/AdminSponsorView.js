@@ -193,9 +193,11 @@ const handleAction = async (action) => {
             <p><strong>Reason for Sponsorship:</strong> {students.reason_for_sponsorship}</p>
             <p>
                 <strong>Income Certificate:</strong> {renderDocLink(":", students.income_certificate)}
-            </p><p>
+            </p>
+            {/* <p>
                 <strong>Gov Id:</strong> {renderDocLink(":", students.gov_id)}
-            </p><p>
+            </p> */}
+            <p>
                 <strong>Bank Statement:</strong> {renderDocLink(":", students.bank_statement)}
             </p>
             </div>  

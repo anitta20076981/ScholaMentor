@@ -836,7 +836,7 @@ exports.approveMentor = async (req, res) => {
   }
 };
 
-
+//last commit reference from chat gpt : https://chatgpt.com/share/693dc092-7220-8001-a7ab-a67177cb2a40
 exports.getAllMentorshipRequests = async (req, res) => {
   try {
     const query = `

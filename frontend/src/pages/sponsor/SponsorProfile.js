@@ -17,7 +17,7 @@ function SponsorProfile() {
     address: "",
     gender: "",
     occupation: "",
-    gov_id:  null,
+    // gov_id:  null,
     reason_for_sponsorship: "",
     income_certificate:  null,
     profile_photo: null,
@@ -46,7 +46,7 @@ function SponsorProfile() {
           address: data.address || "",
           occupation: data.occupation || "",
           reason_for_sponsorship: data.reason_for_sponsorship || "",         
-          gov_id: data.gov_id || null,
+          // gov_id: data.gov_id || null,
           income_certificate: data.income_certificate || null,
           bank_statement: data.bank_statement || null,
           profile_photo: data.	profile_photo || null,
@@ -333,7 +333,7 @@ const handleChange = (e) => {
                         )}
                       </div>
 
-                       <div className="form-field" style={{ position: "relative" }}>
+                       {/* <div className="form-field" style={{ position: "relative" }}>
                         <label>Gov Id</label>
                         <input type="file" name="gov_id" onChange={handleChange} />
                         {formData.gov_id && (
@@ -346,7 +346,7 @@ const handleChange = (e) => {
                             <FaEye size={20} />
                           </a>
                         )}
-                      </div>
+                      </div> */}
  
                     </div>
                   </div>
