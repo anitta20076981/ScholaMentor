@@ -37,6 +37,17 @@ function ViewMentorshipRequest() {
 
 
  const handleApprove = async () => {
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "Do you really want to approve this mentorship request?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, approve",
+    cancelButtonText: "Cancel",
+    confirmButtonColor: "#09b525ff",
+  });
+
+  if (!result.isConfirmed) return;
     try {
         await axios.put(`${process.env.REACT_APP_API_URL}/api/admin/approve-mentorship-request/${mentorId}/${studentId}`);
         Swal.fire({
@@ -57,6 +68,46 @@ function ViewMentorshipRequest() {
         });
     }
 };
+
+//reject metorship request same as the 
+const handleReject = async () => {
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "Do you really want to reject this mentorship request?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, reject",
+    cancelButtonText: "Cancel",
+    confirmButtonColor: "#eb2d14",
+  });
+
+  if (!result.isConfirmed) return;
+
+  try {
+    await axios.put(
+      `${process.env.REACT_APP_API_URL}/api/admin/reject-mentorship-request/${mentorId}/${studentId}`
+    );
+
+    Swal.fire({
+      title: "Rejected!",
+      text: "Mentorship request rejected successfully!",
+      icon: "success",
+      confirmButtonText: "OK",
+    }).then(() => {
+      navigate("/admin/mentorship_request");
+    });
+
+  } catch (error) {
+    console.error(error);
+    Swal.fire({
+      title: "Error!",
+      text: "Rejection failed! Please try again.",
+      icon: "error",
+      confirmButtonText: "OK",
+    });
+  }
+};
+
 
   // Inline styles
   
@@ -132,10 +183,12 @@ const main = requestData[0];
           {main && (
             <section className="recommend-section view-request-section">
               <div className="action-buttons" style={{ textAlign: "right" }}>
-                {main.status === "pending" && (
-                  <button className="approve-btn" onClick={handleApprove}  style={{
-                      marginLeft: "auto",
-                      marginTop: "-54px",
+               {main.status === "pending" && (
+                <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "-54px", gap: "10px" }}>
+    
+                  <button
+                    onClick={handleApprove}
+                    style={{
                       backgroundColor: "#ff832b",
                       color: "white",
                       padding: "8px 16px",
@@ -143,11 +196,29 @@ const main = requestData[0];
                       borderRadius: "5px",
                       cursor: "pointer",
                       fontSize: "14px",
-                      display: "block",
-                    }}>
+                    }}
+                  >
                     Approve
                   </button>
-                )}
+
+                   <button
+                    onClick={handleReject}
+                    style={{
+                      backgroundColor: "#eb2d14",
+                      color: "white",
+                      padding: "8px 16px",
+                      border: "none",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                      fontSize: "14px",
+                    }}
+                  >
+                    Reject
+                  </button>
+
+                </div>
+              )}
+
               </div>
 
               <div className="request-container">

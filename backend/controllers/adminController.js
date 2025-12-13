@@ -844,6 +844,7 @@ exports.getAllMentorshipRequests = async (req, res) => {
         mr.student_id,
         mr.mentor_id,
         mr.status,
+        mr.id,
         s.name AS student_name,
         u.name AS mentor_name,
         GROUP_CONCAT(msub.name SEPARATOR ', ') AS subjects,
@@ -908,6 +909,34 @@ exports.approveMentorshipRequest = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to approve mentorship request" });
+  }
+};
+
+exports.rejectMentorshipRequest = async (req, res) => {
+  const { studentId, mentorId } = req.params;
+
+  try {
+    const query = `
+      UPDATE mentorship_requests
+      SET status = 'rejected'
+      WHERE student_id = ? AND mentor_id = ? AND status = 'pending'
+    `;
+    const [result] = await db.execute(query, [studentId, mentorId]);
+
+    await db.query(
+      `INSERT INTO notifications (user_id, message, type, status, created_at, updated_at)
+       VALUES (?, ?, ?, 'unread', NOW(), NOW())`,
+      [
+        studentId,
+        `Your mentorship application has been rejected by admin!.`,
+        "mentorship"
+      ]
+    );
+
+    res.json({ message: "Mentorship request rejected successfully!" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to reject mentorship request" });
   }
 };
 
@@ -1026,5 +1055,21 @@ exports.deleteStudent = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to delete student" });
+  }
+};
+
+exports.deleteMentorshipRequest = async (req, res) => {
+  try {
+    const { mentorshipRequestId } = req.params;
+    const [deleted] = await db.query(
+      `DELETE FROM mentorship_requests WHERE id = ?`,
+      [mentorshipRequestId]
+    );
+
+    res.json({ message: "Mentorship deleted successfully", affectedRows: deleted.affectedRows });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to delete mentorship request" });
   }
 };
