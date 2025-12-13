@@ -844,7 +844,7 @@ exports.getAllMentorshipRequests = async (req, res) => {
         mr.student_id,
         mr.mentor_id,
         mr.status,
-        mr.id,
+        MIN(mr.id) AS id,  
         s.name AS student_name,
         u.name AS mentor_name,
         GROUP_CONCAT(msub.name SEPARATOR ', ') AS subjects,
