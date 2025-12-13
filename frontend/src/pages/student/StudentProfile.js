@@ -217,7 +217,7 @@ function StudentProfile() {
                       <label>Email</label>
                       <input
                         type="email"
-                        name="email"
+                        name="email" readOnly
                         value={formData.email}
                         onChange={handleChange}
                       />

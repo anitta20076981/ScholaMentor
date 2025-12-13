@@ -136,19 +136,21 @@ function AdminMentorShipRequest() {
                       <td style={tdStyle}>{mentor.mentor_name}</td>
                       <td style={tdStyle}>{mentor.status}</td>
                      <td style={tdStyle}>
-                    <button
-                        style={{
-                        border: "none",
-                        background: "none",
-                        cursor: "pointer",
-                        color: "#1e1e2f",
-                        marginRight: "10px",
-                        }}
-                        onClick={() => navigate(`/admin/view-mentorshiprequest/${mentor.student_id}/${mentor.mentor_id}`)}
-                    >
-                        <FaEye />
-                    </button>
-                    
+                     
+                        <button
+                            style={{
+                            border: "none",
+                            background: "none",
+                            cursor: "pointer",
+                            color: "#1e1e2f",
+                            marginRight: "10px",
+                            }}
+                            onClick={() => navigate(`/admin/view-mentorshiprequest/${mentor.student_id}/${mentor.mentor_id}`)}
+                        >
+                            <FaEye />
+                        </button>
+                     
+                    {mentor.status === "pending" && ( 
                     <button
                     style={{
                         border: "none",
@@ -160,6 +162,7 @@ function AdminMentorShipRequest() {
                     >
                     <FaTrash />
                     </button>
+                     )}
         </td>
                     </tr>
                   ))

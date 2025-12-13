@@ -131,9 +131,20 @@ const main = requestData[0];
         <>
           {main && (
             <section className="recommend-section view-request-section">
-              <div className="action-buttons">
+              <div className="action-buttons" style={{ textAlign: "right" }}>
                 {main.status === "pending" && (
-                  <button className="approve-btn" onClick={handleApprove}>
+                  <button className="approve-btn" onClick={handleApprove}  style={{
+                      marginLeft: "auto",
+                      marginTop: "-54px",
+                      backgroundColor: "#ff832b",
+                      color: "white",
+                      padding: "8px 16px",
+                      border: "none",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                      fontSize: "14px",
+                      display: "block",
+                    }}>
                     Approve
                   </button>
                 )}

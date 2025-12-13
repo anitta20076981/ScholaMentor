@@ -109,8 +109,15 @@ function FeeConcession() {
 
     } catch (err) {
       console.error(err);
-      setErrorMessage("Failed to submit application.");
-      setTimeout(() => setErrorMessage(""), 3000);
+      // setErrorMessage("Failed to submit application.");
+      // setTimeout(() => setErrorMessage(""), 3000);
+      const backendError =err.response?.data?.message ||err.response?.data?.error ||"Failed to submit application.";
+      await Swal.fire({
+        title: "Error!",
+        text: backendError,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   };
 

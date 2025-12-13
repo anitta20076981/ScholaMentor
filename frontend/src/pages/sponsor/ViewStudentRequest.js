@@ -344,6 +344,18 @@ function ViewStudentRequest() {
                   <h3 className="section-title">Approved Details</h3>
                   <p><strong>Approved Dated:</strong> {studentRequest.approved_date ? studentRequest.approved_date.split("T")[0] : "—"}</p>
                   <p><strong>Request Date:</strong> {new Date(studentRequest.created_at).toLocaleDateString("en-GB")}</p>
+                  <p><strong>Requested Amount:</strong> {studentRequest.required_amount}</p>
+                  <p><strong>Approved Amount:</strong> {studentRequest.approved_amount}</p>
+                  <p><strong>Approved Type:</strong> {studentRequest.approval_type}</p>
+                </div>
+              )} 
+
+               {studentRequest.status === 'MoreInfo' && (
+                <div className="request-column">
+                  <h3 className="section-title">More Detail Requested</h3>
+                  <p><strong>Requested Doc:</strong> {studentRequest.required_document}</p>
+                  <p><strong>Message:</strong> {studentRequest.message ? studentRequest.message : ''}</p>
+                  
                 </div>
               )} 
 
@@ -360,6 +372,7 @@ function ViewStudentRequest() {
                 <h3 className="section-title">Application Details</h3>
                 <p><strong>Course:</strong> {studentRequest.course}</p>
                 <p><strong>Score:</strong> {studentRequest.cgpa}</p>
+                <p><strong>Requested Amount:</strong> {studentRequest.required_amount}</p>
                 <p><strong>Purpose:</strong> {studentRequest.purpose}</p>
                 <p><strong>Need:</strong> {studentRequest.background}</p>
                 <p><strong>Request Date:</strong> {new Date(studentRequest.created_at).toLocaleDateString("en-GB")}</p>

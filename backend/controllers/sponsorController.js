@@ -115,19 +115,21 @@ exports.getStudentRequest = async (req, res) => {
   try {
     const query = `
       SELECT 
-        sa.*,
+        sa.*,ir.*,
         u.id AS user_id,
         u.name AS student_name,
         u.email AS student_email,
         u.type AS user_type,
         sd.id AS student_detail_id,
         sd.course,
-        sd.cgpa,
+        sa.cgpa,
+        sa.status,
         sd.phone AS phone
 
         FROM sponsorshipapplications AS sa
         JOIN users AS u ON sa.student_id = u.id
         JOIN studentdetails AS sd ON sd.student_id = u.id
+        LEFT JOIN inforequests AS ir ON ir.application_id = sa.id
         WHERE sa.id = ?
       `;
 

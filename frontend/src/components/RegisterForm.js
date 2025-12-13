@@ -40,7 +40,12 @@ function RegisterForm() {
        
     } catch (err) {
       console.error(err);
-      setMessage("Registration failed!");
+      // setMessage("Registration failed!");
+      if (err.response && err.response.data && err.response.data.message) {
+      setMessage(err.response.data.message);
+      } else {
+        setMessage("Registration failed!");
+      }
     }
   };
 return (

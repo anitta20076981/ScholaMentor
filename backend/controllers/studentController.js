@@ -418,6 +418,19 @@ exports.applyFeeConcession = async (req, res) => {
   const supporting_doc = req.files?.supporting_doc?.[0]?.filename || null;
   try {
 
+    const [details] = await db.execute(
+      `SELECT * FROM studentdetails WHERE student_id = ?`,
+      [studentId]
+    );
+    const student_details = details[0];
+
+     if(student_details.phone == null || student_details.dob == null || student_details.gender == null || student_details.address == null || student_details.	pincode == null || student_details.school_or_college == null || student_details.course == null || student_details.department == null || student_details.year	 == null || student_details.id_proof	 == null ||  student_details.address_proof	 == null){
+        return res.status(400).json({
+        success: false,
+        error: "Please fill all fields in your profile before applying."
+      });
+    }
+
     const [studentDetails] = await db.execute(
       `SELECT course, year AS semester FROM studentdetails WHERE student_id = ?`,
       [studentId]

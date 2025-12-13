@@ -39,6 +39,8 @@ function SponsorProfile() {
 
         setFormData((prev) => ({
           ...prev,
+          name: data.name || "",
+          email: data.email || "",
           phone: data.phone || "",
           gender: data.gender || "",
           address: data.address || "",
@@ -214,6 +216,28 @@ const handleChange = (e) => {
                 {/* PERSONAL TAB */}
                 {activeTab === "personal" && (
                   <div className="tab-content">
+                    <div className="form-row">
+                      <div className="form-field">
+                        <label>Name</label>
+                        <input
+                          type="text"
+                          name="name"
+                          readOnly
+                          value={formData.name}
+                          onChange={handleChange}
+                        />
+                      </div>
+                       <div className="form-field">
+                        <label>Email</label>
+                        <input
+                          type="email"
+                          name="email"
+                          readOnly
+                          value={formData.email}
+                          onChange={handleChange}
+                        />
+                      </div>
+                    </div>
                     <div className="form-row">
                       <div className="form-field">
                         <label>Phone Number</label>

@@ -98,7 +98,12 @@ function TopBar({ studentId, successMessage, errorMessage }) {
         </Link>
 
         <nav style={{ display: "flex", gap: "25px", alignItems: "center", position: "relative" }}>
-          <a href="#" style={navLinkStyle}>
+          <a href="howItWorks" style={navLinkStyle}  onClick={(e) => {
+            e.preventDefault();
+            document.getElementById("howItWorks")?.scrollIntoView({
+              behavior: "smooth",
+            });
+          }}>
             How It Works
           </a>
 
