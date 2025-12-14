@@ -418,7 +418,7 @@ exports.updateSponsorDetails = async (req, res) => {
         bank_statement = COALESCE(?, bank_statement),
         profile_photo = COALESCE(?, profile_photo)
         WHERE sponsor_id = ?`;
-
+//COALESCE is ,If the user doesn’t upload a new file it takes the old file
         await db.execute(query, [
             phone,
             address,

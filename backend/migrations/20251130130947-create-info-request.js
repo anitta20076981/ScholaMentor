@@ -28,8 +28,8 @@ module.exports = {
           model: 'Users', // must match your Users table
           key: 'id'
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: 'CASCADE', //if the sponsor id changes in the Users table, it will automatically update here.
+        onDelete: 'CASCADE' //if the sponsor is deleted from Users, all records that reference this sponsor will also be deleted automatically.
       },
 
       student_id: {

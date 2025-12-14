@@ -67,7 +67,7 @@ exports.getAllScholarshipApplications = async (req, res) => {
         END,
         sa.created_at DESC
     `);
-
+  //custome sorting appear in priority wise first pening, approved then rejected order
     res.json(results);
   } catch (err) {
     console.error(err);
@@ -773,6 +773,7 @@ exports.getMentorById = async (req, res) => {
   //     WHERE u.id = ? AND u.type = 'mentor'
   //   `;
   //join with mentorshipsubjects table to show subject name also referene fron chat gpt
+  //combines multiple rows into one and separates with commas
    const query = `
   SELECT 
     u.id,
