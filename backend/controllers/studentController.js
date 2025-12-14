@@ -1,7 +1,7 @@
 const db = require("../config/db");
-const fs = require("fs");
-const path = require("path");
-const puppeteer = require("puppeteer");
+const fs = require("fs"); //To work with files and folders -read,write,delete files
+const path = require("path");// handle file and directory path
+const puppeteer = require("puppeteer");// to generate pdf
 
 exports.getAllScholarships = (req, res) => {
     res.send("List of all scholarship");
@@ -558,7 +558,7 @@ exports.downloadCertificate = async (req, res) => {
     let html = fs.readFileSync(
       path.join(__dirname, "../templates/certificateTemplate.html"),
       "utf-8"
-    );
+    );//Reads static HTML certificate template.UTF-8 ensures correct text encoding
 
     html = html.replace("{{name}}", studentName)
                .replace("{{scholarship}}", scholarshipType)
@@ -567,15 +567,15 @@ exports.downloadCertificate = async (req, res) => {
                .replace("{{tution_fee}}", tution_fee)
                .replace("{{reducedFee}}", reducedFee);
 
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch(); //launch browser
     const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: "networkidle0" });
+    await page.setContent(html, { waitUntil: "networkidle0" }); // All resources are fully loaded before generating PDF
 
     const pdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true,
       margin: { top: "40px", bottom: "40px", left: "40px", right: "40px" },
-    });
+    });//pdf format
 
     await browser.close();
 
@@ -1109,7 +1109,7 @@ exports.getAllMentors = async (req, res) => {
     `;
 
     const [rows] = await db.execute(query);
-    // Group subjects per mentor // refrence from chatgpt
+    // Group subjects per mentor ,since mentor have multiple subjects store the subject to an arry// refrence from chatgpt
     const mentorsMap = {};
     rows.forEach(row => {
       if (!mentorsMap[row.mentor_id]) {

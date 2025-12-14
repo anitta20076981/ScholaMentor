@@ -1,3 +1,4 @@
+// It loads all models automatically from the models folder.
 'use strict';
 
 const fs = require('fs');
